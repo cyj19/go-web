@@ -1,0 +1,83 @@
+package v1
+
+import (
+	"go-web/internal/admin/store"
+	"go-web/internal/pkg/model"
+)
+
+type SysMenuSrv interface {
+	Create(menu *model.SysMenu) error
+	Update(menu *model.SysMenu) error
+	Delete(id uint64) error
+	DeleteBatch(ids []uint64) error
+	GetById(id uint64) (*model.SysMenu, error)
+	GetSome(ids []uint64) ([]model.SysMenu, error)
+	List(menu *model.SysMenu) ([]model.SysMenu, error)
+	GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int64, error)
+}
+
+type menuService struct {
+	factory store.Factory
+}
+
+func newSysMenu(srv *service) SysMenuSrv {
+	return &menuService{factory: srv.factory}
+}
+
+func (m *menuService) Create(menu *model.SysMenu) error {
+	return m.factory.SysMenu().Create(menu)
+}
+
+func (m *menuService) Update(menu *model.SysMenu) error {
+	return m.factory.SysMenu().Update(menu)
+}
+
+func (m *menuService) Delete(id uint64) error {
+	return m.factory.SysMenu().Delete(id)
+}
+
+func (m *menuService) DeleteBatch(ids []uint64) error {
+	return m.factory.SysMenu().DeleteBatch(ids)
+}
+
+func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
+	return m.factory.SysMenu().GetById(id)
+}
+
+func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
+	return m.factory.SysMenu().GetSome(ids)
+}
+
+func (m *menuService) List(menu *model.SysMenu) ([]model.SysMenu, error) {
+	whereOrder := createSysMenuCondition(menu)
+	return m.factory.SysMenu().List(whereOrder...)
+}
+
+func (m *menuService) GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int64, error) {
+	whereOrder := createSysMenuCondition(&menuPage.SysMenu)
+	pageIndex := menuPage.PageIndex
+	pageSize := menuPage.PageSize
+	if pageIndex < 1 {
+		pageIndex = 1
+	}
+	return m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrder...)
+}
+
+func createSysMenuCondition(param *model.SysMenu) []model.WhereOrder {
+	var whereOrder []model.WhereOrder
+	if param != nil {
+		if param.Name != "" {
+			v := "%" + param.Name + "%"
+			whereOrder = append(whereOrder, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
+		}
+		if param.Code != "" {
+			v := "%" + param.Name + "%"
+			whereOrder = append(whereOrder, model.WhereOrder{Where: "code like ?", Value: []interface{}{v}})
+		}
+		if param.Status > 0 {
+			whereOrder = append(whereOrder, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
+		}
+	}
+
+	return whereOrder
+}
