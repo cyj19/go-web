@@ -1,6 +1,13 @@
-# 端口
+# 服务配置
 server:
+  # 端口
   port: 9999
+  #服务名
+  name: auth
+  # url前缀
+  url-prefix: api
+  # api版本
+  api-version: v1
 
 # MySQL配置
 mysql:

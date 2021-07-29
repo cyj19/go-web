@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"go-web/internal/auth/common"
+	"go-web/internal/auth/initialize"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
 
@@ -33,7 +33,7 @@ func (u *UserHandler) Token(c *gin.Context) {
 	expireTime := time.Now().Add(2 * time.Hour)
 	tokenString := productToken(c, result, expireTime)
 	//写入redis
-	redisIns, _ := common.GetRedisIns()
+	redisIns := initialize.GetRedisIns()
 	err = redisIns.Set(tokenString, "", 2*time.Hour).Err()
 
 	if err != nil {
