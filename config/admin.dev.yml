@@ -1,6 +1,13 @@
-#端口
+# 服务配置
 server:
+  # 端口
   port: 8080
+  #服务名
+  name: auth
+  # url前缀
+  url-prefix: api
+  # api版本
+  api-version: v1
 
 #MySQL 数据库相关配置
 mysql:
@@ -18,3 +25,8 @@ redis:
   addr: 127.0.0.1:6379
   password: "123456"
   db: 1
+
+# casbin 配置
+casbin:
+  # 策略文件路径，默认在config目录下
+  model-path: 'rbac_model.conf'

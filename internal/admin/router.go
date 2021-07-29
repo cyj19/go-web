@@ -1,27 +1,25 @@
 package admin
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 
 	"go-web/internal/admin/api/v1/menu"
 	"go-web/internal/admin/api/v1/role"
 	"go-web/internal/admin/api/v1/user"
-	"go-web/internal/admin/common"
 	"go-web/internal/admin/store/mysql"
+	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/middleware"
 )
 
-func initRouter(g *gin.Engine) {
-	initMiddleware(g)
-	initAPI(g)
+// 初始化路由
+func Router() *gin.Engine {
+	g := gin.Default()
+	installMiddleware(g)
+	installAPI(g)
+	return g
 }
 
-func initMiddleware(g *gin.Engine) {
-	redisIns, _ := common.GetRedisIns()
-	enforcer, _ := mysql.GetEnforcerIns()
-	fmt.Printf("redis: %+v, enforcer: %+v \n", redisIns, enforcer)
+func installMiddleware(g *gin.Engine) {
 	var notCheckTokenUrlArr, notCheckParmissionUrlArr []string
 	//不需要token验证的资源
 	notCheckTokenUrlArr = append(notCheckTokenUrlArr, "/v1/auth/token")
@@ -29,20 +27,19 @@ func initMiddleware(g *gin.Engine) {
 	notCheckParmissionUrlArr = append(notCheckParmissionUrlArr, notCheckTokenUrlArr...)
 	//notCheckParmissionUrlArr = append(notCheckParmissionUrlArr, "/v1/role/permission")
 
-	g.Use(middleware.AuthMiddleware(redisIns, middleware.AllowPathPreFixSkipper(notCheckTokenUrlArr...)),
-		middleware.CasbinMiddleware(enforcer, middleware.AllowPathPreFixSkipper(notCheckParmissionUrlArr...)))
+	g.Use(middleware.AuthMiddleware(initialize.GetRedisIns(), middleware.AllowPathPreFixSkipper(notCheckTokenUrlArr...)),
+		middleware.CasbinMiddleware(initialize.GetEnforcerIns(), middleware.AllowPathPreFixSkipper(notCheckParmissionUrlArr...)))
 }
 
-func initAPI(g *gin.Engine) {
+func installAPI(g *gin.Engine) {
 
 	factoryIns, err := mysql.GetMySQLFactory()
 	if err != nil {
 		panic(err)
 	}
-	//初始化数据库表
-	mysql.MigrateTable()
-
-	v1 := g.Group("/v1")
+	configuration := initialize.GetConfiguration()
+	apiRouter := g.Group(configuration.Server.UrlPrefix)
+	v1 := apiRouter.Group(configuration.Server.ApiVersion)
 	{
 		userHandler := user.NewUserHandler(factoryIns)
 		userv1 := v1.Group("/user")

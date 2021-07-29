@@ -4,7 +4,6 @@ import (
 	"errors"
 	"strconv"
 
-	"go-web/internal/admin/common"
 	"go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
@@ -26,7 +25,7 @@ func (m *MenuHandler) Delete(c *gin.Context) {
 func (m *MenuHandler) DeleteBatch(c *gin.Context) {
 
 	strs := c.QueryArray("ids")
-	ids, err := common.ConverSliceToUint64(strs)
+	ids, err := util.ConverSliceToUint64(strs)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to delete menus"), nil)
 		return

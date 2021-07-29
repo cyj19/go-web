@@ -2,17 +2,15 @@ package auth
 
 import (
 	"go-web/internal/auth/api/v1/user"
-	"go-web/internal/auth/initialize"
+
 	"go-web/internal/auth/store/mysql"
-	"go-web/internal/pkg/global"
+	"go-web/internal/pkg/initialize"
 
 	"github.com/gin-gonic/gin"
 )
 
-var customServer *global.CustomServer
-
 // 初始化路由
-func initRouter() *gin.Engine {
+func Router() *gin.Engine {
 	g := gin.Default()
 	installMiddleware(g)
 	installAPI(g)
@@ -28,13 +26,13 @@ func installMiddleware(g *gin.Engine) {
 // 安装API
 func installAPI(g *gin.Engine) {
 	factoryIns, err := mysql.GetMySQLFactory()
-	customServer = initialize.GetCustomServer()
+	configuration := initialize.GetConfiguration()
 	if err != nil {
 		panic(err)
 	}
 
-	apiRouter := g.Group(customServer.UrlPrefix)
-	v1 := apiRouter.Group(customServer.ApiVersion)
+	apiRouter := g.Group(configuration.Server.UrlPrefix)
+	v1 := apiRouter.Group(configuration.Server.ApiVersion)
 	{
 		userHandler := user.NewUserHandler(factoryIns)
 		v1.POST("/auth", userHandler.Token)

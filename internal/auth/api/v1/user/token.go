@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"go-web/internal/auth/initialize"
+	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
 

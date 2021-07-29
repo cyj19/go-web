@@ -35,7 +35,7 @@ func (r *RoleHandler) Delete(c *gin.Context) {
 func (r *RoleHandler) DeleteBatch(c *gin.Context) {
 
 	strs := c.QueryArray("ids")
-	ids, err := common.ConverSliceToUint64(strs)
+	ids, err := util.ConverSliceToUint64(strs)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to conver param"), nil)
 		return

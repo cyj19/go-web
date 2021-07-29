@@ -3,8 +3,8 @@ package mysql
 import (
 	"fmt"
 
-	"go-web/internal/auth/initialize"
 	"go-web/internal/auth/store"
+	"go-web/internal/pkg/initialize"
 	"sync"
 
 	"gorm.io/gorm"
