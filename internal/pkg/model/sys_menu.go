@@ -15,7 +15,7 @@ type SysMenu struct {
 }
 
 func (m *SysMenu) TableName() string {
-	return "menu"
+	return "sys_menu"
 }
 
 type SysMenuPage struct {

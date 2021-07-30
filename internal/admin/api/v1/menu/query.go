@@ -25,13 +25,13 @@ func (m *MenuHandler) GetById(c *gin.Context) {
 }
 
 func (m *MenuHandler) List(c *gin.Context) {
-	var param *model.SysMenu
-	err := c.ShouldBindJSON(param)
+	var param model.SysMenu
+	err := c.ShouldBindJSON(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-	menus, err := m.srv.SysMenu().List(param)
+	menus, err := m.srv.SysMenu().List(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get menu list"), nil)
 		return
@@ -40,14 +40,14 @@ func (m *MenuHandler) List(c *gin.Context) {
 }
 
 func (m *MenuHandler) GetPage(c *gin.Context) {
-	var param *model.SysMenuPage
-	err := c.ShouldBindJSON(param)
+	var param model.SysMenuPage
+	err := c.ShouldBindJSON(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
 
-	menus, count, err := m.srv.SysMenu().GetPage(param)
+	menus, count, err := m.srv.SysMenu().GetPage(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get menu page"), nil)
 		return

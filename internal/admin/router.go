@@ -13,7 +13,8 @@ import (
 
 // 初始化路由
 func Router() *gin.Engine {
-	g := gin.Default()
+	// 创建一个没有中间件的路由
+	g := gin.New()
 	installMiddleware(g)
 	installAPI(g)
 	return g
@@ -22,7 +23,7 @@ func Router() *gin.Engine {
 func installMiddleware(g *gin.Engine) {
 	var notCheckTokenUrlArr, notCheckParmissionUrlArr []string
 	//不需要token验证的资源
-	notCheckTokenUrlArr = append(notCheckTokenUrlArr, "/v1/auth/token")
+	//notCheckTokenUrlArr = append(notCheckTokenUrlArr, "/v1/auth/token")
 	//不需要权限验证的资源
 	notCheckParmissionUrlArr = append(notCheckParmissionUrlArr, notCheckTokenUrlArr...)
 	//notCheckParmissionUrlArr = append(notCheckParmissionUrlArr, "/v1/role/permission")

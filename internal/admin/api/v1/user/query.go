@@ -23,14 +23,15 @@ func (u *UserHandler) GetByUsername(c *gin.Context) {
 
 //查询多条记录，参数为json格式
 func (u *UserHandler) List(c *gin.Context) {
-	var param *model.SysUser
-	err := c.ShouldBindJSON(param)
+	var param model.SysUser
+	// 此处不能传入空指针，否则绑定失败
+	err := c.ShouldBindJSON(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
 
-	list, err := u.srv.SysUser().List(param)
+	list, err := u.srv.SysUser().List(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
@@ -40,14 +41,14 @@ func (u *UserHandler) List(c *gin.Context) {
 }
 
 func (u *UserHandler) GetPage(c *gin.Context) {
-	var param *model.SysUserPage
-	err := c.ShouldBindJSON(param)
+	var param model.SysUserPage
+	err := c.ShouldBindJSON(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
 
-	list, count, err := u.srv.SysUser().GetPage(param)
+	list, count, err := u.srv.SysUser().GetPage(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return

@@ -21,14 +21,14 @@ func (r *RoleHandler) GetById(c *gin.Context) {
 }
 
 func (r *RoleHandler) List(c *gin.Context) {
-	var param *model.SysRole
-	err := c.ShouldBindJSON(param)
+	var param model.SysRole
+	err := c.ShouldBindJSON(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
 
-	roles, err := r.srv.SysRole().List(param)
+	roles, err := r.srv.SysRole().List(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get roles"), nil)
 		return
@@ -37,14 +37,14 @@ func (r *RoleHandler) List(c *gin.Context) {
 }
 
 func (r *RoleHandler) GetPage(c *gin.Context) {
-	var param *model.SysRolePage
-	err := c.ShouldBindJSON(param)
+	var param model.SysRolePage
+	err := c.ShouldBindJSON(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
 
-	roles, count, err := r.srv.SysRole().GetPage(param)
+	roles, count, err := r.srv.SysRole().GetPage(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get role page"), nil)
 		return

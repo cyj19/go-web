@@ -15,11 +15,10 @@ import (
 //由于gorm提供的DeletedAt没有json tag， 因此自定义为yyyy-MM-dd hh:mm:ss格式
 type DeletedAt struct {
 	time.Time
-	gorm.Model
 }
 
-//实现driver包中的Valuer接口，将自定义的类型值转换为驱动支持的Value类型值
-func (t *DeletedAt) Value() (driver.Value, error) {
+//实现driver包中的Valuer接口，将自定义的类型值转换为驱动支持的Value类型值，ps: 接收器不能是指针类型，否则会报invalid memory address or nil pointer dereference
+func (t DeletedAt) Value() (driver.Value, error) {
 	var zeroTime time.Time
 	//零值判断
 	if t.Time.UnixNano() == zeroTime.UnixNano() {
@@ -29,7 +28,7 @@ func (t *DeletedAt) Value() (driver.Value, error) {
 	return t.Time, nil
 }
 
-//实现sql包中的Scanner接口，被Rows和Row的Scan方法使用
+// 实现sql包中的Scanner接口，被Rows和Row的Scan方法使用
 func (t *DeletedAt) Scan(v interface{}) error {
 	//把数据库中的时间赋值给t
 	if v, ok := v.(time.Time); ok {
@@ -39,7 +38,7 @@ func (t *DeletedAt) Scan(v interface{}) error {
 	return fmt.Errorf("can not convert %v to timestamp", v)
 }
 
-//编码为json格式
+// 重写time.Time的MarshalJSON方法
 func (t *DeletedAt) MarshalJSON() ([]byte, error) {
 	timeStr := t.Format("2006-01-02 15:04:05")
 	//零值判断
@@ -50,7 +49,7 @@ func (t *DeletedAt) MarshalJSON() ([]byte, error) {
 	return []byte(formatted), nil
 }
 
-//解码json格式
+// 重写time.Time的UnmarshalJSON方法
 func (t *DeletedAt) UnmarshalJSON(data []byte) error {
 	//去除json格式中的双引号
 	timeStr := strings.Trim(string(data), "\"")
@@ -59,8 +58,20 @@ func (t *DeletedAt) UnmarshalJSON(data []byte) error {
 		*t = DeletedAt{Time: time.Time{}}
 		return nil
 	}
-	*t = DeletedAt{Time: setLocTime(timeStr)}
+	t.SetString(timeStr)
 	return nil
+}
+
+// 设置字符串
+func (t *DeletedAt) SetString(str string) *DeletedAt {
+	if t != nil {
+		// 指定解析的格式(设置转为本地格式)
+		now, err := time.ParseInLocation("2006-01-02 15:04:05", str, time.Local)
+		if err == nil {
+			*t = DeletedAt{Time: now}
+		}
+	}
+	return t
 }
 
 /*

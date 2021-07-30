@@ -47,7 +47,7 @@ func (u *UserHandler) Token(c *gin.Context) {
 func productToken(c *gin.Context, user *model.SysUser, expireTime time.Time) string {
 
 	claims := &model.Claims{
-		UserId: user.ID,
+		UserId: user.Id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(), //过期时间
 			IssuedAt:  time.Now().Unix(),

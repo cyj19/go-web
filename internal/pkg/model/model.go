@@ -8,10 +8,10 @@ import (
 
 // gorm提供的Model没有json tag，因此进行自定义
 type Model struct {
-	ID        uint64           `gorm:"column:id;primary_key;auto_increment;" json:"id" form:"id"`
-	CreatedAt model.LocalTime  `gorm:"column:created_at;type:datetime;not null;" json:"created_at" form:"created_at"`
-	UpdatedAt model.LocalTime  `gorm:"column:updated_at;type:datetime;not null;" json:"updated_at"  form:"updated_at"`
-	DeletedAt *model.DeletedAt `gorm:"column:deleted_at;type:datetime;" json:"deleted_at" `
+	Id        uint64           `gorm:"primaryKey;comment:'自增编号'" json:"id"`
+	CreatedAt model.LocalTime  `gorm:"comment:'创建时间'" json:"createdAt"`
+	UpdatedAt model.LocalTime  `gorm:"comment:'更新时间'" json:"updatedAt"`
+	DeletedAt *model.DeletedAt `gorm:"index:idx_deleted_at;comment:'删除时间(软删除)'" json:"deletedAt"`
 }
 
 type Claims struct {
