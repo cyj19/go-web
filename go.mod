@@ -3,6 +3,7 @@ module go-web
 go 1.16
 
 require (
+	github.com/appleboy/gin-jwt/v2 v2.6.4
 	github.com/casbin/casbin/v2 v2.28.3
 	github.com/casbin/gorm-adapter/v3 v3.3.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible

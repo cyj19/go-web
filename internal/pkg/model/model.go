@@ -25,3 +25,8 @@ type WhereOrder struct {
 	Where string
 	Value []interface{}
 }
+
+type Login struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
+}

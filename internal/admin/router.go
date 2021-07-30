@@ -27,8 +27,11 @@ func installMiddleware(g *gin.Engine) {
 	//不需要权限验证的资源
 	notCheckParmissionUrlArr = append(notCheckParmissionUrlArr, notCheckTokenUrlArr...)
 	//notCheckParmissionUrlArr = append(notCheckParmissionUrlArr, "/v1/role/permission")
-
-	g.Use(middleware.AuthMiddleware(initialize.GetRedisIns(), middleware.AllowPathPreFixSkipper(notCheckTokenUrlArr...)),
+	authMiddleware, err := middleware.InitGinJWTMiddleware(nil)
+	if err != nil {
+		panic(err)
+	}
+	g.Use(authMiddleware.MiddlewareFunc(),
 		middleware.CasbinMiddleware(initialize.GetEnforcerIns(), middleware.AllowPathPreFixSkipper(notCheckParmissionUrlArr...)))
 }
 
@@ -38,6 +41,7 @@ func installAPI(g *gin.Engine) {
 	if err != nil {
 		panic(err)
 	}
+
 	configuration := initialize.GetConfiguration()
 	apiRouter := g.Group(configuration.Server.UrlPrefix)
 	v1 := apiRouter.Group(configuration.Server.ApiVersion)

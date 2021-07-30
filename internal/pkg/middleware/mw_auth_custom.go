@@ -13,6 +13,10 @@ import (
 	"github.com/go-redis/redis"
 )
 
+/*
+	基于jwt-go，自己写的简单的token验证中间件
+*/
+
 var jwtkey = []byte("go-web")
 
 //token授权验证

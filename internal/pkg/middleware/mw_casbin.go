@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 
-	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
 
 	"github.com/casbin/casbin/v2"
@@ -19,9 +18,9 @@ func CasbinMiddleware(enforcer *casbin.Enforcer, skipper ...SkipperFunc) gin.Han
 		}
 		p := c.Request.URL.Path
 		m := c.Request.Method
-		claims := c.MustGet("claims").(*model.Claims)
+		userId := c.MustGet("user")
 
-		b, err := enforcer.Enforce(fmt.Sprintf("%d", claims.UserId), p, m)
+		b, err := enforcer.Enforce(fmt.Sprintf("%d", userId), p, m)
 		if err != nil {
 			util.WriteResponse(c, 500, err, nil)
 			c.Abort()
