@@ -31,7 +31,12 @@ func MySQL() {
 
 //自动迁移表结构
 func autoMigrateTables() {
-	dbIns.AutoMigrate(new(model.SysUser))
+	dbIns.AutoMigrate(
+		new(model.SysUser),
+		new(model.SysRole),
+		new(model.SysMenu),
+		new(model.SysCasbin),
+	)
 }
 
 // 暴露给其他包

@@ -10,12 +10,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func CasbinMiddleware(enforcer *casbin.Enforcer, skipper ...SkipperFunc) gin.HandlerFunc {
+func CasbinMiddleware(enforcer *casbin.Enforcer) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if len(skipper) > 0 && skipper[0](c) {
-			c.Next()
-			return
-		}
 		p := c.Request.URL.Path
 		m := c.Request.Method
 		userId := c.MustGet("user")
