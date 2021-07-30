@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/util"
 	"go-web/pkg/model"
 	"time"
@@ -16,20 +17,21 @@ import (
 
 // login为登录处理函数，因为gin-jwt是授权认证一体的，不需要授权功能传入nil即可
 func InitGinJWTMiddleware(login func(c *gin.Context) (interface{}, error)) (*jwt.GinJWTMiddleware, error) {
+	configuration := initialize.GetConfiguration()
 	return jwt.New(&jwt.GinJWTMiddleware{
-		Realm:           "go-web",                                           // jwt标识
-		Key:             []byte("secret-key"),                               // 服务端密钥
-		Timeout:         time.Hour,                                          // token过期时间
-		MaxRefresh:      time.Hour,                                          // token最大刷新时间(RefreshToken过期时间=Timeout+MaxRefresh)
-		PayloadFunc:     payloadFunc,                                        // 有效荷载处理
-		IdentityHandler: identityHandler,                                    // 解析Claims
-		Authenticator:   login,                                              // 登录处理
-		Authorizator:    authorizator,                                       // token校验成功处理
-		Unauthorized:    unauthorized,                                       // token校验失败处理
-		LoginResponse:   loginResponse,                                      // 登录成功后的响应
-		LogoutResponse:  logoutResponse,                                     // 登出后的响应
-		RefreshResponse: refreshResponse,                                    // 刷新token后的响应
-		TokenLookup:     "header: Authorization, query: token, cookie: jwt", // 依次在这几个地方寻找请求中的token
+		Realm:           configuration.Jwt.Realm,                                 // jwt标识
+		Key:             []byte(configuration.Jwt.Key),                           // 服务端密钥
+		Timeout:         time.Hour * time.Duration(configuration.Jwt.Timeout),    // token过期时间
+		MaxRefresh:      time.Hour * time.Duration(configuration.Jwt.MaxRefresh), // token最大刷新时间(RefreshToken过期时间=Timeout+MaxRefresh)
+		PayloadFunc:     payloadFunc,                                             // 有效荷载处理
+		IdentityHandler: identityHandler,                                         // 解析Claims
+		Authenticator:   login,                                                   // 登录处理
+		Authorizator:    authorizator,                                            // token校验成功处理
+		Unauthorized:    unauthorized,                                            // token校验失败处理
+		LoginResponse:   loginResponse,                                           // 登录成功后的响应
+		LogoutResponse:  logoutResponse,                                          // 登出后的响应
+		RefreshResponse: refreshResponse,                                         // 刷新token后的响应
+		TokenLookup:     "header: Authorization, query: token, cookie: jwt",      // 依次在这几个地方寻找请求中的token
 		TokenHeadName:   "Bearer",
 		TimeFunc:        time.Now,
 	})

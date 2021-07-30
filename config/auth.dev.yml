@@ -25,3 +25,14 @@ redis:
   addr: 127.0.0.1:6379
   password: "123456"
   db: 1
+
+# jwt 配置
+jwt:
+  # jwt标识
+  realm: go-web jwt
+  # 服务端密钥
+  key: secret key
+  # token过期时间，小时
+  timeout: 2
+  # 刷新token最大过期时间，小时
+  max-refresh: 24
