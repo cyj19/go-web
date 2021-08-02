@@ -62,6 +62,6 @@ func (u *user) GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrd
 
 func (u *user) Login(username, password string) (*model.SysUser, error) {
 	result := model.SysUser{}
-	err := u.db.Where("username = ? and password = ? and deleted = 0", username, password).First(&result).Error
+	err := u.db.Where("username = ? and password = ?", username, password).First(&result).Error
 	return &result, err
 }

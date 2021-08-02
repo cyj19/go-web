@@ -1,6 +1,7 @@
 package user
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -60,4 +61,23 @@ func (u *UserHandler) GetPage(c *gin.Context) {
 	}
 	page.SetPageNum(count)
 	util.WriteResponse(c, 0, nil, page)
+}
+
+// 使用go-jwt授权
+func (u *UserHandler) Login(c *gin.Context) (interface{}, error) {
+	var param model.SysUser
+	err := c.ShouldBindJSON(&param)
+	if err != nil {
+		return nil, err
+	}
+
+	user, err := u.srv.SysUser().Login(param.Username, param.Password)
+
+	if err != nil || user == nil {
+		return nil, err
+	}
+
+	return map[string]interface{}{
+		"user": fmt.Sprintf("%d", user.Id),
+	}, nil
 }

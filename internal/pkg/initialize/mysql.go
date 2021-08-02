@@ -3,7 +3,6 @@ package initialize
 import (
 	"fmt"
 	"go-web/internal/pkg/global"
-	"go-web/internal/pkg/model"
 	"sync"
 
 	"gorm.io/gorm"
@@ -14,7 +13,8 @@ var (
 	once  sync.Once
 )
 
-func MySQL() {
+// model为表结构
+func MySQL(models ...interface{}) {
 	var err error
 	// 单例模式，保证整个生命周期只初始化一次
 	once.Do(func() {
@@ -25,18 +25,13 @@ func MySQL() {
 		panic(fmt.Sprintf("初始化MySQL异常：%v", err))
 	}
 
-	autoMigrateTables()
+	autoMigrateTables(models...)
 
 }
 
 //自动迁移表结构
-func autoMigrateTables() {
-	dbIns.AutoMigrate(
-		new(model.SysUser),
-		new(model.SysRole),
-		new(model.SysMenu),
-		new(model.SysCasbin),
-	)
+func autoMigrateTables(models ...interface{}) {
+	dbIns.AutoMigrate(models...)
 }
 
 // 暴露给其他包

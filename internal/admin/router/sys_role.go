@@ -6,15 +6,16 @@ import (
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/middleware"
 
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
 
 // 注册角色路由
-func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory) {
+func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 
 	rolev1 := r.Group("/role")
-	// 使用casbin中间件
-	rolev1.Use(middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
+
+	rolev1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
 	{
 		roleHandler := role.NewRoleHandler(factoryIns)
 

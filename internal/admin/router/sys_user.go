@@ -6,15 +6,15 @@ import (
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/middleware"
 
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
 
 // 注册用户路由
-func InitUserRouter(r *gin.RouterGroup, factoryIns store.Factory) {
+func InitUserRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 
-	// 除了公共路由，其他路由都需要权限验证
 	userv1 := r.Group("/user")
-	userv1.Use(middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
+	userv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
 	{
 		userHandler := user.NewUserHandler(factoryIns)
 		userv1.GET("/:name", userHandler.GetByUsername)

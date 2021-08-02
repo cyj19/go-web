@@ -6,14 +6,15 @@ import (
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/middleware"
 
+	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
 
 // 注册菜单路由
-func InitMenuRouter(r *gin.RouterGroup, factoryIns store.Factory) {
+func InitMenuRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 
 	menuv1 := r.Group("/menu")
-	menuv1.Use(middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
+	menuv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
 	{
 		menuHandler := menu.NewMenuHandler(factoryIns)
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-web/internal/admin"
 	"go-web/internal/pkg/initialize"
+	"go-web/internal/pkg/model"
 	"log"
 	"net/http"
 	"os"
@@ -21,7 +22,7 @@ func main() {
 	// 初始化日志
 
 	// 初始化MySQL
-	initialize.MySQL()
+	initialize.MySQL(new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin))
 
 	// 初始化Redis
 	initialize.Redis()

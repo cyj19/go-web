@@ -1,7 +1,7 @@
 # 服务配置
 server:
   # 端口
-  port: 8080
+  port: 9999
   #服务名
   name: auth
   # url前缀
@@ -14,7 +14,7 @@ mysql:
   host: 127.0.0.1:3306
   username: root
   password: "123456"
-  database: my-admin
+  database: go-web
   max-idle-connections: 100  # MySQL 最大空闲连接数
   max-open-connections: 100  # MySQL 最大打开的连接数
   max-connection-life-time: 10s # 空闲连接最大存活时间
@@ -30,3 +30,14 @@ redis:
 casbin:
   # 策略文件路径，默认在config目录下
   model-path: 'rbac_model.conf'
+
+# jwt 配置
+jwt:
+  # jwt标识
+  realm: go-web jwt
+  # 服务端密钥
+  key: secret key
+  # token过期时间，小时
+  timeout: 2
+  # 刷新token最大过期时间，小时
+  max-refresh: 24
