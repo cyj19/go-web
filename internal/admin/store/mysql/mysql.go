@@ -30,9 +30,8 @@ func (ds *datastore) SysMenu() store.SysMenuStore {
 
 //不能放到pkg包中
 var (
-	factory           store.Factory
-	dbIns             *gorm.DB
-	once, onceFactory sync.Once
+	factory     store.Factory
+	onceFactory sync.Once
 )
 
 //单例 获取factory

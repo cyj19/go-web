@@ -36,14 +36,14 @@ func (r *role) DeleteBatch(ids []uint64) error {
 
 func (r *role) GetById(id uint64) (*model.SysRole, error) {
 	result := &model.SysRole{}
-	err := r.db.Where("id = ?", id).First(result).Error
+	err := r.db.Preload("Menus").Where("id = ?", id).First(result).Error
 	return result, err
 }
 
 func (r *role) List(whereOrder ...model.WhereOrder) ([]model.SysRole, error) {
 	result := make([]model.SysRole, 0)
 	tx := queryByCondition(r.db, &model.SysRole{}, whereOrder)
-	err := tx.Find(&result).Error
+	err := tx.Preload("Menus").Find(&result).Error
 	return result, err
 }
 
@@ -58,6 +58,6 @@ func (r *role) GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrd
 	if err != nil || count == 0 {
 		return nil, count, err
 	}
-	err = tx.Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
+	err = tx.Preload("Menus").Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
 	return result, count, err
 }
