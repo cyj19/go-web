@@ -15,7 +15,7 @@ func (r *RoleHandler) Create(c *gin.Context) {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-	err = r.srv.SysRole().Create(&role)
+	err = r.srv.Create(&role)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to create role"), nil)
 		return

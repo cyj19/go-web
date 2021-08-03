@@ -16,9 +16,6 @@ func newSysUser(ds *datastore) store.SysUserStore {
 }
 
 //实现store.UserStore接口
-func (u *user) Create(user *model.SysUser) error {
-	return u.db.Create(user).Error
-}
 
 func (u *user) Update(user *model.SysUser) error {
 	return u.db.Save(user).Error

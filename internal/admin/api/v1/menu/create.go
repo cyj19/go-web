@@ -18,7 +18,7 @@ func (m *MenuHandler) Create(c *gin.Context) {
 
 	menu.Status = true
 
-	err = m.srv.SysMenu().Create(&menu)
+	err = m.srv.Create(&menu)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to create menu"), nil)
 		return

@@ -6,7 +6,6 @@ import (
 )
 
 type SysUserSrv interface {
-	Create(user *model.SysUser) error
 	Update(user *model.SysUser) error
 	Delete(id uint64) error
 	DeleteBatch(ids []uint64) error
@@ -25,10 +24,6 @@ func newSysUser(srv *service) SysUserSrv {
 }
 
 //实现SysUserSrv接口
-
-func (u *userService) Create(user *model.SysUser) error {
-	return u.factory.SysUser().Create(user)
-}
 
 func (u *userService) Delete(id uint64) error {
 	return u.factory.SysUser().Delete(id)

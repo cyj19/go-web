@@ -18,7 +18,7 @@ func (u *UserHandler) Create(c *gin.Context) {
 		return
 	}
 
-	err = u.srv.SysUser().Create(&param)
+	err = u.srv.Create(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
