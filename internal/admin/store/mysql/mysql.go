@@ -28,6 +28,10 @@ func (ds *datastore) SysMenu() store.SysMenuStore {
 	return newSysMenu(ds)
 }
 
+func (ds *datastore) Create(value interface{}) error {
+	return ds.db.Create(value).Error
+}
+
 //不能放到pkg包中
 var (
 	factory     store.Factory

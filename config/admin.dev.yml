@@ -8,6 +8,8 @@ server:
   url-prefix: api
   # api版本
   api-version: v1
+  # 初始化数据
+  init-data: true
 
 #MySQL 数据库相关配置
 mysql:

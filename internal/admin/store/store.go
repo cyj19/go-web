@@ -5,4 +5,5 @@ type Factory interface {
 	SysUser() SysUserStore
 	SysRole() SysRoleStore
 	SysMenu() SysMenuStore
+	Create(value interface{}) error
 }

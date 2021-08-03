@@ -31,12 +31,12 @@ func CasbinSetRolePermission(srv srvv1.Service, roleid string, menuids ...string
 
 	enforcer.DeletePermissionsForUser(roleid)
 
-	for _, menu := range menus {
-		if menu.Type == 3 {
-			enforcer.AddPermissionForUser(roleid, menu.URL, menu.Method)
-		}
+	// for _, menu := range menus {
+	// 	if menu.Type == 3 {
+	// 		enforcer.AddPermissionForUser(roleid, menu.URL, menu.Method)
+	// 	}
 
-	}
+	// }
 	return nil
 }
 

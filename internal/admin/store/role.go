@@ -8,6 +8,7 @@ type SysRoleStore interface {
 	Delete(id uint64) error
 	DeleteBatch(ids []uint64) error
 	GetById(id uint64) (*model.SysRole, error)
+	GetByName(name string) (*model.SysRole, error)
 	List(whereOrder ...model.WhereOrder) ([]model.SysRole, error)
 	GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrder) ([]model.SysRole, int64, error)
 }

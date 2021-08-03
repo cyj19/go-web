@@ -6,6 +6,7 @@ type Service interface {
 	SysUser() SysUserSrv
 	SysRole() SysRoleSrv
 	SysMenu() SysMenuSrv
+	Create(value interface{}) error
 }
 
 type service struct {
@@ -30,4 +31,8 @@ func (s *service) SysRole() SysRoleSrv {
 
 func (s *service) SysMenu() SysMenuSrv {
 	return newSysMenu(s)
+}
+
+func (s *service) Create(value interface{}) error {
+	return s.factory.Create(value)
 }

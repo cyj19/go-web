@@ -23,6 +23,7 @@ type ServerConfiguration struct {
 	Name       string `mapstructure:"name" json:"name"`
 	UrlPrefix  string `mapstructure:"url-prefix" json:"urlPrefix"`
 	ApiVersion string `mapstructure:"api-version" json:"apiVersion"`
+	InitData   bool   `mapstructure:"init-data" json:"initData"`
 }
 
 type MysqlConfiguration struct {
@@ -46,6 +47,7 @@ func NewMySQL(opt *MysqlConfiguration) (*gorm.DB, error) {
 		true,
 		"Local")
 
+	// gorm 默认会在事务里执行写入操作（创建、更新、删除）
 	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{Logger: logger.Default.LogMode(logger.LogLevel(opt.LogLevel))})
 	if err != nil {
 		return nil, err

@@ -7,20 +7,16 @@ import (
 
 	"go-web/internal/admin/api/v1/user"
 	"go-web/internal/admin/router"
-	"go-web/internal/admin/store/mysql"
+	"go-web/internal/admin/store"
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/middleware"
 )
 
 // 初始化路由
-func Router() *gin.Engine {
+func Router(factoryIns store.Factory) *gin.Engine {
 	// 创建一个没有中间件的路由
 	g := gin.New()
 
-	factoryIns, err := mysql.GetMySQLFactory()
-	if err != nil {
-		panic(fmt.Sprintf("初始化工厂实例失败：%v", err))
-	}
 	userHandler := user.NewUserHandler(factoryIns)
 	// 初始化go-jwt中间件
 	authMiddleware, err := middleware.InitGinJWTMiddleware(userHandler.Login)

@@ -2,17 +2,17 @@ package model
 
 type SysMenu struct {
 	Model
-	URL      string    `gorm:"column:url;size:72;"  json:"url" form:"url"`
-	Method   string    `gorm:"column:method;size:32;" json:"method" form:"method"`
-	Name     string    `gorm:"column:name;size:32;not null;"  json:"name" form:"name"`
-	Sequence int       `gorm:"column:sequence;not null;" json:"sequence" form:"sequence"`
-	Type     uint8     `gorm:"column:type;type:tinyint(1);not null;" json:"type" form:"type" `                  //菜单类型 1模块2菜单3操作
-	Code     string    `gorm:"column:code;size:32;not_null;unique_index:uk_menu_code;" json:"code" form:"code"` //菜单代码
-	Icon     string    `gorm:"column:icon;size:32;" json:"icon" form:"icon"`
-	Status   uint8     `gorm:"column:status;type:tinyint(1);not null;"  json:"status" form:"status"`
-	Memo     string    `gorm:"column:memo;size:64;"  json:"memo" form:"memo"`
-	ParentID uint64    `gorm:"column:parent_id;not null;" json:"parent_id" form:"parent_id"`
-	Roles    []SysRole `gorm:"many2many:sys_role_menu_relation;" json:"roles"` // 角色菜单多对多关系表
+	Name      string    `gorm:"comment:'菜单英文名称'" json:"name"`
+	Title     string    `gorm:"comment:'菜单标题(中文名称)'" json:"title"`
+	Icon      string    `gorm:"comment:'菜单图标'" json:"icon"`
+	Path      string    `gorm:"comment:'菜单前端访问路径'" json:"path"`
+	Redirect  string    `gorm:"comment:'重定向路径'" josn:"redirect"`
+	Component string    `gorm:"comment:'前端组件路径'" json:"component"`
+	Sort      *uint     `gomr:"type:int unsigned;comment:'菜单顺序(同级比较越小越前)'" josn:"sort"` // 定义为指针类型可以避免默认值为0的情况
+	Status    bool      `gorm:"type:tinyint(1);default:1;comment:'菜单状态(0：禁用，1：启动)'" json:"status"`
+	ParentId  uint64    `gorm:"column:parent_id;not null;" json:"parent_id" form:"parent_id"`
+	Children  []SysMenu `gorm:"-" json:"children"`
+	Roles     []SysRole `gorm:"many2many:sys_role_menu_relation;" json:"roles"` // 角色菜单多对多关系表
 }
 
 func (m *SysMenu) TableName() string {

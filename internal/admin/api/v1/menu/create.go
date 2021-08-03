@@ -15,9 +15,9 @@ func (m *MenuHandler) Create(c *gin.Context) {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-	if menu.Status < 1 {
-		menu.Status = 1
-	}
+
+	menu.Status = true
+
 	err = m.srv.SysMenu().Create(&menu)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to create menu"), nil)

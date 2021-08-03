@@ -11,6 +11,7 @@ type SysMenuSrv interface {
 	Delete(id uint64) error
 	DeleteBatch(ids []uint64) error
 	GetById(id uint64) (*model.SysMenu, error)
+	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
 	List(menu *model.SysMenu) ([]model.SysMenu, error)
 	GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int64, error)
@@ -44,6 +45,10 @@ func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
 	return m.factory.SysMenu().GetById(id)
 }
 
+func (m *menuService) GetByPath(path string) (*model.SysMenu, error) {
+	return m.factory.SysMenu().GetByPath(path)
+}
+
 func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
 	return m.factory.SysMenu().GetSome(ids)
 }
@@ -70,13 +75,9 @@ func createSysMenuCondition(param *model.SysMenu) []model.WhereOrder {
 			v := "%" + param.Name + "%"
 			whereOrder = append(whereOrder, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
 		}
-		if param.Code != "" {
-			v := "%" + param.Name + "%"
-			whereOrder = append(whereOrder, model.WhereOrder{Where: "code like ?", Value: []interface{}{v}})
-		}
-		if param.Status > 0 {
-			whereOrder = append(whereOrder, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
-		}
+
+		whereOrder = append(whereOrder, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
+
 	}
 
 	return whereOrder

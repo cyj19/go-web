@@ -11,6 +11,7 @@ type SysRoleSrv interface {
 	Delete(id uint64) error
 	DeleteBatch(ids []uint64) error
 	GetById(id uint64) (*model.SysRole, error)
+	GetByName(name string) (*model.SysRole, error)
 	List(r *model.SysRole) ([]model.SysRole, error)
 	GetPage(rolePage *model.SysRolePage) ([]model.SysRole, int64, error)
 }
@@ -41,6 +42,10 @@ func (r *roleService) DeleteBatch(ids []uint64) error {
 
 func (r *roleService) GetById(id uint64) (*model.SysRole, error) {
 	return r.factory.SysRole().GetById(id)
+}
+
+func (r *roleService) GetByName(name string) (*model.SysRole, error) {
+	return r.factory.SysRole().GetByName(name)
 }
 
 func (r *roleService) List(role *model.SysRole) ([]model.SysRole, error) {

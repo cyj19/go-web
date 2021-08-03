@@ -34,9 +34,15 @@ func (m *menu) DeleteBatch(ids []uint64) error {
 }
 
 func (m *menu) GetById(id uint64) (*model.SysMenu, error) {
-	var result *model.SysMenu
-	err := m.db.Where("id = ?", id).First(result).Error
-	return result, err
+	var result model.SysMenu
+	err := m.db.Preload("Roles").Where("id = ?", id).First(&result).Error
+	return &result, err
+}
+
+func (m *menu) GetByPath(path string) (*model.SysMenu, error) {
+	var result model.SysMenu
+	err := m.db.Preload("Roles").Where("path = ?", path).First(&result).Error
+	return &result, err
 }
 
 func (m *menu) GetSome(ids []uint64) ([]model.SysMenu, error) {

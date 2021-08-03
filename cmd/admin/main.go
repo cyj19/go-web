@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go-web/internal/admin"
+	"go-web/internal/admin/store/mysql"
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/model"
 	"log"
@@ -24,14 +25,23 @@ func main() {
 	// 初始化MySQL
 	initialize.MySQL(new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin))
 
+	// 初始化操作工厂
+	factoryIns, err := mysql.GetMySQLFactory()
+	if err != nil {
+		panic(fmt.Sprintf("初始化工厂实例失败：%v", err))
+	}
+
 	// 初始化Redis
 	initialize.Redis()
 
 	// 初始化Casbin
 	initialize.Casbin()
 
+	// 初始化数据
+	admin.InitData(factoryIns)
+
 	// 初始化路由
-	g := admin.Router()
+	g := admin.Router(factoryIns)
 	configuration := initialize.GetConfiguration()
 	host := "0.0.0.0"
 	port := configuration.Server.Port
