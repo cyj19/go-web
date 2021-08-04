@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (m *MenuHandler) GetById(c *gin.Context) {
+func (m *SysMenuHandler) GetById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
@@ -24,14 +24,14 @@ func (m *MenuHandler) GetById(c *gin.Context) {
 	util.WriteResponse(c, 200, nil, menu)
 }
 
-func (m *MenuHandler) List(c *gin.Context) {
+func (m *SysMenuHandler) GetList(c *gin.Context) {
 	var param model.SysMenu
 	err := c.ShouldBindJSON(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-	menus, err := m.srv.SysMenu().List(&param)
+	menus, err := m.srv.SysMenu().GetList(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get menu list"), nil)
 		return
@@ -39,7 +39,7 @@ func (m *MenuHandler) List(c *gin.Context) {
 	util.WriteResponse(c, 200, nil, menus)
 }
 
-func (m *MenuHandler) GetPage(c *gin.Context) {
+func (m *SysMenuHandler) GetPage(c *gin.Context) {
 	var param model.SysMenuPage
 	err := c.ShouldBindJSON(&param)
 	if err != nil {

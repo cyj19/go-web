@@ -25,12 +25,8 @@ func (m *menu) Update(menu *model.SysMenu) error {
 	return m.db.Save(menu).Error
 }
 
-func (m *menu) Delete(id uint64) error {
-	return delete(m.db, id, &model.SysMenu{})
-}
-
 func (m *menu) DeleteBatch(ids []uint64) error {
-	return deleteBatch(m.db, ids, &model.SysMenu{})
+	return deleteBatch(m.db, &model.SysMenu{}, ids)
 }
 
 func (m *menu) GetById(id uint64) (*model.SysMenu, error) {
@@ -51,7 +47,7 @@ func (m *menu) GetSome(ids []uint64) ([]model.SysMenu, error) {
 	return result, err
 }
 
-func (m *menu) List(whereOrder ...model.WhereOrder) ([]model.SysMenu, error) {
+func (m *menu) GetList(whereOrder ...model.WhereOrder) ([]model.SysMenu, error) {
 	var result []model.SysMenu
 	tx := queryByCondition(m.db, &model.SysMenu{}, whereOrder)
 	err := tx.Find(&result).Error

@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (r *RoleHandler) GetById(c *gin.Context) {
+func (r *SysRoleHandler) GetById(c *gin.Context) {
 	id, _ := strconv.Atoi(c.Param("id"))
 	role, err := r.srv.SysRole().GetById(uint64(id))
 	if err != nil {
@@ -20,7 +20,7 @@ func (r *RoleHandler) GetById(c *gin.Context) {
 	util.WriteResponse(c, 200, nil, role)
 }
 
-func (r *RoleHandler) List(c *gin.Context) {
+func (r *SysRoleHandler) GetList(c *gin.Context) {
 	var param model.SysRole
 	err := c.ShouldBindJSON(&param)
 	if err != nil {
@@ -28,7 +28,7 @@ func (r *RoleHandler) List(c *gin.Context) {
 		return
 	}
 
-	roles, err := r.srv.SysRole().List(&param)
+	roles, err := r.srv.SysRole().GetList(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get roles"), nil)
 		return
@@ -36,7 +36,7 @@ func (r *RoleHandler) List(c *gin.Context) {
 	util.WriteResponse(c, 200, nil, roles)
 }
 
-func (r *RoleHandler) GetPage(c *gin.Context) {
+func (r *SysRoleHandler) GetPage(c *gin.Context) {
 	var param model.SysRolePage
 	err := c.ShouldBindJSON(&param)
 	if err != nil {

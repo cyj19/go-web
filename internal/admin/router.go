@@ -17,7 +17,7 @@ func Router(factoryIns store.Factory) *gin.Engine {
 	// 创建一个没有中间件的路由
 	g := gin.New()
 
-	userHandler := user.NewUserHandler(factoryIns)
+	userHandler := user.NewSysUserHandler(factoryIns)
 	// 初始化go-jwt中间件
 	authMiddleware, err := middleware.InitGinJWTMiddleware(userHandler.Login)
 	if err != nil {
@@ -33,6 +33,6 @@ func Router(factoryIns store.Factory) *gin.Engine {
 	router.InitUserRouter(v1, factoryIns, authMiddleware) // 注册用户路由
 	router.InitRoleRouter(v1, factoryIns, authMiddleware) // 注册角色路由
 	router.InitMenuRouter(v1, factoryIns, authMiddleware) // 注册菜单路由
-	router.InitApiRouter(v1)                              //注册接口路由
+	router.InitApiRouter(v1, factoryIns, authMiddleware)  //注册接口路由
 	return g
 }

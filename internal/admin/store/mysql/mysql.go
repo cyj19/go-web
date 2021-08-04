@@ -28,6 +28,10 @@ func (ds *datastore) SysMenu() store.SysMenuStore {
 	return newSysMenu(ds)
 }
 
+func (ds *datastore) SysApi() store.SysApiStore {
+	return newSysApi(ds)
+}
+
 func (ds *datastore) Create(value interface{}) error {
 	return ds.db.Create(value).Error
 }
@@ -68,10 +72,6 @@ func queryByCondition(db *gorm.DB, model interface{}, whereOrder []model.WhereOr
 	return tx
 }
 
-func delete(db *gorm.DB, id uint64, model interface{}) error {
-	return db.Where("id = ?", id).Delete(model).Error
-}
-
-func deleteBatch(db *gorm.DB, ids []uint64, model interface{}) error {
-	return db.Where("id in (?)", ids).Delete(model).Error
+func deleteBatch(db *gorm.DB, model interface{}, ids []uint64) error {
+	return db.Where("id in ?", ids).Delete(model).Error
 }

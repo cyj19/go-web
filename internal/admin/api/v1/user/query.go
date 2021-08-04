@@ -11,7 +11,7 @@ import (
 )
 
 //查询
-func (u *UserHandler) GetByUsername(c *gin.Context) {
+func (u *SysUserHandler) GetByUsername(c *gin.Context) {
 
 	user, err := u.srv.SysUser().GetByUsername(c.Param("name"))
 	if err != nil {
@@ -23,7 +23,7 @@ func (u *UserHandler) GetByUsername(c *gin.Context) {
 }
 
 //查询多条记录，参数为json格式
-func (u *UserHandler) List(c *gin.Context) {
+func (u *SysUserHandler) GetList(c *gin.Context) {
 	var param model.SysUser
 	// 此处不能传入空指针，否则绑定失败
 	err := c.ShouldBindJSON(&param)
@@ -32,7 +32,7 @@ func (u *UserHandler) List(c *gin.Context) {
 		return
 	}
 
-	list, err := u.srv.SysUser().List(&param)
+	list, err := u.srv.SysUser().GetList(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
@@ -41,7 +41,7 @@ func (u *UserHandler) List(c *gin.Context) {
 	util.WriteResponse(c, 0, nil, list)
 }
 
-func (u *UserHandler) GetPage(c *gin.Context) {
+func (u *SysUserHandler) GetPage(c *gin.Context) {
 	var param model.SysUserPage
 	err := c.ShouldBindJSON(&param)
 	if err != nil {
@@ -64,7 +64,7 @@ func (u *UserHandler) GetPage(c *gin.Context) {
 }
 
 // 使用go-jwt授权
-func (u *UserHandler) Login(c *gin.Context) (interface{}, error) {
+func (u *SysUserHandler) Login(c *gin.Context) (interface{}, error) {
 	var param model.SysUser
 	err := c.ShouldBindJSON(&param)
 	if err != nil {

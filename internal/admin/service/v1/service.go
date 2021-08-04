@@ -6,6 +6,7 @@ type Service interface {
 	SysUser() SysUserSrv
 	SysRole() SysRoleSrv
 	SysMenu() SysMenuSrv
+	SysApi() SysApiSrv
 	Create(value interface{}) error
 }
 
@@ -31,6 +32,10 @@ func (s *service) SysRole() SysRoleSrv {
 
 func (s *service) SysMenu() SysMenuSrv {
 	return newSysMenu(s)
+}
+
+func (s *service) SysApi() SysApiSrv {
+	return newSysApi(s)
 }
 
 func (s *service) Create(value interface{}) error {

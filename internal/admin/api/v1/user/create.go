@@ -10,7 +10,7 @@ import (
 )
 
 //增加用户
-func (u *UserHandler) Create(c *gin.Context) {
+func (u *SysUserHandler) Create(c *gin.Context) {
 	var param model.SysUser
 	err := c.ShouldBindJSON(&param)
 	if err != nil {

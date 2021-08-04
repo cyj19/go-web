@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (m *MenuHandler) Update(c *gin.Context) {
+func (m *SysMenuHandler) Update(c *gin.Context) {
 	var menu model.SysMenu
 	err := c.ShouldBindJSON(&menu)
 	if err != nil {

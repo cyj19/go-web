@@ -25,13 +25,8 @@ func (r *role) Update(role *model.SysRole) error {
 	return r.db.Save(role).Error
 }
 
-func (r *role) Delete(id uint64) error {
-	return delete(r.db, id, &model.SysRole{})
-
-}
-
 func (r *role) DeleteBatch(ids []uint64) error {
-	return deleteBatch(r.db, ids, &model.SysRole{})
+	return deleteBatch(r.db, &model.SysRole{}, ids)
 }
 
 func (r *role) GetById(id uint64) (*model.SysRole, error) {
@@ -46,7 +41,7 @@ func (r *role) GetByName(name string) (*model.SysRole, error) {
 	return result, err
 }
 
-func (r *role) List(whereOrder ...model.WhereOrder) ([]model.SysRole, error) {
+func (r *role) GetList(whereOrder ...model.WhereOrder) ([]model.SysRole, error) {
 	result := make([]model.SysRole, 0)
 	tx := queryByCondition(r.db, &model.SysRole{}, whereOrder)
 	err := tx.Preload("Menus").Find(&result).Error

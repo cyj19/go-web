@@ -8,11 +8,10 @@ import (
 type SysRoleSrv interface {
 	Create(r *model.SysRole) error
 	Update(r *model.SysRole) error
-	Delete(id uint64) error
 	DeleteBatch(ids []uint64) error
 	GetById(id uint64) (*model.SysRole, error)
 	GetByName(name string) (*model.SysRole, error)
-	List(r *model.SysRole) ([]model.SysRole, error)
+	GetList(r *model.SysRole) ([]model.SysRole, error)
 	GetPage(rolePage *model.SysRolePage) ([]model.SysRole, int64, error)
 }
 
@@ -32,10 +31,6 @@ func (r *roleService) Update(role *model.SysRole) error {
 	return r.factory.SysRole().Update(role)
 }
 
-func (r *roleService) Delete(id uint64) error {
-	return r.factory.SysRole().Delete(id)
-}
-
 func (r *roleService) DeleteBatch(ids []uint64) error {
 	return r.factory.SysRole().DeleteBatch(ids)
 }
@@ -48,13 +43,13 @@ func (r *roleService) GetByName(name string) (*model.SysRole, error) {
 	return r.factory.SysRole().GetByName(name)
 }
 
-func (r *roleService) List(role *model.SysRole) ([]model.SysRole, error) {
-	whereOrder := createSysRoleCondition(role)
-	return r.factory.SysRole().List(whereOrder...)
+func (r *roleService) GetList(role *model.SysRole) ([]model.SysRole, error) {
+	whereOrder := createSysRoleQueryCondition(role)
+	return r.factory.SysRole().GetList(whereOrder...)
 }
 
 func (r *roleService) GetPage(userPage *model.SysRolePage) ([]model.SysRole, int64, error) {
-	whereOrder := createSysRoleCondition(&userPage.SysRole)
+	whereOrder := createSysRoleQueryCondition(&userPage.SysRole)
 	pageIndex := userPage.PageIndex
 	pageSize := userPage.PageSize
 	if pageIndex < 1 {
@@ -63,7 +58,7 @@ func (r *roleService) GetPage(userPage *model.SysRolePage) ([]model.SysRole, int
 	return r.factory.SysRole().GetPage(pageIndex, pageSize, whereOrder...)
 }
 
-func createSysRoleCondition(param *model.SysRole) []model.WhereOrder {
+func createSysRoleQueryCondition(param *model.SysRole) []model.WhereOrder {
 	var whereOrder []model.WhereOrder
 	if param != nil {
 		if param.Name != "" {

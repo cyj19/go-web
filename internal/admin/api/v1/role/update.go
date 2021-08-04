@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (r *RoleHandler) Update(c *gin.Context) {
+func (r *SysRoleHandler) Update(c *gin.Context) {
 	var role model.SysRole
 	err := c.ShouldBindJSON(&role)
 	if err != nil {

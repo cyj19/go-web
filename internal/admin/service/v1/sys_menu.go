@@ -8,12 +8,11 @@ import (
 type SysMenuSrv interface {
 	Create(menu *model.SysMenu) error
 	Update(menu *model.SysMenu) error
-	Delete(id uint64) error
 	DeleteBatch(ids []uint64) error
 	GetById(id uint64) (*model.SysMenu, error)
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
-	List(menu *model.SysMenu) ([]model.SysMenu, error)
+	GetList(menu *model.SysMenu) ([]model.SysMenu, error)
 	GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int64, error)
 }
 
@@ -33,10 +32,6 @@ func (m *menuService) Update(menu *model.SysMenu) error {
 	return m.factory.SysMenu().Update(menu)
 }
 
-func (m *menuService) Delete(id uint64) error {
-	return m.factory.SysMenu().Delete(id)
-}
-
 func (m *menuService) DeleteBatch(ids []uint64) error {
 	return m.factory.SysMenu().DeleteBatch(ids)
 }
@@ -53,13 +48,13 @@ func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
 	return m.factory.SysMenu().GetSome(ids)
 }
 
-func (m *menuService) List(menu *model.SysMenu) ([]model.SysMenu, error) {
-	whereOrder := createSysMenuCondition(menu)
-	return m.factory.SysMenu().List(whereOrder...)
+func (m *menuService) GetList(menu *model.SysMenu) ([]model.SysMenu, error) {
+	whereOrder := createSysMenuQueryCondition(menu)
+	return m.factory.SysMenu().GetList(whereOrder...)
 }
 
 func (m *menuService) GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int64, error) {
-	whereOrder := createSysMenuCondition(&menuPage.SysMenu)
+	whereOrder := createSysMenuQueryCondition(&menuPage.SysMenu)
 	pageIndex := menuPage.PageIndex
 	pageSize := menuPage.PageSize
 	if pageIndex < 1 {
@@ -68,7 +63,7 @@ func (m *menuService) GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int
 	return m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrder...)
 }
 
-func createSysMenuCondition(param *model.SysMenu) []model.WhereOrder {
+func createSysMenuQueryCondition(param *model.SysMenu) []model.WhereOrder {
 	var whereOrder []model.WhereOrder
 	if param != nil {
 		if param.Name != "" {

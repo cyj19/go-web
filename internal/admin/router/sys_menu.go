@@ -16,13 +16,13 @@ func InitMenuRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware
 	menuv1 := r.Group("/menu")
 	menuv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
 	{
-		menuHandler := menu.NewMenuHandler(factoryIns)
+		menuHandler := menu.NewSysMenuHandler(factoryIns)
 
 		menuv1.POST("/add", menuHandler.Create)
 		menuv1.DELETE("/:id", menuHandler.Delete)
 		menuv1.DELETE("", menuHandler.DeleteBatch)
 		menuv1.PUT("/update", menuHandler.Update)
-		menuv1.POST("/list", menuHandler.List)
+		menuv1.POST("/list", menuHandler.GetList)
 		menuv1.POST("/page", menuHandler.GetPage)
 		menuv1.GET("/:id", menuHandler.GetById)
 	}
