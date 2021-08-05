@@ -21,6 +21,7 @@ func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory, enforcer *casb
 		rolev1.POST("/add", roleHandler.Create)
 		rolev1.DELETE("/delete", roleHandler.BatchDelete)
 		rolev1.PATCH("/update", roleHandler.Update)
+		rolev1.PATCH("/menu/update", roleHandler.UpdateMenuForRole)
 		rolev1.POST("/list", roleHandler.GetList)
 		rolev1.POST("/page", roleHandler.GetPage)
 

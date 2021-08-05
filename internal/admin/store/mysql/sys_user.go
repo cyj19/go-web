@@ -18,7 +18,7 @@ func newSysUser(ds *datastore) store.SysUserStore {
 //实现store.UserStore接口
 // Updates使用 struct 更新时，默认情况下，GORM 只会更新非零值的字段
 func (u *user) Update(user *model.SysUser) error {
-	return u.db.Model(user).Updates(user).Error
+	return u.db.Updates(user).Error
 }
 
 // 更新用户角色(添加、删除)

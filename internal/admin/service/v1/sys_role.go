@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"fmt"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/model"
 )
@@ -8,6 +9,7 @@ import (
 type SysRoleSrv interface {
 	Create(r *model.SysRole) error
 	Update(r *model.SysRole) error
+	UpdateMenuForRole(cd *model.CreateDelete) error
 	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysRole, error)
 	GetByName(name string) (*model.SysRole, error)
@@ -29,6 +31,15 @@ func (r *roleService) Create(role *model.SysRole) error {
 
 func (r *roleService) Update(role *model.SysRole) error {
 	return r.factory.SysRole().Update(role)
+}
+
+func (r *roleService) UpdateMenuForRole(cd *model.CreateDelete) error {
+	// 查询记录是否存在
+	_, err := r.GetById(cd.Id)
+	if err != nil {
+		return fmt.Errorf("记录不存在：%v ", err)
+	}
+	return r.factory.SysRole().UpdateMenuForRole(cd)
 }
 
 func (r *roleService) BatchDelete(ids []uint64) error {
