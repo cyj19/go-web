@@ -12,7 +12,7 @@ import (
 //增加用户
 func (u *SysUserHandler) Create(c *gin.Context) {
 	var param model.SysUser
-	err := c.ShouldBindJSON(&param)
+	err := c.ShouldBind(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return

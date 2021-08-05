@@ -11,7 +11,7 @@ import (
 
 func (m *SysMenuHandler) Update(c *gin.Context) {
 	var menu model.SysMenu
-	err := c.ShouldBindJSON(&menu)
+	err := c.ShouldBind(&menu)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return

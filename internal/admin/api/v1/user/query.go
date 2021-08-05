@@ -26,7 +26,7 @@ func (u *SysUserHandler) GetByUsername(c *gin.Context) {
 func (u *SysUserHandler) GetList(c *gin.Context) {
 	var param model.SysUser
 	// 此处不能传入空指针，否则绑定失败
-	err := c.ShouldBindJSON(&param)
+	err := c.ShouldBind(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
@@ -43,7 +43,7 @@ func (u *SysUserHandler) GetList(c *gin.Context) {
 
 func (u *SysUserHandler) GetPage(c *gin.Context) {
 	var param model.SysUserPage
-	err := c.ShouldBindJSON(&param)
+	err := c.ShouldBind(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
@@ -66,7 +66,7 @@ func (u *SysUserHandler) GetPage(c *gin.Context) {
 // 使用go-jwt授权
 func (u *SysUserHandler) Login(c *gin.Context) (interface{}, error) {
 	var param model.SysUser
-	err := c.ShouldBindJSON(&param)
+	err := c.ShouldBind(&param)
 	if err != nil {
 		return nil, err
 	}

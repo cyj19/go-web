@@ -22,7 +22,7 @@ func (r *SysRoleHandler) GetById(c *gin.Context) {
 
 func (r *SysRoleHandler) GetList(c *gin.Context) {
 	var param model.SysRole
-	err := c.ShouldBindJSON(&param)
+	err := c.ShouldBind(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
@@ -38,7 +38,7 @@ func (r *SysRoleHandler) GetList(c *gin.Context) {
 
 func (r *SysRoleHandler) GetPage(c *gin.Context) {
 	var param model.SysRolePage
-	err := c.ShouldBindJSON(&param)
+	err := c.ShouldBind(&param)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return

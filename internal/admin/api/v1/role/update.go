@@ -11,7 +11,7 @@ import (
 
 func (r *SysRoleHandler) Update(c *gin.Context) {
 	var role model.SysRole
-	err := c.ShouldBindJSON(&role)
+	err := c.ShouldBind(&role)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 	}
@@ -32,6 +32,22 @@ func (r *SysRoleHandler) UpdateMenuForRole(c *gin.Context) {
 	}
 
 	err = r.srv.SysRole().UpdateMenuForRole(&param)
+	if err != nil {
+		log.Fatalf("更新失败：%v", err)
+		return
+	}
+	util.WriteResponse(c, 200, nil, "")
+}
+
+func (r *SysRoleHandler) UpdateApiForRole(c *gin.Context) {
+	var param model.CreateDelete
+	err := c.ShouldBind(&param)
+	if err != nil {
+		log.Fatalf("参数绑定失败：%v", err)
+		return
+	}
+
+	err = r.srv.SysRole().UpdateApiForRole(&param)
 	if err != nil {
 		log.Fatalf("更新失败：%v", err)
 		return

@@ -10,7 +10,7 @@ import (
 
 func (r *SysRoleHandler) Create(c *gin.Context) {
 	var role model.SysRole
-	err := c.ShouldBindJSON(&role)
+	err := c.ShouldBind(&role)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
