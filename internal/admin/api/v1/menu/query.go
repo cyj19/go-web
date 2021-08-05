@@ -31,7 +31,8 @@ func (m *SysMenuHandler) GetList(c *gin.Context) {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-	menus, err := m.srv.SysMenu().GetList(&param)
+	whereOrders := createSysMenuQueryCondition(param)
+	menus, err := m.srv.SysMenu().GetList(whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get menu list"), nil)
 		return
@@ -46,8 +47,8 @@ func (m *SysMenuHandler) GetPage(c *gin.Context) {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-
-	menus, count, err := m.srv.SysMenu().GetPage(&param)
+	whereOrders := createSysMenuQueryCondition(param.SysMenu)
+	menus, count, err := m.srv.SysMenu().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get menu page"), nil)
 		return
@@ -58,4 +59,17 @@ func (m *SysMenuHandler) GetPage(c *gin.Context) {
 	}
 	page.SetPageNum(count)
 	util.WriteResponse(c, 200, nil, page)
+}
+
+func createSysMenuQueryCondition(param model.SysMenu) []model.WhereOrder {
+	whereOrders := make([]model.WhereOrder, 0)
+
+	if param.Name != "" {
+		v := "%" + param.Name + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
+	}
+
+	whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
+
+	return whereOrders
 }

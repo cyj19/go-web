@@ -12,8 +12,8 @@ type SysUserSrv interface {
 	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysUser, error)
 	GetByUsername(username string) (*model.SysUser, error)
-	GetList(user *model.SysUser) ([]model.SysUser, error)
-	GetPage(userPage *model.SysUserPage) ([]model.SysUser, int64, error)
+	GetList(whereOrders ...model.WhereOrder) ([]model.SysUser, error)
+	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysUser, int64, error)
 	Login(username, password string) (*model.SysUser, error)
 }
 
@@ -52,41 +52,19 @@ func (u *userService) GetByUsername(username string) (*model.SysUser, error) {
 	return u.factory.SysUser().GetByUsername(username)
 }
 
-func (u *userService) GetList(user *model.SysUser) ([]model.SysUser, error) {
+func (u *userService) GetList(whereOrders ...model.WhereOrder) ([]model.SysUser, error) {
 	//构建查询条件
-	whereOrder := createSysUserQueryCondition(user)
-	return u.factory.SysUser().GetList(whereOrder...)
+	//whereOrder := createSysUserQueryCondition(user)
+	return u.factory.SysUser().GetList(whereOrders...)
 
 }
 
-func (u *userService) GetPage(userPage *model.SysUserPage) ([]model.SysUser, int64, error) {
-	//构建查询条件
-	whereOrder := createSysUserQueryCondition(&userPage.SysUser)
-	pageIndex := userPage.PageIndex
-	pageSize := userPage.PageSize
-	if pageIndex < 1 {
-		pageIndex = 1
-	}
-	return u.factory.SysUser().GetPage(pageIndex, pageSize, whereOrder...)
+func (u *userService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysUser, int64, error) {
+	return u.factory.SysUser().GetPage(pageIndex, pageSize, whereOrders...)
 
 }
 
 func (u *userService) Login(username, password string) (*model.SysUser, error) {
 	return u.factory.SysUser().Login(username, password)
 
-}
-
-func createSysUserQueryCondition(param *model.SysUser) []model.WhereOrder {
-	var whereOrder []model.WhereOrder
-	if param != nil {
-		if param.Username != "" {
-			v := "%" + param.Username + "%"
-			whereOrder = append(whereOrder, model.WhereOrder{Where: "username like ?", Value: []interface{}{v}})
-		}
-		if param.Status != nil {
-			whereOrder = append(whereOrder, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
-		}
-	}
-
-	return whereOrder
 }

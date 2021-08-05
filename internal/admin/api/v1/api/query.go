@@ -15,7 +15,8 @@ func (a *SysApiHandler) GetList(c *gin.Context) {
 		log.Fatalf("参数绑定失败：%v", err)
 		return
 	}
-	apis, err := a.srv.SysApi().GetList(&param)
+	whereOrders := createSysApiQueryCondition(param)
+	apis, err := a.srv.SysApi().GetList(whereOrders...)
 	if err != nil {
 		log.Fatalf("查询失败：%v", err)
 		return
@@ -30,7 +31,8 @@ func (a *SysApiHandler) GetPage(c *gin.Context) {
 		log.Fatalf("参数绑定失败：%v", err)
 		return
 	}
-	apis, count, err := a.srv.SysApi().GetPage(&param)
+	whereOrders := createSysApiQueryCondition(param.SysApi)
+	apis, count, err := a.srv.SysApi().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		log.Fatalf("查询失败：%v", err)
 		return
@@ -45,4 +47,30 @@ func (a *SysApiHandler) GetPage(c *gin.Context) {
 	}
 	page.SetPageNum(count)
 	util.WriteResponse(c, 200, nil, page)
+}
+
+func createSysApiQueryCondition(param model.SysApi) []model.WhereOrder {
+
+	whereOrders := make([]model.WhereOrder, 0)
+	if param.Id > 0 {
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "id = ?", Value: []interface{}{param.Id}})
+	}
+	if param.Method != "" {
+		v := "%" + param.Method + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "method like ?", Value: []interface{}{v}})
+	}
+	if param.Path != "" {
+		v := "%" + param.Path + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "path like ?", Value: []interface{}{v}})
+	}
+	if param.Category != "" {
+		v := "%" + param.Category + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "category like ?", Value: []interface{}{v}})
+	}
+	if param.Creator != "" {
+		v := "%" + param.Creator + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "creator like ?", Value: []interface{}{v}})
+	}
+	return whereOrders
+
 }

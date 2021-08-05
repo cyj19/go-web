@@ -31,8 +31,8 @@ func (u *SysUserHandler) GetList(c *gin.Context) {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
-
-	list, err := u.srv.SysUser().GetList(&param)
+	whereOrders := createSysUserQueryCondition(param)
+	list, err := u.srv.SysUser().GetList(whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
@@ -48,8 +48,8 @@ func (u *SysUserHandler) GetPage(c *gin.Context) {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
-
-	list, count, err := u.srv.SysUser().GetPage(&param)
+	whereOrders := createSysUserQueryCondition(param.SysUser)
+	list, count, err := u.srv.SysUser().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
@@ -80,4 +80,18 @@ func (u *SysUserHandler) Login(c *gin.Context) (interface{}, error) {
 	return map[string]interface{}{
 		"user": fmt.Sprintf("%d", user.Id),
 	}, nil
+}
+
+func createSysUserQueryCondition(param model.SysUser) []model.WhereOrder {
+	whereOrders := make([]model.WhereOrder, 0)
+
+	if param.Username != "" {
+		v := "%" + param.Username + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "username like ?", Value: []interface{}{v}})
+	}
+	if param.Status != nil {
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
+	}
+
+	return whereOrders
 }

@@ -12,8 +12,8 @@ type SysMenuSrv interface {
 	GetById(id uint64) (*model.SysMenu, error)
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
-	GetList(menu *model.SysMenu) ([]model.SysMenu, error)
-	GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int64, error)
+	GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error)
+	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysMenu, int64, error)
 }
 
 type menuService struct {
@@ -48,32 +48,14 @@ func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
 	return m.factory.SysMenu().GetSome(ids)
 }
 
-func (m *menuService) GetList(menu *model.SysMenu) ([]model.SysMenu, error) {
-	whereOrder := createSysMenuQueryCondition(menu)
-	return m.factory.SysMenu().GetList(whereOrder...)
+func (m *menuService) GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error) {
+
+	return m.factory.SysMenu().GetList(whereOrders...)
 }
 
-func (m *menuService) GetPage(menuPage *model.SysMenuPage) ([]model.SysMenu, int64, error) {
-	whereOrder := createSysMenuQueryCondition(&menuPage.SysMenu)
-	pageIndex := menuPage.PageIndex
-	pageSize := menuPage.PageSize
-	if pageIndex < 1 {
+func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysMenu, int64, error) {
+	if pageIndex <= 0 {
 		pageIndex = 1
 	}
-	return m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrder...)
-}
-
-func createSysMenuQueryCondition(param *model.SysMenu) []model.WhereOrder {
-	var whereOrder []model.WhereOrder
-	if param != nil {
-		if param.Name != "" {
-			v := "%" + param.Name + "%"
-			whereOrder = append(whereOrder, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
-		}
-
-		whereOrder = append(whereOrder, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
-
-	}
-
-	return whereOrder
+	return m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrders...)
 }

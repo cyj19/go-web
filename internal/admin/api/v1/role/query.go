@@ -27,8 +27,8 @@ func (r *SysRoleHandler) GetList(c *gin.Context) {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-
-	roles, err := r.srv.SysRole().GetList(&param)
+	whereOrders := createSysRoleQueryCondition(param)
+	roles, err := r.srv.SysRole().GetList(whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get roles"), nil)
 		return
@@ -43,8 +43,8 @@ func (r *SysRoleHandler) GetPage(c *gin.Context) {
 		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
 		return
 	}
-
-	roles, count, err := r.srv.SysRole().GetPage(&param)
+	whereOrders := createSysRoleQueryCondition(param.SysRole)
+	roles, count, err := r.srv.SysRole().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get role page"), nil)
 		return
@@ -56,4 +56,19 @@ func (r *SysRoleHandler) GetPage(c *gin.Context) {
 	}
 	page.SetPageNum(count)
 	util.WriteResponse(c, 200, nil, page)
+}
+
+func createSysRoleQueryCondition(param model.SysRole) []model.WhereOrder {
+	whereOrders := make([]model.WhereOrder, 0)
+
+	if param.Name != "" {
+		v := "%" + param.Name + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
+	}
+	if param.NameZh != "" {
+		v := "%" + param.NameZh + "%"
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "name_zh like ?", Value: []interface{}{v}})
+	}
+
+	return whereOrders
 }
