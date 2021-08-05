@@ -1,23 +1,30 @@
 package v1
 
-import "go-web/internal/admin/store"
+import (
+	"go-web/internal/admin/store"
+
+	"github.com/casbin/casbin/v2"
+)
 
 type Service interface {
 	SysUser() SysUserSrv
 	SysRole() SysRoleSrv
 	SysMenu() SysMenuSrv
 	SysApi() SysApiSrv
+	SysCasbin() SysCasbinSrv
 	Create(value interface{}) error
 }
 
 type service struct {
-	factory store.Factory
+	factory  store.Factory
+	enforcer *casbin.Enforcer
 }
 
 //工厂模式，创建service
-func NewService(factory store.Factory) Service {
+func NewService(factory store.Factory, enforcer *casbin.Enforcer) Service {
 	return &service{
-		factory: factory,
+		factory:  factory,
+		enforcer: enforcer,
 	}
 }
 
@@ -36,6 +43,10 @@ func (s *service) SysMenu() SysMenuSrv {
 
 func (s *service) SysApi() SysApiSrv {
 	return newSysApi(s)
+}
+
+func (s *service) SysCasbin() SysCasbinSrv {
+	return newCasbinService(s)
 }
 
 func (s *service) Create(value interface{}) error {

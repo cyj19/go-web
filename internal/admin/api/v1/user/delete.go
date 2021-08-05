@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (u *SysUserHandler) Delete(c *gin.Context) {
+func (u *SysUserHandler) BatchDelete(c *gin.Context) {
 	var param model.IdParam
 	err := c.ShouldBind(&param)
 	if err != nil {
@@ -16,7 +16,7 @@ func (u *SysUserHandler) Delete(c *gin.Context) {
 	}
 
 	ids := util.Str2Uint64Array(param.Ids)
-	err = u.srv.SysUser().DeleteBatch(ids)
+	err = u.srv.SysUser().BatchDelete(ids)
 	if err != nil {
 		util.WriteResponse(c, 500, err, nil)
 		return

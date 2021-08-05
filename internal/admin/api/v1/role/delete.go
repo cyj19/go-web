@@ -30,7 +30,7 @@ func (r *SysRoleHandler) Delete(c *gin.Context) {
 /*
 	DELETE:  /v1/role?ids=1&ids=2&ids=3
 */
-func (r *SysRoleHandler) DeleteBatch(c *gin.Context) {
+func (r *SysRoleHandler) BatchDelete(c *gin.Context) {
 
 	strs := c.QueryArray("ids")
 	ids, err := util.ConverSliceToUint64(strs)
@@ -38,7 +38,7 @@ func (r *SysRoleHandler) DeleteBatch(c *gin.Context) {
 		util.WriteResponse(c, 500, errors.New("failed to conver param"), nil)
 		return
 	}
-	err = r.srv.SysRole().DeleteBatch(ids)
+	err = r.srv.SysRole().BatchDelete(ids)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to delete role collection"), nil)
 		return

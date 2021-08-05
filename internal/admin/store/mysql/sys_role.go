@@ -22,11 +22,11 @@ func (r *role) Create(role *model.SysRole) error {
 }
 
 func (r *role) Update(role *model.SysRole) error {
-	return r.db.Save(role).Error
+	return r.db.Updates(role).Error
 }
 
-func (r *role) DeleteBatch(ids []uint64) error {
-	return deleteBatch(r.db, &model.SysRole{}, ids)
+func (r *role) BatchDelete(ids []uint64) error {
+	return batchDelete(r.db, &model.SysRole{}, ids)
 }
 
 func (r *role) GetById(id uint64) (*model.SysRole, error) {

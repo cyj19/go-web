@@ -8,6 +8,21 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func (a *SysApiHandler) GetList(c *gin.Context) {
+	var param model.SysApi
+	err := c.ShouldBind(&param)
+	if err != nil {
+		log.Fatalf("参数绑定失败：%v", err)
+		return
+	}
+	apis, err := a.srv.SysApi().GetList(&param)
+	if err != nil {
+		log.Fatalf("查询失败：%v", err)
+		return
+	}
+	util.WriteResponse(c, 200, nil, apis)
+}
+
 func (a *SysApiHandler) GetPage(c *gin.Context) {
 	var param model.SysApiPage
 	err := c.ShouldBind(&param)

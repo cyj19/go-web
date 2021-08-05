@@ -55,8 +55,8 @@ func (u *user) UpdateRoleForUser(cd *model.CreateDelete) error {
 	return nil
 }
 
-func (u *user) DeleteBatch(ids []uint64) error {
-	return deleteBatch(u.db, &model.SysUser{}, ids)
+func (u *user) BatchDelete(ids []uint64) error {
+	return batchDelete(u.db, &model.SysUser{}, ids)
 }
 
 func (u *user) GetById(id uint64) (*model.SysUser, error) {

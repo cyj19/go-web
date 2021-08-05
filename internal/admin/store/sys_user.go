@@ -6,7 +6,7 @@ import "go-web/internal/pkg/model"
 type SysUserStore interface {
 	Update(u *model.SysUser) error
 	UpdateRoleForUser(cd *model.CreateDelete) error
-	DeleteBatch(ids []uint64) error
+	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysUser, error)
 	GetByUsername(username string) (*model.SysUser, error)
 	GetList(whereOrder ...model.WhereOrder) ([]model.SysUser, error)

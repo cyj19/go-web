@@ -72,6 +72,6 @@ func queryByCondition(db *gorm.DB, model interface{}, whereOrder []model.WhereOr
 	return tx
 }
 
-func deleteBatch(db *gorm.DB, model interface{}, ids []uint64) error {
+func batchDelete(db *gorm.DB, model interface{}, ids []uint64) error {
 	return db.Where("id in ?", ids).Delete(model).Error
 }

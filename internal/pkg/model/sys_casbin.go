@@ -19,3 +19,9 @@ type SysCasbinPage struct {
 	SysCasbin
 	PageInfo
 }
+
+type SysRoleCasbin struct {
+	Kyeword string `json:"keyword"` // 按角色，对应casbin的v0
+	Path    string `json:"path"`    // 对应casbin的v1
+	Method  string `josn:"method"`  // 对应casbin的v2
+}

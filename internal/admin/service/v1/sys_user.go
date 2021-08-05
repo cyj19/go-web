@@ -9,7 +9,7 @@ import (
 type SysUserSrv interface {
 	Update(user *model.SysUser) error
 	UpdateRoleForUser(cd *model.CreateDelete) error
-	DeleteBatch(ids []uint64) error
+	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysUser, error)
 	GetByUsername(username string) (*model.SysUser, error)
 	GetList(user *model.SysUser) ([]model.SysUser, error)
@@ -40,8 +40,8 @@ func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
 	return u.factory.SysUser().UpdateRoleForUser(cd)
 }
 
-func (u *userService) DeleteBatch(ids []uint64) error {
-	return u.factory.SysUser().DeleteBatch(ids)
+func (u *userService) BatchDelete(ids []uint64) error {
+	return u.factory.SysUser().BatchDelete(ids)
 }
 
 func (u *userService) GetById(id uint64) (*model.SysUser, error) {

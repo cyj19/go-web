@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (a *SysApiHandler) DeleteBatch(c *gin.Context) {
+func (a *SysApiHandler) BatchDelete(c *gin.Context) {
 	var param model.IdParam
 	err := c.ShouldBind(&param)
 	if err != nil {
@@ -16,7 +16,7 @@ func (a *SysApiHandler) DeleteBatch(c *gin.Context) {
 		return
 	}
 	ids := util.Str2Uint64Array(param.Ids)
-	err = a.srv.SysApi().DeleteBatch(ids)
+	err = a.srv.SysApi().BatchDelete(ids)
 	if err != nil {
 		log.Fatalf("删除接口失败：%v", err)
 		return

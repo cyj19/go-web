@@ -8,7 +8,7 @@ import (
 type SysMenuSrv interface {
 	Create(menu *model.SysMenu) error
 	Update(menu *model.SysMenu) error
-	DeleteBatch(ids []uint64) error
+	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysMenu, error)
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
@@ -32,8 +32,8 @@ func (m *menuService) Update(menu *model.SysMenu) error {
 	return m.factory.SysMenu().Update(menu)
 }
 
-func (m *menuService) DeleteBatch(ids []uint64) error {
-	return m.factory.SysMenu().DeleteBatch(ids)
+func (m *menuService) BatchDelete(ids []uint64) error {
+	return m.factory.SysMenu().BatchDelete(ids)
 }
 
 func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {

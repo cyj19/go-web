@@ -3,6 +3,7 @@ package admin
 import (
 	"fmt"
 
+	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 
 	"go-web/internal/admin/api/v1/user"
@@ -13,11 +14,11 @@ import (
 )
 
 // 初始化路由
-func Router(factoryIns store.Factory) *gin.Engine {
+func Router(factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	// 创建一个没有中间件的路由
 	g := gin.New()
 
-	userHandler := user.NewSysUserHandler(factoryIns)
+	userHandler := user.NewSysUserHandler(factoryIns, enforcer)
 	// 初始化go-jwt中间件
 	authMiddleware, err := middleware.InitGinJWTMiddleware(userHandler.Login)
 	if err != nil {
@@ -29,10 +30,10 @@ func Router(factoryIns store.Factory) *gin.Engine {
 	v1 := apiRouter.Group(configuration.Server.ApiVersion)
 	// 所有路由都需要token校验
 	//v1.Use(authMiddleware.MiddlewareFunc())
-	router.InitBaseRouter(v1, authMiddleware)             // 注册基础路由
-	router.InitUserRouter(v1, factoryIns, authMiddleware) // 注册用户路由
-	router.InitRoleRouter(v1, factoryIns, authMiddleware) // 注册角色路由
-	router.InitMenuRouter(v1, factoryIns, authMiddleware) // 注册菜单路由
-	router.InitApiRouter(v1, factoryIns, authMiddleware)  //注册接口路由
+	router.InitBaseRouter(v1, authMiddleware)                       // 注册基础路由
+	router.InitUserRouter(v1, factoryIns, enforcer, authMiddleware) // 注册用户路由
+	router.InitRoleRouter(v1, factoryIns, enforcer, authMiddleware) // 注册角色路由
+	router.InitMenuRouter(v1, factoryIns, enforcer, authMiddleware) // 注册菜单路由
+	router.InitApiRouter(v1, factoryIns, enforcer, authMiddleware)  //注册接口路由
 	return g
 }

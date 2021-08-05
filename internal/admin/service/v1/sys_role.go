@@ -8,7 +8,7 @@ import (
 type SysRoleSrv interface {
 	Create(r *model.SysRole) error
 	Update(r *model.SysRole) error
-	DeleteBatch(ids []uint64) error
+	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysRole, error)
 	GetByName(name string) (*model.SysRole, error)
 	GetList(r *model.SysRole) ([]model.SysRole, error)
@@ -31,8 +31,8 @@ func (r *roleService) Update(role *model.SysRole) error {
 	return r.factory.SysRole().Update(role)
 }
 
-func (r *roleService) DeleteBatch(ids []uint64) error {
-	return r.factory.SysRole().DeleteBatch(ids)
+func (r *roleService) BatchDelete(ids []uint64) error {
+	return r.factory.SysRole().BatchDelete(ids)
 }
 
 func (r *roleService) GetById(id uint64) (*model.SysRole, error) {

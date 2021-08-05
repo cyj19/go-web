@@ -6,16 +6,18 @@ import (
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/model"
+
+	"github.com/casbin/casbin/v2"
 )
 
 // 初始化数据
-func InitData(factoryIns store.Factory) {
+func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	configuration := initialize.GetConfiguration()
 	if !configuration.Server.InitData {
 		return
 	}
 
-	service := srvv1.NewService(factoryIns)
+	service := srvv1.NewService(factoryIns, enforcer)
 
 	// 初始化角色
 	newRoles := make([]model.SysRole, 0)
@@ -115,6 +117,10 @@ func InitData(factoryIns store.Factory) {
 	// 生成菜单，先创建父菜单，再创建子菜单
 	generateMenu(0, menus, roles[0], service)
 
+	// 初始化接口
+	apis := mockSysApi()
+	service.Create(apis)
+
 	// 初始化用户
 	newUsers := make([]model.SysUser, 0)
 
@@ -198,4 +204,16 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 
 	}
 
+}
+
+// 初始化的接口数据
+func mockSysApi() []model.SysApi {
+	return []model.SysApi{
+		{
+			Method:   "post",
+			Path:     "/v1/base/login",
+			Category: "base",
+			Creator:  "系统创建",
+		},
+	}
 }

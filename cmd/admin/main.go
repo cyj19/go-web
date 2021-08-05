@@ -36,12 +36,13 @@ func main() {
 
 	// 初始化Casbin
 	initialize.Casbin()
+	enforcer := initialize.GetEnforcerIns()
 
 	// 初始化数据
-	admin.InitData(factoryIns)
+	admin.InitData(factoryIns, enforcer)
 
 	// 初始化路由
-	g := admin.Router(factoryIns)
+	g := admin.Router(factoryIns, enforcer)
 	configuration := initialize.GetConfiguration()
 	host := "0.0.0.0"
 	port := configuration.Server.Port

@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -27,4 +28,8 @@ func Str2Uint64(str string) uint64 {
 		return 0
 	}
 	return num
+}
+
+func Uint642Str(num uint64) string {
+	return fmt.Sprintf("%d", num)
 }

@@ -3,6 +3,8 @@ package user
 import (
 	srvv1 "go-web/internal/admin/service/v1"
 	"go-web/internal/admin/store"
+
+	"github.com/casbin/casbin/v2"
 )
 
 type SysUserHandler struct {
@@ -10,9 +12,9 @@ type SysUserHandler struct {
 	factory store.Factory
 }
 
-func NewSysUserHandler(factory store.Factory) *SysUserHandler {
+func NewSysUserHandler(factory store.Factory, enforcer *casbin.Enforcer) *SysUserHandler {
 	return &SysUserHandler{
-		srv:     srvv1.NewService(factory),
+		srv:     srvv1.NewService(factory, enforcer),
 		factory: factory,
 	}
 }

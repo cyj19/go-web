@@ -15,12 +15,16 @@ func newSysApi(ds *datastore) store.SysApiStore {
 	return &sysApi{db: ds.db}
 }
 
+func (a *sysApi) Create(api *model.SysApi) error {
+	return a.db.Create(api).Error
+}
+
 func (a *sysApi) Update(api *model.SysApi) error {
 	return a.db.Updates(api).Error
 }
 
-func (a *sysApi) DeleteBatch(ids []uint64) error {
-	return deleteBatch(a.db, &model.SysApi{}, ids)
+func (a *sysApi) BatchDelete(ids []uint64) error {
+	return batchDelete(a.db, &model.SysApi{}, ids)
 }
 
 func (a *sysApi) GetById(id uint64) (*model.SysApi, error) {

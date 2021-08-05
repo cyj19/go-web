@@ -25,8 +25,8 @@ func (m *menu) Update(menu *model.SysMenu) error {
 	return m.db.Save(menu).Error
 }
 
-func (m *menu) DeleteBatch(ids []uint64) error {
-	return deleteBatch(m.db, &model.SysMenu{}, ids)
+func (m *menu) BatchDelete(ids []uint64) error {
+	return batchDelete(m.db, &model.SysMenu{}, ids)
 }
 
 func (m *menu) GetById(id uint64) (*model.SysMenu, error) {
