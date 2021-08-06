@@ -8,6 +8,9 @@ import (
 
 type SysCasbinSrv interface {
 	GetRoleCasbins(roleCasbin model.SysRoleCasbin) []model.SysRoleCasbin
+	BatchDeleteRoleCasbins(roleCasbins []model.SysRoleCasbin) (bool, error)
+	CreateRoleCasbin(roleCasbin model.SysRoleCasbin) (bool, error)
+	BatchCreateRoleCasbins(roleCasbins []model.SysRoleCasbin) (bool, error)
 }
 
 type casbinService struct {

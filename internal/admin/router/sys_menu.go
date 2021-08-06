@@ -3,7 +3,6 @@ package router
 import (
 	"go-web/internal/admin/api/v1/menu"
 	"go-web/internal/admin/store"
-	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/middleware"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
@@ -15,7 +14,7 @@ import (
 func InitMenuRouter(r *gin.RouterGroup, factoryIns store.Factory, enforcer *casbin.Enforcer, authMiddleware *jwt.GinJWTMiddleware) {
 
 	menuv1 := r.Group("/menu")
-	menuv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
+	menuv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(factoryIns, enforcer))
 	{
 		menuHandler := menu.NewSysMenuHandler(factoryIns, enforcer)
 

@@ -6,6 +6,8 @@ import (
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/model"
+	"go-web/internal/pkg/util"
+	"strings"
 
 	"github.com/casbin/casbin/v2"
 )
@@ -118,8 +120,64 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	generateMenu(0, menus, roles[0], service)
 
 	// 初始化接口
-	apis := mockSysApi()
-	service.Create(apis)
+	apis := mockSysApi(configuration.Server.ApiVersion)
+	newApis := make([]model.SysApi, 0)
+	newRoleCasbins := make([]model.SysRoleCasbin, 0)
+	for _, api := range apis {
+		whereOrder := model.WhereOrder{Where: "method = ? and path = ?", Value: []interface{}{api.Method, api.Path}}
+		oldApis, err := service.SysApi().GetList(whereOrder)
+		if err != nil || len(oldApis) == 0 {
+			newApis = append(newApis, api)
+			p := strings.TrimPrefix(api.Path, "/"+configuration.Server.ApiVersion)
+
+			// 不需要权限验证的接口不加入casbin规则
+			basePaths := map[string]string{
+				"/base/login":         "",
+				"/base/logout":        "",
+				"/base/refresh_token": "",
+			}
+
+			if _, ok := basePaths[p]; ok {
+				continue
+			}
+			// 构建casbin规则
+			// 管理员拥有所有接口权限
+			newRoleCasbins = append(newRoleCasbins, model.SysRoleCasbin{
+				Kyeword: util.Uint642Str(roles[0].Id),
+				Path:    api.Path,
+				Method:  api.Method,
+			})
+
+			// 公共接口
+			publicPaths := map[string]string{
+				"/user/info": "",
+			}
+
+			if _, ok := publicPaths[p]; ok {
+				for i := 1; i < len(roles); i++ {
+					// 其他角色赋予基础接口权限
+					newRoleCasbins = append(newRoleCasbins, model.SysRoleCasbin{
+						Kyeword: util.Uint642Str(roles[i].Id),
+						Path:    api.Path,
+						Method:  api.Method,
+					})
+				}
+
+			}
+		}
+	}
+	if len(newApis) > 0 {
+		err := service.Create(&newApis)
+		if err != nil {
+			panic(fmt.Errorf("初始化接口失败：%v", err))
+		}
+	}
+	if len(newRoleCasbins) > 0 {
+		_, err := service.SysCasbin().BatchCreateRoleCasbins(newRoleCasbins)
+		if err != nil {
+			panic(fmt.Errorf("初始化接口权限失败：%v", err))
+		}
+	}
 
 	// 初始化用户
 	newUsers := make([]model.SysUser, 0)
@@ -207,143 +265,150 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 }
 
 // 初始化的接口数据
-func mockSysApi() []model.SysApi {
+func mockSysApi(version string) []model.SysApi {
+	apiVersion := "/" + version
 	return []model.SysApi{
 		{
 			Method:   "POST",
-			Path:     "/v1/base/login",
+			Path:     apiVersion + "/base/login",
 			Category: "base",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "GET",
-			Path:     "/v1/base/logout",
+			Path:     apiVersion + "/base/logout",
 			Category: "base",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "GET",
-			Path:     "/v1/base/refresh_token",
+			Path:     apiVersion + "/base/refresh_token",
 			Category: "base",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/user/add",
+			Path:     apiVersion + "/user/add",
 			Category: "user",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "DELETE",
-			Path:     "/v1/user/delete",
+			Path:     apiVersion + "/user/delete",
 			Category: "user",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "PATCH",
-			Path:     "/v1/user/update",
+			Path:     apiVersion + "/user/update",
 			Category: "user",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "PATCH",
-			Path:     "/v1/user/role/update",
+			Path:     apiVersion + "/user/role/update",
 			Category: "user",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/user/page",
+			Path:     apiVersion + "/user/page",
 			Category: "user",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/role/add",
+			Path:     apiVersion + "/role/add",
 			Category: "role",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "DELETE",
-			Path:     "/v1/role/delete",
+			Path:     apiVersion + "/role/delete",
 			Category: "role",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "PATCH",
-			Path:     "/v1/role/update",
+			Path:     apiVersion + "/role/update",
 			Category: "role",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "PATCH",
-			Path:     "/v1/role/menu/update",
+			Path:     apiVersion + "/role/menu/update",
+			Category: "role",
+			Creator:  "系统创建",
+		},
+		{
+			Method:   "PATCH",
+			Path:     apiVersion + "/role/api/update",
 			Category: "role",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/role/list",
+			Path:     apiVersion + "/role/list",
 			Category: "role",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/role/page",
+			Path:     apiVersion + "/role/page",
 			Category: "role",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/menu/add",
+			Path:     apiVersion + "/menu/add",
 			Category: "menu",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "PATCH",
-			Path:     "/v1/menu/update",
+			Path:     apiVersion + "/menu/update",
 			Category: "menu",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/menu/list",
+			Path:     apiVersion + "/menu/list",
 			Category: "menu",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/menu/page",
+			Path:     apiVersion + "/menu/page",
 			Category: "menu",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/api/add",
+			Path:     apiVersion + "/api/add",
 			Category: "api",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "DELETE",
-			Path:     "/v1/api/delete",
+			Path:     apiVersion + "/api/delete",
 			Category: "api",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "PATCH",
-			Path:     "/v1/api/update",
+			Path:     apiVersion + "/api/update",
 			Category: "api",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/api/list",
+			Path:     apiVersion + "/api/list",
 			Category: "api",
 			Creator:  "系统创建",
 		},
 		{
 			Method:   "POST",
-			Path:     "/v1/api/page",
+			Path:     apiVersion + "/api/page",
 			Category: "api",
 			Creator:  "系统创建",
 		},

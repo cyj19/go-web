@@ -3,7 +3,6 @@ package role
 import (
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
-	"go-web/pkg/errors"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -13,11 +12,11 @@ func (r *SysRoleHandler) Update(c *gin.Context) {
 	var role model.SysRole
 	err := c.ShouldBind(&role)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
+		log.Fatalf("参数绑定失败：%v", err)
 	}
 	err = r.srv.SysRole().Update(&role)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to update"), nil)
+		log.Fatalf("更新失败：%v", err)
 		return
 	}
 	util.WriteResponse(c, 200, nil, role)

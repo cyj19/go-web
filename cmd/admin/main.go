@@ -23,7 +23,7 @@ func main() {
 	// 初始化日志
 
 	// 初始化MySQL
-	initialize.MySQL(new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin))
+	initialize.MySQL(new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin), new(model.SysApi))
 
 	// 初始化操作工厂
 	factoryIns, err := mysql.GetMySQLFactory()

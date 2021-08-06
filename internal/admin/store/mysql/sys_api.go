@@ -36,7 +36,7 @@ func (a *sysApi) GetById(id uint64) (*model.SysApi, error) {
 func (a *sysApi) GetList(whereOrder ...model.WhereOrder) ([]model.SysApi, error) {
 	result := make([]model.SysApi, 0)
 	dbTemp := queryByCondition(a.db, &model.SysApi{}, whereOrder)
-	err := dbTemp.Find(result).Error
+	err := dbTemp.Find(&result).Error
 	return result, err
 }
 
@@ -51,7 +51,7 @@ func (a *sysApi) GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereO
 	if err != nil || count == 0 {
 		return nil, count, err
 	}
-	err = dbTemp.Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(result).Error
+	err = dbTemp.Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
 	return result, count, err
 
 }

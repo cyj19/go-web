@@ -1,12 +1,9 @@
 package middleware
 
 import (
-	"net/http"
 	"strings"
 
 	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
-	"go-web/pkg/errors"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -28,7 +25,6 @@ func AuthMiddleware(redisIns *redis.Client, skipper ...SkipperFunc) gin.HandlerF
 		}
 		tokenString := c.GetHeader("Authorization")
 		if tokenString == "" {
-			util.WriteResponse(c, http.StatusUnauthorized, errors.New("权限不足"), nil)
 			c.Abort()
 			return
 		}
@@ -36,7 +32,6 @@ func AuthMiddleware(redisIns *redis.Client, skipper ...SkipperFunc) gin.HandlerF
 
 		token, claims, err := parseToken(tokenString, redisIns)
 		if err != nil || token == nil || !token.Valid {
-			util.WriteResponse(c, http.StatusUnauthorized, errors.New("权限不足"), nil)
 			c.Abort()
 			return
 		}

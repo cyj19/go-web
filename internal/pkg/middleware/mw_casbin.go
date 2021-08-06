@@ -1,32 +1,55 @@
 package middleware
 
 import (
-	"errors"
-	"fmt"
+	"strings"
 
-	"go-web/internal/pkg/util"
+	"go-web/internal/admin/api/v1/user"
+	"go-web/internal/admin/store"
+	"go-web/internal/pkg/initialize"
+	"go-web/internal/pkg/model"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 )
 
-func CasbinMiddleware(enforcer *casbin.Enforcer) gin.HandlerFunc {
+// 基于rbac
+func CasbinMiddleware(factory store.Factory, enforcer *casbin.Enforcer) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		p := c.Request.URL.Path
-		m := c.Request.Method
-		userId := c.MustGet("user")
+		configuration := initialize.GetConfiguration()
+		obj := c.Request.URL.Path
+		// 清除路径前缀
+		obj = strings.Replace(obj, "/"+configuration.Server.UrlPrefix, "", 1)
+		act := c.Request.Method
+		// 获取当前用户
+		currentUser := user.GetCurrentUser(c, factory, enforcer)
 
-		b, err := enforcer.Enforce(fmt.Sprintf("%d", userId), p, m)
-		if err != nil {
-			util.WriteResponse(c, 500, err, nil)
-			c.Abort()
-			return
-		} else if !b {
-			util.WriteResponse(c, 403, errors.New("无权限访问"), nil)
+		if !check(enforcer, currentUser, obj, act) {
 			c.Abort()
 			return
 		}
+
 		c.Next()
+	}
+
+}
+
+func check(enforcer *casbin.Enforcer, user *model.SysUser, obj string, act string) bool {
+	if len(user.Roles) <= 0 {
+		return false
+	}
+	var flag int
+
+	for i, role := range user.Roles {
+		b, _ := enforcer.Enforce(role.Id, obj, act)
+		if b {
+			return true
+		}
+		flag = i
+	}
+	if flag == len(user.Roles) {
+		return false
+	} else {
+		return true
 	}
 
 }
