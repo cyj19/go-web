@@ -66,6 +66,10 @@ func createSysRoleQueryCondition(param model.SysRole) []model.WhereOrder {
 	if param.Status != nil {
 		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
 	}
+	if param.Sort != nil {
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "sort = ?", Value: []interface{}{*param.Sort}})
+	}
+	whereOrders = append(whereOrders, model.WhereOrder{Order: "sort"})
 
 	return whereOrders
 }

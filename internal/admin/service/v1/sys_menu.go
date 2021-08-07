@@ -3,6 +3,7 @@ package v1
 import (
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/model"
+	"go-web/internal/pkg/util"
 )
 
 type SysMenuSrv interface {
@@ -13,6 +14,7 @@ type SysMenuSrv interface {
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error)
+	GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error)
 	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error)
 }
 
@@ -49,8 +51,36 @@ func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
 }
 
 func (m *menuService) GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error) {
-
 	return m.factory.SysMenu().GetList(whereOrders...)
+}
+
+func (m *menuService) GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error) {
+	// 创建role服务
+	rs := &roleService{factory: m.factory}
+	whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{ids}}
+	roles, err := rs.GetList(whereOrder)
+	if err != nil {
+		return nil, err
+	}
+	// 角色拥有的菜单
+	menus := make([]model.SysMenu, 0)
+	for i, role := range roles {
+		if i > 0 {
+			// 已有的不加入
+			for _, menu := range role.Menus {
+				// 判断菜单是否已存在
+				if !util.ContainsSysMenu(menus, menu) {
+					menus = append(menus, menu)
+				}
+			}
+		} else {
+			menus = append(menus, role.Menus...)
+		}
+
+	}
+	// 根据parentId 和 sort构建菜单树
+	tree := genMenuTree(0, menus)
+	return tree, nil
 }
 
 func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
@@ -68,4 +98,16 @@ func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.
 	}
 	page.SetPageNum(count)
 	return page, err
+}
+
+func genMenuTree(parentId uint64, menus []model.SysMenu) []model.SysMenu {
+	tree := make([]model.SysMenu, 0)
+	for _, menu := range menus {
+		if menu.ParentId == parentId {
+			// 递归遍历子菜单
+			menu.Children = genMenuTree(menu.Id, menus)
+			tree = append(tree, menu)
+		}
+	}
+	return tree
 }

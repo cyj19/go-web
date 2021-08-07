@@ -2,6 +2,7 @@ package menu
 
 import (
 	"errors"
+	"log"
 	"strconv"
 
 	"go-web/internal/pkg/model"
@@ -40,6 +41,21 @@ func (m *SysMenuHandler) GetList(c *gin.Context) {
 	util.WriteResponse(c, 200, nil, menus)
 }
 
+func (m *SysMenuHandler) GetMenusByRoleId(c *gin.Context) {
+	var param model.IdParam
+	err := c.ShouldBind(&param)
+	if err != nil {
+		log.Fatalf("参数绑定失败：%v", err)
+		return
+	}
+	menus, err := m.srv.SysMenu().GetMenusByRoleId(util.Str2Uint64Array(param.Ids))
+	if err != nil {
+		log.Fatalf("查询失败：%v", err)
+		return
+	}
+	util.WriteResponse(c, 200, nil, menus)
+}
+
 func (m *SysMenuHandler) GetPage(c *gin.Context) {
 	var param model.SysMenuPage
 	err := c.ShouldBind(&param)
@@ -68,6 +84,8 @@ func createSysMenuQueryCondition(param model.SysMenu) []model.WhereOrder {
 	if param.Status != nil {
 		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
 	}
+
+	whereOrders = append(whereOrders, model.WhereOrder{Order: "parent_id, sort"})
 
 	return whereOrders
 }

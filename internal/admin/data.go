@@ -38,9 +38,11 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	for i, value := range roles {
 		oldRole, err := service.SysRole().GetByName(value.Name)
 		if err != nil || oldRole == nil {
+			sort := uint(i)
+			value.Sort = &sort
 			newRoles = append(newRoles, value)
 		} else {
-			roles[i].Id = oldRole.Id
+			roles[i] = *oldRole
 		}
 	}
 
@@ -366,6 +368,12 @@ func mockSysApi(version string) []model.SysApi {
 			Creator:  "系统创建",
 		},
 		{
+			Method:   "DELETE",
+			Path:     apiVersion + "/menu/delete",
+			Category: "menu",
+			Creator:  "系统创建",
+		},
+		{
 			Method:   "PATCH",
 			Path:     apiVersion + "/menu/update",
 			Category: "menu",
@@ -374,6 +382,12 @@ func mockSysApi(version string) []model.SysApi {
 		{
 			Method:   "POST",
 			Path:     apiVersion + "/menu/list",
+			Category: "menu",
+			Creator:  "系统创建",
+		},
+		{
+			Method:   "GET",
+			Path:     apiVersion + "/menu/all",
 			Category: "menu",
 			Creator:  "系统创建",
 		},

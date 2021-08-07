@@ -20,8 +20,9 @@ func InitMenuRouter(r *gin.RouterGroup, factoryIns store.Factory, enforcer *casb
 
 		menuv1.POST("/add", menuHandler.Create)
 		menuv1.DELETE("/delete", menuHandler.BatchDelete)
-		menuv1.PUT("/update", menuHandler.Update)
+		menuv1.PATCH("/update", menuHandler.Update)
 		menuv1.POST("/list", menuHandler.GetList)
+		menuv1.GET("/all", menuHandler.GetMenusByRoleId)
 		menuv1.POST("/page", menuHandler.GetPage)
 	}
 }

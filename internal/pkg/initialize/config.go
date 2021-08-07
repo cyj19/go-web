@@ -12,7 +12,7 @@ import (
 
 const (
 	confileType = "yml"
-	configPath  = "../../config"
+	configPath  = "../../configs"
 )
 
 var box = new(global.CustomConfBox)

@@ -77,14 +77,16 @@ func (r *role) GetById(id uint64) (*model.SysRole, error) {
 
 func (r *role) GetByName(name string) (*model.SysRole, error) {
 	result := &model.SysRole{}
-	err := r.db.Preload("Menus").Where("name = ?", name).First(result).Error
+	err := r.db.Preload("Menus").Where("name = ?", name).Order("sort").First(result).Error
 	return result, err
 }
 
 func (r *role) GetList(whereOrder ...model.WhereOrder) ([]model.SysRole, error) {
 	result := make([]model.SysRole, 0)
 	tx := queryByCondition(r.db, &model.SysRole{}, whereOrder)
-	err := tx.Preload("Menus").Find(&result).Error
+	err := tx.Preload("Menus", func(db *gorm.DB) *gorm.DB {
+		return db.Order("parent_id, sort")
+	}).Find(&result).Error
 	return result, err
 }
 
