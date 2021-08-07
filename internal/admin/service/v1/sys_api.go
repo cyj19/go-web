@@ -138,6 +138,7 @@ func (a *apiService) GetPage(pageIndex int, pageSize int, whereOrders ...model.W
 	list, count, err := a.factory.SysApi().GetPage(pageIndex, pageSize, whereOrders...)
 	page := &model.Page{
 		Records:  list,
+		Total:    count,
 		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
 	}
 	page.SetPageNum(count)

@@ -69,6 +69,7 @@ func (u *userService) GetPage(pageIndex int, pageSize int, whereOrders ...model.
 	list, count, err := u.factory.SysUser().GetPage(pageIndex, pageSize, whereOrders...)
 	page := &model.Page{
 		Records:  list,
+		Total:    count,
 		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
 	}
 	page.SetPageNum(count)

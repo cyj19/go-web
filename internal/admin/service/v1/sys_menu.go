@@ -63,6 +63,7 @@ func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.
 	list, count, err := m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrders...)
 	page := &model.Page{
 		Records:  list,
+		Total:    count,
 		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
 	}
 	page.SetPageNum(count)
