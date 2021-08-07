@@ -44,17 +44,11 @@ func (r *SysRoleHandler) GetPage(c *gin.Context) {
 		return
 	}
 	whereOrders := createSysRoleQueryCondition(param.SysRole)
-	roles, count, err := r.srv.SysRole().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+	page, err := r.srv.SysRole().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get role page"), nil)
 		return
 	}
-
-	page := &model.Page{
-		Records:  roles,
-		PageInfo: model.PageInfo{PageIndex: param.PageIndex, PageSize: param.PageSize},
-	}
-	page.SetPageNum(count)
 	util.WriteResponse(c, 200, nil, page)
 }
 
@@ -68,6 +62,9 @@ func createSysRoleQueryCondition(param model.SysRole) []model.WhereOrder {
 	if param.NameZh != "" {
 		v := "%" + param.NameZh + "%"
 		whereOrders = append(whereOrders, model.WhereOrder{Where: "name_zh like ?", Value: []interface{}{v}})
+	}
+	if param.Status != nil {
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
 	}
 
 	return whereOrders

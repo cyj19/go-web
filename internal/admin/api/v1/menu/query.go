@@ -48,16 +48,13 @@ func (m *SysMenuHandler) GetPage(c *gin.Context) {
 		return
 	}
 	whereOrders := createSysMenuQueryCondition(param.SysMenu)
-	menus, count, err := m.srv.SysMenu().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+
+	page, err := m.srv.SysMenu().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, 500, errors.New("failed to get menu page"), nil)
 		return
 	}
-	page := &model.Page{
-		Records:  menus,
-		PageInfo: model.PageInfo{PageIndex: param.PageIndex, PageSize: param.PageSize},
-	}
-	page.SetPageNum(count)
+
 	util.WriteResponse(c, 200, nil, page)
 }
 
@@ -68,8 +65,9 @@ func createSysMenuQueryCondition(param model.SysMenu) []model.WhereOrder {
 		v := "%" + param.Name + "%"
 		whereOrders = append(whereOrders, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
 	}
-
-	whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
+	if param.Status != nil {
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
+	}
 
 	return whereOrders
 }

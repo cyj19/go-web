@@ -60,7 +60,7 @@ func identityHandler(c *gin.Context) interface{} {
 func authorizator(data interface{}, c *gin.Context) bool {
 	if v, ok := data.(map[string]interface{}); ok {
 		if user, ok := v["user"].(string); ok {
-			userId := util.StrToUint64(user)
+			userId := util.Str2Uint64(user)
 			// 把userId设置到上下文中
 			c.Set("user", userId)
 			return true

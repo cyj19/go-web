@@ -50,16 +50,17 @@ func (r *role) UpdateMenuForRole(cd *model.CreateDelete) error {
 		createMenus := make([]model.SysMenu, 0)
 		for _, v := range cd.Create {
 			createMenus = append(createMenus, model.SysMenu{Model: model.Model{Id: v}})
-			// 添加关联
-			err = tx.Model(role).Association("Menus").Append(createMenus)
-			if err != nil {
-				// 回滚事务
-				tx.Rollback()
-				return err
-			}
+		}
+		// 添加关联
+		err = tx.Model(role).Association("Menus").Append(createMenus)
+		if err != nil {
+			// 回滚事务
+			tx.Rollback()
+			return err
 		}
 	}
-
+	// 提交事务
+	tx.Commit()
 	return nil
 
 }

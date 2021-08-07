@@ -49,17 +49,12 @@ func (u *SysUserHandler) GetPage(c *gin.Context) {
 		return
 	}
 	whereOrders := createSysUserQueryCondition(param.SysUser)
-	list, count, err := u.srv.SysUser().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+	page, err := u.srv.SysUser().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
 
-	page := &model.Page{
-		Records:  list,
-		PageInfo: model.PageInfo{PageIndex: param.PageIndex, PageSize: param.PageSize},
-	}
-	page.SetPageNum(count)
 	util.WriteResponse(c, 0, nil, page)
 }
 
@@ -85,12 +80,16 @@ func (u *SysUserHandler) Login(c *gin.Context) (interface{}, error) {
 func createSysUserQueryCondition(param model.SysUser) []model.WhereOrder {
 	whereOrders := make([]model.WhereOrder, 0)
 
+	if param.Id > 0 {
+		v := param.Id
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "id = ?", Value: []interface{}{v}})
+	}
 	if param.Username != "" {
 		v := "%" + param.Username + "%"
 		whereOrders = append(whereOrders, model.WhereOrder{Where: "username like ?", Value: []interface{}{v}})
 	}
 	if param.Status != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{param.Status}})
+		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
 	}
 
 	return whereOrders

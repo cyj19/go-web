@@ -151,6 +151,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 			// 公共接口
 			publicPaths := map[string]string{
 				"/user/info": "",
+				"/menu/list": "",
 			}
 
 			if _, ok := publicPaths[p]; ok {

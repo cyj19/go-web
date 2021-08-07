@@ -19,7 +19,7 @@ type Claims struct {
 	jwt.StandardClaims
 }
 
-//sql的条件
+//sql的条件，可以自由再添加or,limit,offset
 type WhereOrder struct {
 	Order string
 	Where string

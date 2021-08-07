@@ -32,20 +32,12 @@ func (a *SysApiHandler) GetPage(c *gin.Context) {
 		return
 	}
 	whereOrders := createSysApiQueryCondition(param.SysApi)
-	apis, count, err := a.srv.SysApi().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+	page, err := a.srv.SysApi().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
 		log.Fatalf("查询失败：%v", err)
 		return
 	}
-	page := model.Page{
-		Records: apis,
-		Total:   count,
-		PageInfo: model.PageInfo{
-			PageIndex: param.PageIndex,
-			PageSize:  param.PageSize,
-		},
-	}
-	page.SetPageNum(count)
+
 	util.WriteResponse(c, 200, nil, page)
 }
 

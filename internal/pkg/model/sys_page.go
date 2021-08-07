@@ -15,6 +15,10 @@ type PageInfo struct {
 }
 
 func (p *Page) SetPageNum(count int64) {
+	if count == 0 {
+		p.PageNum = 0
+		return
+	}
 	c := int(count)
 	if c%p.PageSize == 0 {
 		p.PageNum = c / p.PageSize

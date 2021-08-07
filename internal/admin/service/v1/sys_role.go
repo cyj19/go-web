@@ -18,7 +18,7 @@ type SysRoleSrv interface {
 	GetById(id uint64) (*model.SysRole, error)
 	GetByName(name string) (*model.SysRole, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysRole, error)
-	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysRole, int64, error)
+	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error)
 }
 
 type roleService struct {
@@ -126,9 +126,18 @@ func (r *roleService) GetList(whereOrders ...model.WhereOrder) ([]model.SysRole,
 	return r.factory.SysRole().GetList(whereOrders...)
 }
 
-func (r *roleService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysRole, int64, error) {
+func (r *roleService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
 	if pageIndex <= 0 {
 		pageIndex = 1
 	}
-	return r.factory.SysRole().GetPage(pageIndex, pageSize, whereOrders...)
+	if pageSize <= 0 {
+		pageSize = defaultSize
+	}
+	list, count, err := r.factory.SysRole().GetPage(pageIndex, pageSize, whereOrders...)
+	page := &model.Page{
+		Records:  list,
+		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
+	}
+	page.SetPageNum(count)
+	return page, err
 }

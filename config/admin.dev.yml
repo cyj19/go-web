@@ -9,7 +9,7 @@ server:
   # api版本
   api-version: v1
   # 初始化数据
-  init-data: true
+  init-data: false
 
 #MySQL 数据库相关配置
 mysql:

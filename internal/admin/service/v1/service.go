@@ -20,6 +20,8 @@ type service struct {
 	enforcer *casbin.Enforcer
 }
 
+const defaultSize = 10
+
 //工厂模式，创建service
 func NewService(factory store.Factory, enforcer *casbin.Enforcer) Service {
 	return &service{

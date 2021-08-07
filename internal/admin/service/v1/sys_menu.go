@@ -13,7 +13,7 @@ type SysMenuSrv interface {
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error)
-	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysMenu, int64, error)
+	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error)
 }
 
 type menuService struct {
@@ -53,9 +53,18 @@ func (m *menuService) GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu,
 	return m.factory.SysMenu().GetList(whereOrders...)
 }
 
-func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysMenu, int64, error) {
+func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
 	if pageIndex <= 0 {
 		pageIndex = 1
 	}
-	return m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrders...)
+	if pageSize <= 0 {
+		pageSize = defaultSize
+	}
+	list, count, err := m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrders...)
+	page := &model.Page{
+		Records:  list,
+		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
+	}
+	page.SetPageNum(count)
+	return page, err
 }

@@ -13,7 +13,7 @@ type SysUserSrv interface {
 	GetById(id uint64) (*model.SysUser, error)
 	GetByUsername(username string) (*model.SysUser, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysUser, error)
-	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysUser, int64, error)
+	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error)
 	Login(username, password string) (*model.SysUser, error)
 }
 
@@ -59,8 +59,20 @@ func (u *userService) GetList(whereOrders ...model.WhereOrder) ([]model.SysUser,
 
 }
 
-func (u *userService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysUser, int64, error) {
-	return u.factory.SysUser().GetPage(pageIndex, pageSize, whereOrders...)
+func (u *userService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
+	if pageIndex <= 0 {
+		pageIndex = 1
+	}
+	if pageSize <= 0 {
+		pageSize = defaultSize
+	}
+	list, count, err := u.factory.SysUser().GetPage(pageIndex, pageSize, whereOrders...)
+	page := &model.Page{
+		Records:  list,
+		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
+	}
+	page.SetPageNum(count)
+	return page, err
 
 }
 

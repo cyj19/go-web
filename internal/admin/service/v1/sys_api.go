@@ -14,7 +14,7 @@ type SysApiSrv interface {
 	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysApi, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysApi, error)
-	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysApi, int64, error)
+	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error)
 }
 
 type apiService struct {
@@ -128,9 +128,18 @@ func (a *apiService) GetList(whereOrders ...model.WhereOrder) ([]model.SysApi, e
 	return a.factory.SysApi().GetList(whereOrders...)
 }
 
-func (a *apiService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) ([]model.SysApi, int64, error) {
+func (a *apiService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
 	if pageIndex <= 0 {
 		pageIndex = 1
 	}
-	return a.factory.SysApi().GetPage(pageIndex, pageSize, whereOrders...)
+	if pageSize <= 0 {
+		pageSize = defaultSize
+	}
+	list, count, err := a.factory.SysApi().GetPage(pageIndex, pageSize, whereOrders...)
+	page := &model.Page{
+		Records:  list,
+		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
+	}
+	page.SetPageNum(count)
+	return page, err
 }
