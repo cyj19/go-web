@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/model"
+	"go-web/internal/pkg/util"
 )
 
 type SysUserSrv interface {
@@ -53,8 +54,6 @@ func (u *userService) GetByUsername(username string) (*model.SysUser, error) {
 }
 
 func (u *userService) GetList(whereOrders ...model.WhereOrder) ([]model.SysUser, error) {
-	//构建查询条件
-	//whereOrder := createSysUserQueryCondition(user)
 	return u.factory.SysUser().GetList(whereOrders...)
 
 }
@@ -78,6 +77,7 @@ func (u *userService) GetPage(pageIndex int, pageSize int, whereOrders ...model.
 }
 
 func (u *userService) Login(username, password string) (*model.SysUser, error) {
-	return u.factory.SysUser().Login(username, password)
+
+	return u.factory.SysUser().Login(username, util.EncryptionPsw(password))
 
 }

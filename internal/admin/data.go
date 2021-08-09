@@ -188,12 +188,12 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	users := []model.SysUser{
 		{
 			Username: "admin",
-			Password: "123456",
+			Password: util.EncryptionPsw("123456"),
 			Roles:    []model.SysRole{roles[0]}, // 默认拥有admin角色
 		},
 		{
 			Username: "guest",
-			Password: "123456",
+			Password: util.EncryptionPsw("123456"),
 			Roles:    []model.SysRole{roles[1]}, // 默认拥有guest角色
 		},
 	}

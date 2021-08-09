@@ -17,7 +17,7 @@ func (u *SysUserHandler) Create(c *gin.Context) {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
-
+	param.Password = util.EncryptionPsw(param.Password)
 	err = u.srv.Create(&param)
 	if err != nil {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
