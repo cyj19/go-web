@@ -10,6 +10,24 @@ import (
 	"go-web/internal/pkg/util"
 )
 
+func (u *SysUserHandler) GetUserInfo(c *gin.Context) {
+	currentUser := u.GetCurrentUser(c)
+	var userResp model.SysUserResponse
+	util.Struct2Struct(currentUser, &userResp)
+	util.WriteResponse(c, 0, nil, userResp)
+}
+
+func (u *SysUserHandler) GetCurrentUser(c *gin.Context) model.SysUser {
+	userId, exist := c.Get("user")
+	var currentUser *model.SysUser
+	if !exist {
+		return *currentUser
+	}
+	// 查询用户
+	currentUser, _ = u.srv.SysUser().GetById(userId.(uint64))
+	return *currentUser
+}
+
 //查询
 func (u *SysUserHandler) GetByUsername(c *gin.Context) {
 
@@ -18,7 +36,9 @@ func (u *SysUserHandler) GetByUsername(c *gin.Context) {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
-	util.WriteResponse(c, 0, nil, user)
+	var userResp model.SysUserResponse
+	util.Struct2Struct(user, &userResp)
+	util.WriteResponse(c, 0, nil, userResp)
 
 }
 
@@ -37,8 +57,9 @@ func (u *SysUserHandler) GetList(c *gin.Context) {
 		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
 		return
 	}
-
-	util.WriteResponse(c, 0, nil, list)
+	var userRespList []model.SysUserResponse
+	util.Struct2Struct(list, &userRespList)
+	util.WriteResponse(c, 0, nil, userRespList)
 }
 
 func (u *SysUserHandler) GetPage(c *gin.Context) {

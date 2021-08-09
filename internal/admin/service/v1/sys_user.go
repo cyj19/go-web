@@ -66,8 +66,10 @@ func (u *userService) GetPage(pageIndex int, pageSize int, whereOrders ...model.
 		pageSize = defaultSize
 	}
 	list, count, err := u.factory.SysUser().GetPage(pageIndex, pageSize, whereOrders...)
+	var userRespList []model.SysUserResponse
+	util.Struct2Struct(list, &userRespList)
 	page := &model.Page{
-		Records:  list,
+		Records:  userRespList,
 		Total:    count,
 		PageInfo: model.PageInfo{PageIndex: pageIndex, PageSize: pageSize},
 	}

@@ -290,6 +290,12 @@ func mockSysApi(version string) []model.SysApi {
 			Creator:  "系统创建",
 		},
 		{
+			Method:   "GET",
+			Path:     apiVersion + "/user/info",
+			Category: "user",
+			Creator:  "系统创建",
+		},
+		{
 			Method:   "POST",
 			Path:     apiVersion + "/user/add",
 			Category: "user",

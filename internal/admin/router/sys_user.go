@@ -17,7 +17,7 @@ func InitUserRouter(r *gin.RouterGroup, factoryIns store.Factory, enforcer *casb
 	//userv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
 	{
 		userHandler := user.NewSysUserHandler(factoryIns, enforcer)
-
+		userv1.GET("/info", userHandler.GetUserInfo)
 		userv1.POST("/add", userHandler.Create)
 		userv1.DELETE("/delete", userHandler.BatchDelete)
 		userv1.PATCH("/update", userHandler.Update)

@@ -18,3 +18,11 @@ type SysUserPage struct {
 	SysUser
 	PageInfo
 }
+
+// 用户信息响应结构体，数据脱敏
+type SysUserResponse struct {
+	Model
+	Username string    `json:"username"`
+	Status   *bool     `json:"status"`
+	Roles    []SysRole `json:"roles"`
+}
