@@ -19,6 +19,8 @@ func Router(factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	g := gin.New()
 	// 添加全局异常处理中间件
 	g.Use(middleware.Exception)
+	// 添加全局跨域中间件
+	g.Use(middleware.Cors())
 
 	userHandler := user.NewSysUserHandler(factoryIns, enforcer)
 	// 初始化go-jwt中间件
