@@ -21,6 +21,7 @@ func main() {
 	initialize.Config("admin.dev.yml", "admin.prod.yml")
 
 	// 初始化日志
+	initialize.InitLogger()
 
 	// 初始化MySQL
 	initialize.MySQL(new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin), new(model.SysApi))

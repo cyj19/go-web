@@ -2,9 +2,12 @@ package global
 
 import (
 	"io/ioutil"
+	"log"
 
 	"github.com/spf13/viper"
 )
+
+var LoggerIns *log.Logger
 
 //自定义配置盒子，存放环境配置和对应的viper
 type CustomConfBox struct {
