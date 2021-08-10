@@ -3,7 +3,7 @@ package model
 //分页
 type Page struct {
 	Records interface{} `json:"records"`
-	Total   int64       `josn:"total"`
+	Total   int64       `json:"total"`
 	PageNum int         `json:"pageNum"`
 	PageInfo
 }

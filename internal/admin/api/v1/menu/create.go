@@ -2,8 +2,7 @@ package menu
 
 import (
 	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
-	"log"
+	"go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,14 +11,15 @@ func (m *SysMenuHandler) Create(c *gin.Context) {
 	var menu model.SysMenu
 	err := c.ShouldBind(&menu)
 	if err != nil {
-		log.Fatalf("参数绑定失败：%v", err)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 
 	err = m.srv.Create(&menu)
 	if err != nil {
-		log.Fatalf("创建菜单失败：%v", err)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, menu)
+
+	response.Success()
 }

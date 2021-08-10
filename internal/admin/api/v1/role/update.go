@@ -2,8 +2,7 @@ package role
 
 import (
 	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
-	"log"
+	"go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,44 +11,46 @@ func (r *SysRoleHandler) Update(c *gin.Context) {
 	var role model.SysRole
 	err := c.ShouldBind(&role)
 	if err != nil {
-		log.Fatalf("参数绑定失败：%v", err)
+		response.FailWithCode(response.ParameterBindingError)
 	}
 	err = r.srv.SysRole().Update(&role)
 	if err != nil {
-		log.Fatalf("更新失败：%v", err)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, role)
+
+	response.SuccessWithData(role)
 }
 
 func (r *SysRoleHandler) UpdateMenuForRole(c *gin.Context) {
 	var param model.CreateDelete
 	err := c.ShouldBind(&param)
 	if err != nil {
-		log.Fatalf("参数绑定失败：%v", err)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 
 	err = r.srv.SysRole().UpdateMenuForRole(&param)
 	if err != nil {
-		log.Fatalf("更新失败：%v", err)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, "")
+	response.Success()
 }
 
 func (r *SysRoleHandler) UpdateApiForRole(c *gin.Context) {
 	var param model.CreateDelete
 	err := c.ShouldBind(&param)
 	if err != nil {
-		log.Fatalf("参数绑定失败：%v", err)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 
 	err = r.srv.SysRole().UpdateApiForRole(&param)
 	if err != nil {
-		log.Fatalf("更新失败：%v", err)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, "")
+
+	response.Success()
 }

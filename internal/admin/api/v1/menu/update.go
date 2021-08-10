@@ -1,10 +1,8 @@
 package menu
 
 import (
-	"errors"
-
 	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
+	"go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,13 +11,14 @@ func (m *SysMenuHandler) Update(c *gin.Context) {
 	var menu model.SysMenu
 	err := c.ShouldBind(&menu)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	err = m.srv.SysMenu().Update(&menu)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to update menu"), nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, menu)
+
+	response.SuccessWithData(menu)
 }

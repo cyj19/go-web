@@ -1,9 +1,8 @@
 package menu
 
 import (
-	"log"
-
 	"go-web/internal/pkg/model"
+	"go-web/internal/pkg/response"
 	"go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
@@ -17,14 +16,15 @@ func (m *SysMenuHandler) BatchDelete(c *gin.Context) {
 	var param model.IdParam
 	err := c.ShouldBind(&param)
 	if err != nil {
-		log.Fatalf("参数绑定失败：%v", err)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	ids := util.Str2Uint64Array(param.Ids)
 	err = m.srv.SysMenu().BatchDelete(ids)
 	if err != nil {
-		log.Fatalf("删除菜单失败：%v", err)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, nil)
+
+	response.Success()
 }

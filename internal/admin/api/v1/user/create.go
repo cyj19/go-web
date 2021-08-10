@@ -1,9 +1,8 @@
 package user
 
 import (
-	"net/http"
-
 	"go-web/internal/pkg/model"
+	"go-web/internal/pkg/response"
 	"go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
@@ -14,15 +13,15 @@ func (u *SysUserHandler) Create(c *gin.Context) {
 	var param model.SysUser
 	err := c.ShouldBind(&param)
 	if err != nil {
-		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	param.Password = util.EncryptionPsw(param.Password)
 	err = u.srv.Create(&param)
 	if err != nil {
-		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
 
-	util.WriteResponse(c, 0, nil, param)
+	response.Success()
 }

@@ -1,11 +1,10 @@
 package menu
 
 import (
-	"errors"
-	"log"
 	"strconv"
 
 	"go-web/internal/pkg/model"
+	"go-web/internal/pkg/response"
 	"go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
@@ -14,64 +13,67 @@ import (
 func (m *SysMenuHandler) GetById(c *gin.Context) {
 	id, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
+		response.FailWithCode(response.InternalServerError)
 		return
 	}
 	menu, err := m.srv.SysMenu().GetById(uint64(id))
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to get menu"), nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, menu)
+
+	response.SuccessWithData(menu)
 }
 
 func (m *SysMenuHandler) GetList(c *gin.Context) {
 	var param model.SysMenu
 	err := c.ShouldBind(&param)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	whereOrders := createSysMenuQueryCondition(param)
 	menus, err := m.srv.SysMenu().GetList(whereOrders...)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to get menu list"), nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, menus)
+
+	response.SuccessWithData(menus)
 }
 
 func (m *SysMenuHandler) GetMenusByRoleId(c *gin.Context) {
 	var param model.IdParam
 	err := c.ShouldBind(&param)
 	if err != nil {
-		log.Fatalf("参数绑定失败：%v", err)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	menus, err := m.srv.SysMenu().GetMenusByRoleId(util.Str2Uint64Array(param.Ids))
 	if err != nil {
-		log.Fatalf("查询失败：%v", err)
+		response.FailWithMsg(err.Error())
 		return
 	}
-	util.WriteResponse(c, 200, nil, menus)
+
+	response.SuccessWithData(menus)
 }
 
 func (m *SysMenuHandler) GetPage(c *gin.Context) {
 	var param model.SysMenuPage
 	err := c.ShouldBind(&param)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to bind param"), nil)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	whereOrders := createSysMenuQueryCondition(param.SysMenu)
 
 	page, err := m.srv.SysMenu().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
-		util.WriteResponse(c, 500, errors.New("failed to get menu page"), nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
 
-	util.WriteResponse(c, 200, nil, page)
+	response.SuccessWithData(page)
 }
 
 func createSysMenuQueryCondition(param model.SysMenu) []model.WhereOrder {

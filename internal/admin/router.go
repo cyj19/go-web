@@ -17,6 +17,8 @@ import (
 func Router(factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	// 创建一个没有中间件的路由
 	g := gin.New()
+	// 添加全局异常处理中间件
+	g.Use(middleware.Exception)
 
 	userHandler := user.NewSysUserHandler(factoryIns, enforcer)
 	// 初始化go-jwt中间件
@@ -28,7 +30,7 @@ func Router(factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	configuration := initialize.GetConfiguration()
 	apiRouter := g.Group(configuration.Server.UrlPrefix)
 	v1 := apiRouter.Group(configuration.Server.ApiVersion)
-	// 所有路由都需要token校验
+
 	//v1.Use(authMiddleware.MiddlewareFunc())
 	router.InitBaseRouter(v1, authMiddleware)                       // 注册基础路由
 	router.InitUserRouter(v1, factoryIns, enforcer, authMiddleware) // 注册用户路由

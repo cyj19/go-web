@@ -2,11 +2,11 @@ package user
 
 import (
 	"fmt"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"go-web/internal/pkg/model"
+	"go-web/internal/pkg/response"
 	"go-web/internal/pkg/util"
 )
 
@@ -14,7 +14,7 @@ func (u *SysUserHandler) GetUserInfo(c *gin.Context) {
 	currentUser := u.GetCurrentUser(c)
 	var userResp model.SysUserResponse
 	util.Struct2Struct(currentUser, &userResp)
-	util.WriteResponse(c, 0, nil, userResp)
+	response.SuccessWithData(userResp)
 }
 
 func (u *SysUserHandler) GetCurrentUser(c *gin.Context) model.SysUser {
@@ -33,12 +33,12 @@ func (u *SysUserHandler) GetByUsername(c *gin.Context) {
 
 	user, err := u.srv.SysUser().GetByUsername(c.Param("name"))
 	if err != nil {
-		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
 	var userResp model.SysUserResponse
 	util.Struct2Struct(user, &userResp)
-	util.WriteResponse(c, 0, nil, userResp)
+	response.SuccessWithData(userResp)
 
 }
 
@@ -48,35 +48,35 @@ func (u *SysUserHandler) GetList(c *gin.Context) {
 	// 此处不能传入空指针，否则绑定失败
 	err := c.ShouldBind(&param)
 	if err != nil {
-		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	whereOrders := createSysUserQueryCondition(param)
 	list, err := u.srv.SysUser().GetList(whereOrders...)
 	if err != nil {
-		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
 	var userRespList []model.SysUserResponse
 	util.Struct2Struct(list, &userRespList)
-	util.WriteResponse(c, 0, nil, userRespList)
+	response.SuccessWithData(userRespList)
 }
 
 func (u *SysUserHandler) GetPage(c *gin.Context) {
 	var param model.SysUserPage
 	err := c.ShouldBind(&param)
 	if err != nil {
-		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
+		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
 	whereOrders := createSysUserQueryCondition(param.SysUser)
 	page, err := u.srv.SysUser().GetPage(param.PageIndex, param.PageSize, whereOrders...)
 	if err != nil {
-		util.WriteResponse(c, http.StatusInternalServerError, err, nil)
+		response.FailWithMsg(err.Error())
 		return
 	}
 
-	util.WriteResponse(c, 0, nil, page)
+	response.SuccessWithData(page)
 }
 
 // 使用go-jwt授权

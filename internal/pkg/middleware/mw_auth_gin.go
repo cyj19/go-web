@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"go-web/internal/pkg/initialize"
+	"go-web/internal/pkg/response"
 	"go-web/internal/pkg/util"
 	"go-web/pkg/model"
 	"time"
@@ -71,11 +72,11 @@ func authorizator(data interface{}, c *gin.Context) bool {
 
 // 认证失败处理
 func unauthorized(c *gin.Context, code int, message string) {
-	util.WriteResponse(c, code, nil, "认证失败")
+	response.FailWithCode(code)
 }
 
 func loginResponse(c *gin.Context, code int, token string, expires time.Time) {
-	util.WriteResponse(c, 200, nil, map[string]interface{}{
+	response.SuccessWithData(map[string]interface{}{
 		"token": token,
 		"expires": model.LocalTime{
 			Time: expires,
@@ -84,11 +85,11 @@ func loginResponse(c *gin.Context, code int, token string, expires time.Time) {
 }
 
 func logoutResponse(c *gin.Context, code int) {
-	util.WriteResponse(c, 200, nil, nil)
+	response.Success()
 }
 
 func refreshResponse(c *gin.Context, code int, token string, expires time.Time) {
-	util.WriteResponse(c, 200, nil, map[string]interface{}{
+	response.SuccessWithData(map[string]interface{}{
 		"token": token,
 		"expires": model.LocalTime{
 			Time: expires,
