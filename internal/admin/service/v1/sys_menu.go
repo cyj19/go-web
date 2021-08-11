@@ -58,7 +58,7 @@ func (m *menuService) GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error) {
 	// 创建role服务
 	rs := &roleService{factory: m.factory}
 	whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{ids}}
-	roles, err := rs.GetList(whereOrder)
+	roles, err := rs.GetListByWhereOrder(whereOrder)
 	if err != nil {
 		return nil, err
 	}

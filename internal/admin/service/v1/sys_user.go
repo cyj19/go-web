@@ -6,13 +6,14 @@ import (
 	"go-web/internal/pkg/cache"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
+
+	"github.com/casbin/casbin/v2"
 )
 
 type SysUserSrv interface {
 	Update(user *model.SysUser) error
 	UpdateRoleForUser(cd *model.CreateDelete) error
 	BatchDelete(ids []uint64) error
-	GetById(id uint64) (*model.SysUser, error)
 	GetByUsername(username string) (*model.SysUser, error)
 	GetList(user model.SysUser) ([]model.SysUser, error)
 	GetPage(userPaage model.SysUserPage) (*model.Page, error)
@@ -20,11 +21,15 @@ type SysUserSrv interface {
 }
 
 type userService struct {
-	factory store.Factory
+	factory  store.Factory
+	enforcer *casbin.Enforcer
 }
 
 func newSysUser(srv *service) SysUserSrv {
-	return &userService{factory: srv.factory}
+	return &userService{
+		factory:  srv.factory,
+		enforcer: srv.enforcer,
+	}
 }
 
 //实现SysUserSrv接口
@@ -42,7 +47,9 @@ func (u *userService) Update(param *model.SysUser) error {
 
 func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
 	// 查询记录是否存在
-	user, err := u.GetById(cd.Id)
+	srv := NewService(u.factory, u.enforcer)
+	user := &model.SysUser{}
+	err := srv.GetById(cd.Id, user)
 	if err != nil {
 		return fmt.Errorf("记录找不到：%v ", err)
 	}
@@ -66,23 +73,6 @@ func (u *userService) BatchDelete(ids []uint64) error {
 	keys := cache.Keys(user.TableName() + "*")
 	cache.Del(keys...)
 	return nil
-}
-
-func (u *userService) GetById(id uint64) (*model.SysUser, error) {
-	// 组装key
-	user := &model.SysUser{}
-	key := fmt.Sprintf("%s:id:%d", user.TableName(), id)
-	// 从缓存中查询
-	err := cache.Get(key, user)
-	if err != nil {
-		user, err = u.factory.SysUser().GetById(id)
-		if err != nil {
-			return nil, err
-		}
-		// 添加到缓存
-		cache.Set(key, user)
-	}
-	return user, nil
 }
 
 func (u *userService) GetByUsername(username string) (*model.SysUser, error) {

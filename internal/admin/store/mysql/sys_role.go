@@ -71,7 +71,7 @@ func (r *role) BatchDelete(ids []uint64) error {
 
 func (r *role) GetById(id uint64) (*model.SysRole, error) {
 	result := &model.SysRole{}
-	err := r.db.Preload("Menus").Where("id = ?", id).First(result).Error
+	err := r.db.Preload("Menus").Where("id = ?", id).Order("sort").First(result).Error
 	return result, err
 }
 

@@ -59,12 +59,6 @@ func (u *user) BatchDelete(ids []uint64) error {
 	return batchDelete(u.db, &model.SysUser{}, ids)
 }
 
-func (u *user) GetById(id uint64) (*model.SysUser, error) {
-	result := model.SysUser{}
-	err := u.db.Preload("Roles").Where("id = ?", id).First(&result).Error
-	return &result, err
-}
-
 func (u *user) GetByUsername(username string) (*model.SysUser, error) {
 	result := model.SysUser{}
 	err := u.db.Preload("Roles").Where("username = ?", username).First(&result).Error

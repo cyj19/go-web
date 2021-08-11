@@ -49,3 +49,16 @@
 <Custom>2021/08/11 15:49:18 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 <nil>}
 <Custom>2021/08/11 15:49:35 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
 <Custom>2021/08/11 15:49:35 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 {{1 2021-08-07 15:05:53 +0800 CST 2021-08-11 15:49:18 +0800 CST <nil>} admin 0xc00061a58d [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} admin 管理员 0xc00061a5a0 0xc00061a5a8 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} guest 访客 0xc00061a5b8 0xc00061a5c0 [] []}]}}
+<Custom>2021/08/11 17:23:53 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 map[expires:2021-08-11 19:23:53.8892899 +0800 CST m=+7205.094291401 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg2ODEwMzMsImlkZW50aXR5IjoiMSIsIm9yaWdfaWF0IjoxNjI4NjczODMzLCJ1c2VyIjoiMSJ9.quNC3oWxHFPM24moMHtVeKlIfMVMmnKWJGpOvlWTMi8]}
+<Custom>2021/08/11 17:24:29 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/11 17:24:29 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {406 unsupported data type: 0xc0000dcc80: Table not set, please set it like: db.Model(&user) or db.Table("users") <nil>}
+<Custom>2021/08/11 17:26:57 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/11 17:26:57 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc00018a640}
+<Custom>2021/08/11 17:28:19 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/11 17:28:19 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0004cf900}
+<Custom>2021/08/11 18:19:34 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {401 认证失败，请重新登录 <nil>}
+<Custom>2021/08/11 18:19:54 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/11 18:19:54 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 {{1 2021-08-07 15:05:53 +0800 CST 2021-08-11 15:49:18 +0800 CST <nil>} admin 0xc0001a1945 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} admin 管理员 0xc0001a1960 0xc0001a1968 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} guest 访客 0xc0001a1978 0xc0001a1980 [] []}]}}
+<Custom>2021/08/11 18:20:18 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/11 18:20:18 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0003d4500}
+<Custom>2021/08/11 18:20:38 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000583c20}

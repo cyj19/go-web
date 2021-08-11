@@ -25,6 +25,6 @@ func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory, enforcer *casb
 		rolev1.PATCH("/api/update", roleHandler.UpdateApiForRole)
 		rolev1.POST("/list", roleHandler.GetList)
 		rolev1.POST("/page", roleHandler.GetPage)
-
+		rolev1.GET("/:id", roleHandler.GetById)
 	}
 }

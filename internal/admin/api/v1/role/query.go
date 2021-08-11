@@ -10,8 +10,9 @@ import (
 )
 
 func (r *SysRoleHandler) GetById(c *gin.Context) {
+	role := &model.SysRole{}
 	id, _ := strconv.Atoi(c.Param("id"))
-	role, err := r.srv.SysRole().GetById(uint64(id))
+	err := r.srv.GetById(uint64(id), role)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -26,8 +27,8 @@ func (r *SysRoleHandler) GetList(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysRoleQueryCondition(param)
-	roles, err := r.srv.SysRole().GetList(whereOrders...)
+
+	roles, err := r.srv.SysRole().GetList(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -43,34 +44,12 @@ func (r *SysRoleHandler) GetPage(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysRoleQueryCondition(param.SysRole)
-	page, err := r.srv.SysRole().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+
+	page, err := r.srv.SysRole().GetPage(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
 	}
 
 	response.SuccessWithData(page)
-}
-
-func createSysRoleQueryCondition(param model.SysRole) []model.WhereOrder {
-	whereOrders := make([]model.WhereOrder, 0)
-
-	if param.Name != "" {
-		v := "%" + param.Name + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
-	}
-	if param.NameZh != "" {
-		v := "%" + param.NameZh + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "name_zh like ?", Value: []interface{}{v}})
-	}
-	if param.Status != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
-	}
-	if param.Sort != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "sort = ?", Value: []interface{}{*param.Sort}})
-	}
-	whereOrders = append(whereOrders, model.WhereOrder{Order: "sort"})
-
-	return whereOrders
 }

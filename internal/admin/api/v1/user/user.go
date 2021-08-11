@@ -24,7 +24,8 @@ func NewSysUserHandler(factory store.Factory, enforcer *casbin.Enforcer) *SysUse
 func GetCurrentUser(c *gin.Context, factory store.Factory, enforcer *casbin.Enforcer) *model.SysUser {
 	userId := c.MustGet("user")
 	// 查询用户
+	user := &model.SysUser{}
 	srv := srvv1.NewService(factory, enforcer)
-	user, _ := srv.SysUser().GetById(userId.(uint64))
+	srv.GetById(userId.(uint64), user)
 	return user
 }

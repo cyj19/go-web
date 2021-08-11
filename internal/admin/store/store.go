@@ -6,6 +6,7 @@ type Factory interface {
 	SysRole() SysRoleStore
 	SysMenu() SysMenuStore
 	SysApi() SysApiStore
-	// 创建操作可以共用
+	// 以下是公用操作
 	Create(value interface{}) error
+	GetById(id uint64, model interface{}) error
 }

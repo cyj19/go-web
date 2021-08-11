@@ -7,7 +7,6 @@ type SysRoleStore interface {
 	Update(r *model.SysRole) error
 	UpdateMenuForRole(cd *model.CreateDelete) error
 	BatchDelete(ids []uint64) error
-	GetById(id uint64) (*model.SysRole, error)
 	GetByName(name string) (*model.SysRole, error)
 	GetList(whereOrder ...model.WhereOrder) ([]model.SysRole, error)
 	GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrder) ([]model.SysRole, int64, error)

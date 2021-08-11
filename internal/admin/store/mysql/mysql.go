@@ -36,6 +36,19 @@ func (ds *datastore) Create(value interface{}) error {
 	return ds.db.Create(value).Error
 }
 
+func (ds *datastore) GetById(id uint64, value interface{}) error {
+	db := ds.db
+	switch value.(type) {
+	case *model.SysUser:
+		db = db.Preload("Roles")
+	case *model.SysRole:
+		db = db.Preload("Menus").Order("sort")
+	case *model.SysMenu:
+		db = db.Order("sort")
+	}
+	return db.Where("id = ?", id).First(value).Error
+}
+
 //不能放到pkg包中
 var (
 	factory     store.Factory
