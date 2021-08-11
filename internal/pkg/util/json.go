@@ -15,11 +15,12 @@ func Struct2Json(obj interface{}) string {
 }
 
 // json 转 struct，因为要修改obj，所以obj必须是指针
-func Json2Struct(str string, obj interface{}) {
+func Json2Struct(str string, obj interface{}) error {
 	err := json.Unmarshal([]byte(str), obj)
 	if err != nil {
 		fmt.Printf("Json2Struct函数异常：%v \n", err)
 	}
+	return err
 }
 
 // struct转struct，根据json标签转换，dest必须是指针

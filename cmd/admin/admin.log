@@ -1,1 +1,51 @@
 <Custom>2021/08/10 17:09:21 mw_exception.go:17: 正常响应： {200 操作成功 [{{1 2021-08-07 15:05:52.881 +0800 CST 2021-08-07 15:05:52.881 +0800 CST <nil>} dashboardRoot 首页父菜单 dashboard /dashboard   0xc000596928 0xc000596970 0 [] []} {{2 2021-08-07 15:05:52.881 +0800 CST 2021-08-07 15:05:52.881 +0800 CST <nil>} systemRoot 系统设置 component /system   0xc0005969d0 0xc0005969d8 0 [] []} {{3 2021-08-07 15:05:52.979 +0800 CST 2021-08-07 15:05:52.979 +0800 CST <nil>} dashboard 首页 dashboard index  /dashboard/index 0xc000596a30 0xc000596a38 1 [] []} {{4 2021-08-07 15:05:53.132 +0800 CST 2021-08-07 15:05:53.132 +0800 CST <nil>} menu 菜单管理 tree-table menu  /system/menu 0xc000596a90 0xc000596a98 2 [] []} {{5 2021-08-07 15:05:53.132 +0800 CST 2021-08-07 15:05:53.132 +0800 CST <nil>} role 角色管理 peoples role  /system/role 0xc000596af0 0xc000596af8 2 [] []} {{6 2021-08-07 15:05:53.132 +0800 CST 2021-08-07 15:05:53.132 +0800 CST <nil>} user 用户管理 user user  /system/user 0xc000596b38 0xc000596b50 2 [] []} {{7 2021-08-07 15:05:53.132 +0800 CST 2021-08-07 15:05:53.132 +0800 CST <nil>} api 接口管理 tree api  /system/api 0xc000596ba0 0xc000596ba8 2 [] []}]}
+<Custom>2021/08/11 10:43:24 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 map[expires:2021-08-11 12:43:24.0823188 +0800 CST m=+7238.022174701 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg2NTcwMDQsImlkZW50aXR5IjoiMSIsIm9yaWdfaWF0IjoxNjI4NjQ5ODA0LCJ1c2VyIjoiMSJ9.wyy0oeTGaGZik6wwWFUWmWII6cFTQkhGl7OPt6Df6gI]}
+<Custom>2021/08/11 10:43:45 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 10:46:07 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 10:48:16 e:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 10:49:58 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 10:55:07 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 11:03:07 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:03:07 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0007b5380}
+<Custom>2021/08/11 11:04:03 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:04:03 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc00046a090}
+<Custom>2021/08/11 11:08:41 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:08:41 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc00065f3b0}
+<Custom>2021/08/11 11:17:49 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:17:49 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0004560c0}
+<Custom>2021/08/11 11:21:31 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:21:31 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000120480}
+<Custom>2021/08/11 11:24:19 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:24:19 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000722420}
+<Custom>2021/08/11 11:24:32 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000886270}
+<Custom>2021/08/11 11:27:06 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0000b8b70}
+<Custom>2021/08/11 11:31:24 e:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000699410}
+<Custom>2021/08/11 11:33:01 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000745320}
+<Custom>2021/08/11 11:34:06 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0004eaae0}
+<Custom>2021/08/11 11:35:19 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:35:19 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0004eb4a0}
+<Custom>2021/08/11 11:36:49 E:/goproject2/go-web/internal/pkg/cache/cache.go:22: redis missing key err: redis: nil
+<Custom>2021/08/11 11:36:49 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000604a80}
+<Custom>2021/08/11 14:13:42 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 map[expires:2021-08-11 16:13:42.7253052 +0800 CST m=+7232.003830601 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg2Njk2MjIsImlkZW50aXR5IjoiMSIsIm9yaWdfaWF0IjoxNjI4NjYyNDIyLCJ1c2VyIjoiMSJ9.UwhO6PVCirZkIAAeaJLGBhPQVBmRd7j51qjr7CQ3Ges]}
+<Custom>2021/08/11 14:13:57 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： interface conversion: interface {} is nil, not []model.SysUser
+<Custom>2021/08/11 14:18:29 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0004b43c0}
+<Custom>2021/08/11 14:18:56 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： interface conversion: interface {} is []interface {}, not []model.SysUser
+<Custom>2021/08/11 14:21:02 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： interface conversion: interface {} is []interface {}, not []model.SysUser
+<Custom>2021/08/11 14:23:03 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： interface conversion: interface {} is []interface {}, not []model.SysUser
+<Custom>2021/08/11 14:24:05 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc00054f4d0}
+<Custom>2021/08/11 14:44:44 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 14:48:28 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 14:52:43 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 14:58:16 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 15:00:24 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 15:02:31 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:22: 未知异常： runtime error: invalid memory address or nil pointer dereference
+<Custom>2021/08/11 15:05:49 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0007948d0}
+<Custom>2021/08/11 15:06:06 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000794e10}
+<Custom>2021/08/11 15:41:28 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {401 认证失败，请重新登录 <nil>}
+<Custom>2021/08/11 15:41:45 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/11 15:41:45 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 {{1 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} admin 0xc000716f85 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} admin 管理员 0xc000716fa0 0xc000716fa8 [] []}]}}
+<Custom>2021/08/11 15:43:21 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 <nil>}
+<Custom>2021/08/11 15:45:39 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 <nil>}
+<Custom>2021/08/11 15:49:18 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 <nil>}
+<Custom>2021/08/11 15:49:35 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/11 15:49:35 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 {{1 2021-08-07 15:05:53 +0800 CST 2021-08-11 15:49:18 +0800 CST <nil>} admin 0xc00061a58d [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} admin 管理员 0xc00061a5a0 0xc00061a5a8 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} guest 访客 0xc00061a5b8 0xc00061a5c0 [] []}]}}

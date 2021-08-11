@@ -51,8 +51,8 @@ func (u *SysUserHandler) GetList(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysUserQueryCondition(param)
-	list, err := u.srv.SysUser().GetList(whereOrders...)
+
+	list, err := u.srv.SysUser().GetList(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -69,8 +69,8 @@ func (u *SysUserHandler) GetPage(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysUserQueryCondition(param.SysUser)
-	page, err := u.srv.SysUser().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+	fmt.Printf("userPage: %+v \n", param)
+	page, err := u.srv.SysUser().GetPage(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -96,22 +96,4 @@ func (u *SysUserHandler) Login(c *gin.Context) (interface{}, error) {
 	return map[string]interface{}{
 		"user": fmt.Sprintf("%d", user.Id),
 	}, nil
-}
-
-func createSysUserQueryCondition(param model.SysUser) []model.WhereOrder {
-	whereOrders := make([]model.WhereOrder, 0)
-
-	if param.Id > 0 {
-		v := param.Id
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "id = ?", Value: []interface{}{v}})
-	}
-	if param.Username != "" {
-		v := "%" + param.Username + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "username like ?", Value: []interface{}{v}})
-	}
-	if param.Status != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
-	}
-
-	return whereOrders
 }
