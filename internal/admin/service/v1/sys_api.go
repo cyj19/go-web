@@ -96,8 +96,9 @@ func (a *apiService) Update(api *model.SysApi) error {
 
 func (a *apiService) BatchDelete(ids []uint64) error {
 	// 查询接口
+	apis := make([]model.SysApi, 0)
 	whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{ids}}
-	apis, err := a.factory.SysApi().GetList(whereOrder)
+	err := a.factory.GetList(model.SysApi{}, &apis, whereOrder)
 	if err != nil {
 		return err
 	}
@@ -125,17 +126,20 @@ func (a *apiService) GetById(id uint64) (*model.SysApi, error) {
 }
 
 func (a *apiService) GetList(whereOrders ...model.WhereOrder) ([]model.SysApi, error) {
-	return a.factory.SysApi().GetList(whereOrders...)
+	list := make([]model.SysApi, 0)
+	err := a.factory.GetList(model.SysApi{}, &list, whereOrders...)
+	return list, err
 }
 
 func (a *apiService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
+	list := make([]model.SysApi, 0)
 	if pageIndex <= 0 {
 		pageIndex = 1
 	}
 	if pageSize <= 0 {
 		pageSize = defaultSize
 	}
-	list, count, err := a.factory.SysApi().GetPage(pageIndex, pageSize, whereOrders...)
+	count, err := a.factory.GetPage(pageIndex, pageSize, model.SysApi{}, &list, whereOrders...)
 	page := &model.Page{
 		Records:  list,
 		Total:    count,

@@ -65,27 +65,27 @@ func (u *user) GetByUsername(username string) (*model.SysUser, error) {
 	return &result, err
 }
 
-func (u *user) GetList(whereOrder ...model.WhereOrder) ([]model.SysUser, error) {
-	result := make([]model.SysUser, 0)
-	tx := queryByCondition(u.db, &model.SysUser{}, whereOrder)
-	err := tx.Preload("Roles").Find(&result).Error
-	return result, err
-}
+// func (u *user) GetList(whereOrder ...model.WhereOrder) ([]model.SysUser, error) {
+// 	result := make([]model.SysUser, 0)
+// 	tx := queryByCondition(u.db, &model.SysUser{}, whereOrder)
+// 	err := tx.Preload("Roles").Find(&result).Error
+// 	return result, err
+// }
 
-func (u *user) GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrder) ([]model.SysUser, int64, error) {
-	result := make([]model.SysUser, 0)
-	tx := queryByCondition(u.db, &model.SysUser{}, whereOrder)
+// func (u *user) GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrder) ([]model.SysUser, int64, error) {
+// 	result := make([]model.SysUser, 0)
+// 	tx := queryByCondition(u.db, &model.SysUser{}, whereOrder)
 
-	//查询总记录数
-	var count int64
-	var err error
-	err = tx.Count(&count).Error
-	if err != nil || count == 0 {
-		return nil, count, err
-	}
-	err = tx.Preload("Roles").Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
-	return result, count, err
-}
+// 	//查询总记录数
+// 	var count int64
+// 	var err error
+// 	err = tx.Count(&count).Error
+// 	if err != nil || count == 0 {
+// 		return nil, count, err
+// 	}
+// 	err = tx.Preload("Roles").Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
+// 	return result, count, err
+// }
 
 func (u *user) Login(username, password string) (*model.SysUser, error) {
 	result := model.SysUser{}

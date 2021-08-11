@@ -91,7 +91,7 @@ func (u *userService) GetList(user model.SysUser) ([]model.SysUser, error) {
 	list = cache.GetSysUserList(key)
 	if len(list) < 1 {
 		whereOrders := createSysUserQueryCondition(user)
-		list, err = u.factory.SysUser().GetList(whereOrders...)
+		err = u.factory.GetList(model.SysUser{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysUserList(key, list)
 	}
@@ -123,7 +123,7 @@ func (u *userService) GetPage(userPage model.SysUserPage) (*model.Page, error) {
 	list = cache.GetSysUserList(key)
 	if len(list) < 1 {
 		whereOrders := createSysUserQueryCondition(userPage.SysUser)
-		list, err = u.factory.SysUser().GetList(whereOrders...)
+		count, err = u.factory.GetPage(pageIndex, pageSize, model.SysUser{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysUserList(key, list)
 	}

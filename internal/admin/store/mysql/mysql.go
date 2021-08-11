@@ -36,9 +36,10 @@ func (ds *datastore) Create(value interface{}) error {
 	return ds.db.Create(value).Error
 }
 
-func (ds *datastore) GetById(id uint64, value interface{}) error {
+// result要用于绑定数据，必须是指针类型
+func (ds *datastore) GetById(id uint64, result interface{}) error {
 	db := ds.db
-	switch value.(type) {
+	switch result.(type) {
 	case *model.SysUser:
 		db = db.Preload("Roles")
 	case *model.SysRole:
@@ -46,7 +47,46 @@ func (ds *datastore) GetById(id uint64, value interface{}) error {
 	case *model.SysMenu:
 		db = db.Order("sort")
 	}
-	return db.Where("id = ?", id).First(value).Error
+	return db.Where("id = ?", id).First(result).Error
+}
+
+// value用于区别模型，struct类型；result用于绑定数据，必须是指针
+func (ds *datastore) GetList(value interface{}, result interface{}, whereOrders ...model.WhereOrder) error {
+	var db *gorm.DB
+	switch v := value.(type) {
+	case model.SysUser:
+		db = queryByCondition(ds.db, &v, whereOrders).Preload("Roles")
+	case model.SysRole:
+		db = queryByCondition(ds.db, &v, whereOrders).Preload("Menus")
+	default:
+		db = queryByCondition(ds.db, &v, whereOrders)
+	}
+
+	return db.Find(&result).Error
+
+}
+
+// value用于区别模型，struct类型；result用于绑定数据，必须是指针
+func (ds *datastore) GetPage(pageIndex int, pageSize int, value interface{}, result interface{}, whereOrders ...model.WhereOrder) (int64, error) {
+	var db *gorm.DB
+	switch v := value.(type) {
+	case model.SysUser:
+		db = queryByCondition(ds.db, &v, whereOrders).Preload("Roles")
+	case model.SysRole:
+		db = queryByCondition(ds.db, &v, whereOrders).Preload("Menus")
+	default:
+		db = queryByCondition(ds.db, &v, whereOrders)
+	}
+
+	//查询总记录数
+	var count int64
+	var err error
+	err = db.Count(&count).Error
+	if err != nil || count == 0 {
+		return count, err
+	}
+	err = db.Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
+	return count, err
 }
 
 //不能放到pkg包中

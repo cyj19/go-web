@@ -10,7 +10,6 @@ type SysMenuSrv interface {
 	Create(menu *model.SysMenu) error
 	Update(menu *model.SysMenu) error
 	BatchDelete(ids []uint64) error
-	GetById(id uint64) (*model.SysMenu, error)
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error)
@@ -38,10 +37,6 @@ func (m *menuService) BatchDelete(ids []uint64) error {
 	return m.factory.SysMenu().BatchDelete(ids)
 }
 
-func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
-	return m.factory.SysMenu().GetById(id)
-}
-
 func (m *menuService) GetByPath(path string) (*model.SysMenu, error) {
 	return m.factory.SysMenu().GetByPath(path)
 }
@@ -51,7 +46,9 @@ func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
 }
 
 func (m *menuService) GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error) {
-	return m.factory.SysMenu().GetList(whereOrders...)
+	list := make([]model.SysMenu, 0)
+	err := m.factory.GetList(model.SysMenu{}, &list, whereOrders...)
+	return list, err
 }
 
 func (m *menuService) GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error) {
@@ -84,13 +81,14 @@ func (m *menuService) GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error) {
 }
 
 func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
+	list := make([]model.SysMenu, 0)
 	if pageIndex <= 0 {
 		pageIndex = 1
 	}
 	if pageSize <= 0 {
 		pageSize = defaultSize
 	}
-	list, count, err := m.factory.SysMenu().GetPage(pageIndex, pageSize, whereOrders...)
+	count, err := m.factory.GetPage(pageIndex, pageSize, model.SysMenu{}, &list, whereOrders...)
 	page := &model.Page{
 		Records:  list,
 		Total:    count,

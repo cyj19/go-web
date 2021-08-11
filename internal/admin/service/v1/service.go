@@ -16,7 +16,7 @@ type Service interface {
 	SysApi() SysApiSrv
 	SysCasbin() SysCasbinSrv
 	Create(value interface{}) error
-	GetById(id uint64, model interface{}) error
+	GetById(id uint64, value interface{}) error
 }
 
 type service struct {
