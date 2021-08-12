@@ -62,3 +62,21 @@
 <Custom>2021/08/11 18:20:18 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
 <Custom>2021/08/11 18:20:18 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0003d4500}
 <Custom>2021/08/11 18:20:38 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000583c20}
+<Custom>2021/08/12 10:51:36 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 map[expires:2021-08-12 12:51:36.3272458 +0800 CST m=+7240.937341501 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2Mjg3NDM4OTYsImlkZW50aXR5IjoiMSIsIm9yaWdfaWF0IjoxNjI4NzM2Njk2LCJ1c2VyIjoiMSJ9.gDNeaPFTbbMaoS9Oz-DnFXMffmK1GqId3IFptKjT2Ec]}
+<Custom>2021/08/12 10:51:50 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/12 10:51:51 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0003d6820}
+<Custom>2021/08/12 10:51:57 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc00051a460}
+<Custom>2021/08/12 10:52:14 E:/goproject2/go-web/internal/pkg/cache/cache.go:23: redis missing key err: redis: nil
+<Custom>2021/08/12 10:52:14 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 {{1 2021-08-07 15:05:53 +0800 CST 2021-08-11 15:49:18 +0800 CST <nil>} admin 0xc000543d1d [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} admin 管理员 0xc000543d30 0xc000543d38 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} guest 访客 0xc000543d48 0xc000543d50 [] []}]}}
+<Custom>2021/08/12 10:52:19 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 {{1 2021-08-07 15:05:53 +0800 CST 2021-08-11 15:49:18 +0800 CST <nil>} admin 0xc000037385 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} admin 管理员 0xc0000373a0 0xc0000373a8 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} guest 访客 0xc0000373b8 0xc0000373c0 [] []}]}}
+<Custom>2021/08/12 10:52:57 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc0004b08d0}
+<Custom>2021/08/12 11:07:08 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc000572720}
+<Custom>2021/08/12 11:07:12 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 0xc00051d7d0}
+<Custom>2021/08/12 11:07:54 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {401 认证失败，请重新登录 <nil>}
+<Custom>2021/08/12 11:08:00 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 <nil>}
+<Custom>2021/08/12 11:08:43 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {401 认证失败，请重新登录 <nil>}
+<Custom>2021/08/12 11:08:51 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {406 unsupported data type: 0xc00058caf0: Table not set, please set it like: db.Model(&user) or db.Table("users") <nil>}
+<Custom>2021/08/12 11:14:26 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {406 invalid value, should be pointer to struct or slice <nil>}
+<Custom>2021/08/12 11:15:00 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {406 unsupported data type: 0xc000630920: Table not set, please set it like: db.Model(&user) or db.Table("users") <nil>}
+<Custom>2021/08/12 11:15:58 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {200 操作成功 <nil>}
+<Custom>2021/08/12 11:17:37 E:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:17: 正常响应： {406 ERR wrong number of arguments for 'del' command <nil>}

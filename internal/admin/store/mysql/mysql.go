@@ -37,9 +37,9 @@ func (ds *datastore) Create(values interface{}) error {
 	return ds.db.Create(values).Error
 }
 
-// value结构体
+// value必须是指针
 func (ds *datastore) BatchDelete(ids []uint64, value interface{}) error {
-	return ds.db.Where("id in ?", ids).Delete(&value).Error
+	return ds.db.Where("id in ?", ids).Delete(value).Error
 }
 
 // Updates使用 struct 更新时，默认情况下，GORM 只会更新非零值的字段
@@ -73,7 +73,7 @@ func (ds *datastore) GetList(value interface{}, result interface{}, whereOrders 
 		db = queryByCondition(ds.db, &v, whereOrders)
 	}
 
-	return db.Find(&result).Error
+	return db.Find(result).Error
 
 }
 
@@ -96,7 +96,7 @@ func (ds *datastore) GetPage(pageIndex int, pageSize int, value interface{}, res
 	if err != nil || count == 0 {
 		return count, err
 	}
-	err = db.Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
+	err = db.Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(result).Error
 	return count, err
 }
 

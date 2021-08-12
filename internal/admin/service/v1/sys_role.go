@@ -41,7 +41,8 @@ func (r *roleService) Create(values ...model.SysRole) error {
 		return err
 	}
 	// 清空缓存
-	return cleanCache(values[0].TableName() + "*")
+	cleanCache(values[0].TableName() + "*")
+	return nil
 }
 
 func (r *roleService) Update(role *model.SysRole) error {
@@ -50,7 +51,8 @@ func (r *roleService) Update(role *model.SysRole) error {
 		return err
 	}
 	// 清空缓存
-	return cleanCache(role.TableName() + "*")
+	cleanCache(role.TableName() + "*")
+	return nil
 }
 
 func (r *roleService) UpdateMenuForRole(cd *model.CreateDelete) error {
@@ -129,7 +131,8 @@ func (r *roleService) BatchDelete(ids []uint64) error {
 		return err
 	}
 	// 清空缓存
-	return cleanCache(value.TableName() + "*")
+	cleanCache(value.TableName() + "*")
+	return nil
 }
 
 func (r *roleService) GetById(id uint64) (*model.SysRole, error) {

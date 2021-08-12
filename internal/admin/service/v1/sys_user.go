@@ -42,7 +42,8 @@ func (u *userService) Create(values ...model.SysUser) error {
 		return err
 	}
 	// 清空缓存
-	return cleanCache(values[0].TableName() + "*")
+	cleanCache(values[0].TableName() + "*")
+	return nil
 }
 
 func (u *userService) Update(value *model.SysUser) error {
@@ -51,7 +52,8 @@ func (u *userService) Update(value *model.SysUser) error {
 		return err
 	}
 	// 清空缓存
-	return cleanCache(value.TableName() + "*")
+	cleanCache(value.TableName() + "*")
+	return nil
 }
 
 func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
@@ -65,18 +67,18 @@ func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
 		return err
 	}
 	// 清空缓存
-	return cleanCache(user.TableName() + "*")
+	cleanCache(user.TableName() + "*")
+	return nil
 }
 
 func (u *userService) BatchDelete(ids []uint64) error {
-	user := &model.SysUser{}
-	err := u.factory.BatchDelete(ids, *user)
+	user := new(model.SysUser)
+	err := u.factory.BatchDelete(ids, user)
 	if err != nil {
 		return err
 	}
 	// 清空user相关的key
-	keys := cache.Keys(user.TableName() + "*")
-	cache.Del(keys...)
+	cleanCache(user.TableName() + "*")
 	return nil
 }
 

@@ -33,7 +33,8 @@ func (m *menuService) Create(values ...model.SysMenu) error {
 	if err != nil {
 		return err
 	}
-	return cleanCache(values[0].TableName() + "*")
+	cleanCache(values[0].TableName() + "*")
+	return nil
 }
 
 func (m *menuService) Update(value *model.SysMenu) error {
@@ -41,7 +42,8 @@ func (m *menuService) Update(value *model.SysMenu) error {
 	if err != nil {
 		return err
 	}
-	return cleanCache(value.TableName() + "*")
+	cleanCache(value.TableName() + "*")
+	return nil
 }
 
 func (m *menuService) BatchDelete(ids []uint64) error {
@@ -50,7 +52,8 @@ func (m *menuService) BatchDelete(ids []uint64) error {
 	if err != nil {
 		return err
 	}
-	return cleanCache(value.TableName() + "*")
+	cleanCache(value.TableName() + "*")
+	return nil
 }
 
 func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
