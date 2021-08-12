@@ -10,9 +10,9 @@ import (
 )
 
 func (r *SysRoleHandler) GetById(c *gin.Context) {
-	role := &model.SysRole{}
+
 	id, _ := strconv.Atoi(c.Param("id"))
-	err := r.srv.GetById(uint64(id), role)
+	role, err := r.srv.SysRole().GetById(uint64(id))
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

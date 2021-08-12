@@ -21,7 +21,8 @@ func CasbinMiddleware(factory store.Factory, enforcer *casbin.Enforcer) gin.Hand
 		obj = strings.Replace(obj, "/"+configuration.Server.UrlPrefix, "", 1)
 		act := c.Request.Method
 		// 获取当前用户
-		currentUser := user.GetCurrentUser(c, factory, enforcer)
+		userHandler := user.NewSysUserHandler(factory, enforcer)
+		currentUser := userHandler.GetCurrentUser(c)
 
 		if !check(enforcer, currentUser, obj, act) {
 			c.Abort()
@@ -33,7 +34,7 @@ func CasbinMiddleware(factory store.Factory, enforcer *casbin.Enforcer) gin.Hand
 
 }
 
-func check(enforcer *casbin.Enforcer, user *model.SysUser, obj string, act string) bool {
+func check(enforcer *casbin.Enforcer, user model.SysUser, obj string, act string) bool {
 	if len(user.Roles) <= 0 {
 		return false
 	}

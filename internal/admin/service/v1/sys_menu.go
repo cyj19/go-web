@@ -29,15 +29,28 @@ func newSysMenu(srv *service) SysMenuSrv {
 }
 
 func (m *menuService) Create(values ...model.SysMenu) error {
-	return m.factory.Create(&values)
+	err := m.factory.Create(&values)
+	if err != nil {
+		return err
+	}
+	return cleanCache(values[0].TableName() + "*")
 }
 
 func (m *menuService) Update(value *model.SysMenu) error {
-	return m.factory.Update(value)
+	err := m.factory.Update(value)
+	if err != nil {
+		return err
+	}
+	return cleanCache(value.TableName() + "*")
 }
 
 func (m *menuService) BatchDelete(ids []uint64) error {
-	return m.factory.BatchDelete(ids, &model.SysMenu{})
+	value := new(model.SysMenu)
+	err := m.factory.BatchDelete(ids, value)
+	if err != nil {
+		return err
+	}
+	return cleanCache(value.TableName() + "*")
 }
 
 func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
@@ -54,7 +67,15 @@ func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
 }
 
 func (m *menuService) GetByPath(path string) (*model.SysMenu, error) {
-	return m.factory.SysMenu().GetByPath(path)
+	value := new(model.SysMenu)
+	key := fmt.Sprintf("%s:path:%s", value.TableName(), path)
+	err := cache.Get(key, value)
+	if err != nil {
+		value, err = m.factory.SysMenu().GetByPath(path)
+		// 写入缓存
+		cache.Set(key, value)
+	}
+	return value, err
 }
 
 func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {

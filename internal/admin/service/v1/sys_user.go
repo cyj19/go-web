@@ -37,7 +37,12 @@ func newSysUser(srv *service) SysUserSrv {
 //实现SysUserSrv接口
 
 func (u *userService) Create(values ...model.SysUser) error {
-	return u.factory.Create(&values)
+	err := u.factory.Create(&values)
+	if err != nil {
+		return err
+	}
+	// 清空缓存
+	return cleanCache(values[0].TableName() + "*")
 }
 
 func (u *userService) Update(value *model.SysUser) error {
@@ -45,17 +50,13 @@ func (u *userService) Update(value *model.SysUser) error {
 	if err != nil {
 		return err
 	}
-	// 清空user相关的key
-	keys := cache.Keys(value.TableName() + "*")
-	cache.Del(keys...)
-	return nil
+	// 清空缓存
+	return cleanCache(value.TableName() + "*")
 }
 
 func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
 	// 查询记录是否存在
-	srv := NewService(u.factory, u.enforcer)
-	user := &model.SysUser{}
-	err := srv.GetById(cd.Id, user)
+	user, err := u.GetById(cd.Id)
 	if err != nil {
 		return fmt.Errorf("记录找不到：%v ", err)
 	}
@@ -63,10 +64,8 @@ func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
 	if err != nil {
 		return err
 	}
-	// 清空user相关的key
-	keys := cache.Keys(user.TableName() + "*")
-	cache.Del(keys...)
-	return nil
+	// 清空缓存
+	return cleanCache(user.TableName() + "*")
 }
 
 func (u *userService) BatchDelete(ids []uint64) error {

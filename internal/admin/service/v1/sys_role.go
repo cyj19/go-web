@@ -36,17 +36,26 @@ func newSysRole(srv *service) SysRoleSrv {
 }
 
 func (r *roleService) Create(values ...model.SysRole) error {
-	return r.factory.Create(&values)
+	err := r.factory.Create(&values)
+	if err != nil {
+		return err
+	}
+	// 清空缓存
+	return cleanCache(values[0].TableName() + "*")
 }
 
 func (r *roleService) Update(role *model.SysRole) error {
-	return r.factory.Update(role)
+	err := r.factory.Update(role)
+	if err != nil {
+		return err
+	}
+	// 清空缓存
+	return cleanCache(role.TableName() + "*")
 }
 
 func (r *roleService) UpdateMenuForRole(cd *model.CreateDelete) error {
 	// 查询记录是否存在
-	srv := NewService(r.factory, r.enforcer)
-	err := srv.GetById(cd.Id, &model.SysRole{})
+	_, err := r.GetById(cd.Id)
 	if err != nil {
 		return fmt.Errorf("记录不存在：%v ", err)
 	}
@@ -56,8 +65,7 @@ func (r *roleService) UpdateMenuForRole(cd *model.CreateDelete) error {
 // 更新角色的接口权限，维护casbin规则
 func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 	// 查询记录是否存在
-	srv := NewService(r.factory, r.enforcer)
-	err := srv.GetById(cd.Id, &model.SysRole{})
+	_, err := r.GetById(cd.Id)
 	if err != nil {
 		return fmt.Errorf("记录不存在：%v ", err)
 	}
@@ -115,7 +123,13 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 }
 
 func (r *roleService) BatchDelete(ids []uint64) error {
-	return r.factory.BatchDelete(ids, &model.SysRole{})
+	value := new(model.SysRole)
+	err := r.factory.BatchDelete(ids, value)
+	if err != nil {
+		return err
+	}
+	// 清空缓存
+	return cleanCache(value.TableName() + "*")
 }
 
 func (r *roleService) GetById(id uint64) (*model.SysRole, error) {
@@ -132,7 +146,15 @@ func (r *roleService) GetById(id uint64) (*model.SysRole, error) {
 }
 
 func (r *roleService) GetByName(name string) (*model.SysRole, error) {
-	return r.factory.SysRole().GetByName(name)
+	value := new(model.SysRole)
+	key := fmt.Sprintf("%s:name:%s", value.TableName(), name)
+	err := cache.Get(key, value)
+	if err != nil {
+		value, err = r.factory.SysRole().GetByName(name)
+		// 写入缓存
+		cache.Set(key, value)
+	}
+	return value, err
 }
 
 func (r *roleService) GetList(role model.SysRole) ([]model.SysRole, error) {

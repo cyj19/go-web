@@ -38,6 +38,9 @@ func (a *apiService) Create(values ...model.SysApi) error {
 		return err
 	}
 
+	// 清空缓存
+	cleanCache(values[0].TableName() + "*")
+
 	for _, api := range values {
 		if len(api.Roles) > 0 {
 			// 创建casbin规则
@@ -70,6 +73,9 @@ func (a *apiService) Update(value *model.SysApi) error {
 	if err != nil {
 		return err
 	}
+
+	// 清空缓存
+	cleanCache(value.TableName() + "*")
 
 	// 对比新旧接口的Method , Path
 	if oldApi.Method != value.Method || oldApi.Path != value.Path {
@@ -106,11 +112,15 @@ func (a *apiService) BatchDelete(ids []uint64) error {
 	if err != nil {
 		return err
 	}
+	temp := new(model.SysApi)
 	//  删除接口
-	err = a.factory.BatchDelete(ids, &model.SysApi{})
+	err = a.factory.BatchDelete(ids, temp)
 	if err != nil {
 		return err
 	}
+
+	// 清空缓存
+	cleanCache(temp.TableName() + "*")
 
 	// 删除casbin规则
 	cs := &casbinService{enforcer: a.enforcer}

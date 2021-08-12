@@ -1,10 +1,8 @@
 package v1
 
 import (
-	"fmt"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
-	"go-web/internal/pkg/model"
 
 	"github.com/casbin/casbin/v2"
 )
@@ -15,7 +13,6 @@ type Service interface {
 	SysMenu() SysMenuSrv
 	SysApi() SysApiSrv
 	SysCasbin() SysCasbinSrv
-	GetById(id uint64, value interface{}) error
 }
 
 type service struct {
@@ -59,29 +56,34 @@ func (s *service) Create(value interface{}) error {
 }
 
 // model必须是指针
-func (s *service) GetById(id uint64, value interface{}) error {
-	// 从缓存查询
-	var tableName string
-	switch v := value.(type) {
-	case *model.SysUser:
-		tableName = v.TableName()
-	case *model.SysRole:
-		tableName = v.TableName()
-	case *model.SysMenu:
-		tableName = v.TableName()
-	case *model.SysApi:
-		tableName = v.TableName()
-	default:
-		tableName = ""
-	}
+// func (s *service) GetById(id uint64, value interface{}) error {
+// 	// 从缓存查询
+// 	var tableName string
+// 	switch v := value.(type) {
+// 	case *model.SysUser:
+// 		tableName = v.TableName()
+// 	case *model.SysRole:
+// 		tableName = v.TableName()
+// 	case *model.SysMenu:
+// 		tableName = v.TableName()
+// 	case *model.SysApi:
+// 		tableName = v.TableName()
+// 	default:
+// 		tableName = ""
+// 	}
 
-	key := fmt.Sprintf("%s:id:%d", tableName, id)
-	err := cache.Get(key, value)
-	if err != nil {
-		err = s.factory.GetById(id, value)
-		// 写入缓存
-		cache.Set(key, value)
-		return err
-	}
-	return nil
+// 	key := fmt.Sprintf("%s:id:%d", tableName, id)
+// 	err := cache.Get(key, value)
+// 	if err != nil {
+// 		err = s.factory.GetById(id, value)
+// 		// 写入缓存
+// 		cache.Set(key, value)
+// 		return err
+// 	}
+// 	return nil
+// }
+
+func cleanCache(pattern string) error {
+	keys := cache.Keys(pattern)
+	return cache.Del(keys...)
 }

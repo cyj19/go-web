@@ -24,7 +24,7 @@ func (u *SysUserHandler) GetCurrentUser(c *gin.Context) model.SysUser {
 		return *currentUser
 	}
 	// 查询用户
-	u.srv.GetById(userId.(uint64), currentUser)
+	currentUser, _ = u.srv.SysUser().GetById(userId.(uint64))
 	return *currentUser
 }
 
