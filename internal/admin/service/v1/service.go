@@ -15,7 +15,6 @@ type Service interface {
 	SysMenu() SysMenuSrv
 	SysApi() SysApiSrv
 	SysCasbin() SysCasbinSrv
-	Create(value interface{}) error
 	GetById(id uint64, value interface{}) error
 }
 

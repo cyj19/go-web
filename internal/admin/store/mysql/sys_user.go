@@ -16,10 +16,6 @@ func newSysUser(ds *datastore) store.SysUserStore {
 }
 
 //实现store.UserStore接口
-// Updates使用 struct 更新时，默认情况下，GORM 只会更新非零值的字段
-func (u *user) Update(user *model.SysUser) error {
-	return u.db.Updates(user).Error
-}
 
 // 更新用户角色(添加、删除)
 func (u *user) UpdateRoleForUser(cd *model.CreateDelete) error {
@@ -55,37 +51,11 @@ func (u *user) UpdateRoleForUser(cd *model.CreateDelete) error {
 	return nil
 }
 
-func (u *user) BatchDelete(ids []uint64) error {
-	return batchDelete(u.db, &model.SysUser{}, ids)
-}
-
 func (u *user) GetByUsername(username string) (*model.SysUser, error) {
 	result := model.SysUser{}
 	err := u.db.Preload("Roles").Where("username = ?", username).First(&result).Error
 	return &result, err
 }
-
-// func (u *user) GetList(whereOrder ...model.WhereOrder) ([]model.SysUser, error) {
-// 	result := make([]model.SysUser, 0)
-// 	tx := queryByCondition(u.db, &model.SysUser{}, whereOrder)
-// 	err := tx.Preload("Roles").Find(&result).Error
-// 	return result, err
-// }
-
-// func (u *user) GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrder) ([]model.SysUser, int64, error) {
-// 	result := make([]model.SysUser, 0)
-// 	tx := queryByCondition(u.db, &model.SysUser{}, whereOrder)
-
-// 	//查询总记录数
-// 	var count int64
-// 	var err error
-// 	err = tx.Count(&count).Error
-// 	if err != nil || count == 0 {
-// 		return nil, count, err
-// 	}
-// 	err = tx.Preload("Roles").Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
-// 	return result, count, err
-// }
 
 func (u *user) Login(username, password string) (*model.SysUser, error) {
 	result := model.SysUser{}

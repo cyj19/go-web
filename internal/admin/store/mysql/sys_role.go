@@ -17,14 +17,6 @@ func newSysRole(ds *datastore) store.SysRoleStore {
 
 //实现store.RoleStore接口
 
-func (r *role) Create(role *model.SysRole) error {
-	return r.db.Create(role).Error
-}
-
-func (r *role) Update(role *model.SysRole) error {
-	return r.db.Updates(role).Error
-}
-
 // 更新角色菜单(添加、删除)
 func (r *role) UpdateMenuForRole(cd *model.CreateDelete) error {
 	role := new(model.SysRole)
@@ -65,42 +57,8 @@ func (r *role) UpdateMenuForRole(cd *model.CreateDelete) error {
 
 }
 
-func (r *role) BatchDelete(ids []uint64) error {
-	return batchDelete(r.db, &model.SysRole{}, ids)
-}
-
-// func (r *role) GetById(id uint64) (*model.SysRole, error) {
-// 	result := &model.SysRole{}
-// 	err := r.db.Preload("Menus").Where("id = ?", id).Order("sort").First(result).Error
-// 	return result, err
-// }
-
 func (r *role) GetByName(name string) (*model.SysRole, error) {
 	result := &model.SysRole{}
 	err := r.db.Preload("Menus").Where("name = ?", name).Order("sort").First(result).Error
 	return result, err
 }
-
-// func (r *role) GetList(whereOrder ...model.WhereOrder) ([]model.SysRole, error) {
-// 	result := make([]model.SysRole, 0)
-// 	tx := queryByCondition(r.db, &model.SysRole{}, whereOrder)
-// 	err := tx.Preload("Menus", func(db *gorm.DB) *gorm.DB {
-// 		return db.Order("parent_id, sort")
-// 	}).Find(&result).Error
-// 	return result, err
-// }
-
-// func (r *role) GetPage(pageIndex int, pageSize int, whereOrder ...model.WhereOrder) ([]model.SysRole, int64, error) {
-// 	result := make([]model.SysRole, 0)
-// 	tx := queryByCondition(r.db, &model.SysRole{}, whereOrder)
-// 	//查询总数
-// 	var count int64
-// 	var err error
-// 	err = tx.Count(&count).Error
-// 	//有错误或总数为0，直接返回
-// 	if err != nil || count == 0 {
-// 		return nil, count, err
-// 	}
-// 	err = tx.Preload("Menus").Offset((pageIndex - 1) * pageSize).Limit(pageSize).Find(&result).Error
-// 	return result, count, err
-// }

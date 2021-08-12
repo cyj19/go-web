@@ -1,7 +1,9 @@
 package v1
 
 import (
+	"fmt"
 	"go-web/internal/admin/store"
+	"go-web/internal/pkg/cache"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
 
@@ -9,8 +11,8 @@ import (
 )
 
 type SysApiSrv interface {
-	Create(a *model.SysApi) error
-	Update(a *model.SysApi) error
+	Create(values ...model.SysApi) error
+	Update(value *model.SysApi) error
 	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysApi, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysApi, error)
@@ -30,45 +32,47 @@ func newSysApi(srv *service) SysApiSrv {
 }
 
 // 自定义接口创建，同步创建casbin规则
-func (a *apiService) Create(api *model.SysApi) error {
-	err := a.factory.Create(api)
+func (a *apiService) Create(values ...model.SysApi) error {
+	err := a.factory.Create(&values)
 	if err != nil {
 		return err
 	}
 
-	if len(api.Roles) > 0 {
-		// 创建casbin规则
-		cs := &casbinService{enforcer: a.enforcer}
-		roleCasbins := make([]model.SysRoleCasbin, 0)
-		for _, role := range api.Roles {
-			roleCasbins = append(roleCasbins, model.SysRoleCasbin{
-				Kyeword: util.Uint642Str(role),
-				Path:    api.Path,
-				Method:  api.Method,
-			})
+	for _, api := range values {
+		if len(api.Roles) > 0 {
+			// 创建casbin规则
+			cs := &casbinService{enforcer: a.enforcer}
+			roleCasbins := make([]model.SysRoleCasbin, 0)
+			for _, role := range api.Roles {
+				roleCasbins = append(roleCasbins, model.SysRoleCasbin{
+					Kyeword: util.Uint642Str(role),
+					Path:    api.Path,
+					Method:  api.Method,
+				})
+			}
+			_, err := cs.BatchCreateRoleCasbins(roleCasbins)
+			return err
 		}
-		_, err := cs.BatchCreateRoleCasbins(roleCasbins)
-		return err
 	}
 
 	return nil
 
 }
 
-func (a *apiService) Update(api *model.SysApi) error {
+func (a *apiService) Update(value *model.SysApi) error {
 	// 查询接口是否存在
-	oldApi, err := a.GetById(api.Id)
+	oldApi, err := a.GetById(value.Id)
 	if err != nil {
 		return err
 	}
 	// 更新接口
-	err = a.factory.SysApi().Update(api)
+	err = a.factory.Update(value)
 	if err != nil {
 		return err
 	}
 
 	// 对比新旧接口的Method , Path
-	if oldApi.Method != api.Method || oldApi.Path != api.Path {
+	if oldApi.Method != value.Method || oldApi.Path != value.Path {
 		// 有修改，更新casbin规则
 		cs := &casbinService{enforcer: a.enforcer}
 		// 获取和旧接口相关的规则
@@ -81,8 +85,8 @@ func (a *apiService) Update(api *model.SysApi) error {
 			for _, rule := range oldRules {
 				newRules = append(newRules, model.SysRoleCasbin{
 					Kyeword: rule.Kyeword,
-					Path:    api.Path,
-					Method:  api.Method,
+					Path:    value.Path,
+					Method:  value.Method,
 				})
 			}
 			_, err = cs.BatchCreateRoleCasbins(newRules)
@@ -103,7 +107,7 @@ func (a *apiService) BatchDelete(ids []uint64) error {
 		return err
 	}
 	//  删除接口
-	err = a.factory.SysApi().BatchDelete(ids)
+	err = a.factory.BatchDelete(ids, &model.SysApi{})
 	if err != nil {
 		return err
 	}
@@ -122,7 +126,16 @@ func (a *apiService) BatchDelete(ids []uint64) error {
 }
 
 func (a *apiService) GetById(id uint64) (*model.SysApi, error) {
-	return a.factory.SysApi().GetById(id)
+	value := new(model.SysApi)
+	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
+	err := cache.Get(key, value)
+	if err != nil {
+		err = a.factory.GetById(id, value)
+		// 写入缓存
+		cache.Set(key, value)
+
+	}
+	return value, err
 }
 
 func (a *apiService) GetList(whereOrders ...model.WhereOrder) ([]model.SysApi, error) {

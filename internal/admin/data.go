@@ -47,7 +47,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	}
 
 	if len(newRoles) > 0 {
-		service.Create(&newRoles)
+		service.SysRole().Create(newRoles...)
 		// 如果admin 和 guest都插入
 		if len(newRoles) == len(roles) {
 			roles = newRoles
@@ -170,7 +170,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 		}
 	}
 	if len(newApis) > 0 {
-		err := service.Create(&newApis)
+		err := service.SysApi().Create(newApis...)
 		if err != nil {
 			panic(fmt.Errorf("初始化接口失败：%v", err))
 		}
@@ -206,7 +206,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	}
 
 	if len(newUsers) > 0 {
-		service.Create(&newUsers)
+		service.SysUser().Create(newUsers...)
 	}
 
 }
@@ -231,7 +231,7 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 
 		}
 		if len(newMenus) > 0 {
-			err := srv.Create(&newMenus)
+			err := srv.SysMenu().Create(newMenus...)
 			if err != nil {
 				panic(fmt.Errorf("初始化菜单失败：%v", err))
 			}
@@ -255,7 +255,7 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 				if len(value.Roles) == 0 {
 					value.Roles = []model.SysRole{adminRole}
 				}
-				err := srv.Create(&value.Children)
+				err := srv.SysMenu().Create(value.Children...)
 				if err != nil {
 					panic(fmt.Errorf("初始化子菜单失败：%v", err))
 				}

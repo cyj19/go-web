@@ -1,15 +1,18 @@
 package v1
 
 import (
+	"fmt"
 	"go-web/internal/admin/store"
+	"go-web/internal/pkg/cache"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
 )
 
 type SysMenuSrv interface {
-	Create(menu *model.SysMenu) error
-	Update(menu *model.SysMenu) error
+	Create(values ...model.SysMenu) error
+	Update(value *model.SysMenu) error
 	BatchDelete(ids []uint64) error
+	GetById(id uint64) (*model.SysMenu, error)
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
 	GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error)
@@ -25,16 +28,29 @@ func newSysMenu(srv *service) SysMenuSrv {
 	return &menuService{factory: srv.factory}
 }
 
-func (m *menuService) Create(menu *model.SysMenu) error {
-	return m.factory.SysMenu().Create(menu)
+func (m *menuService) Create(values ...model.SysMenu) error {
+	return m.factory.Create(&values)
 }
 
-func (m *menuService) Update(menu *model.SysMenu) error {
-	return m.factory.SysMenu().Update(menu)
+func (m *menuService) Update(value *model.SysMenu) error {
+	return m.factory.Update(value)
 }
 
 func (m *menuService) BatchDelete(ids []uint64) error {
-	return m.factory.SysMenu().BatchDelete(ids)
+	return m.factory.BatchDelete(ids, &model.SysMenu{})
+}
+
+func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
+	value := new(model.SysMenu)
+	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
+	err := cache.Get(key, value)
+	if err != nil {
+		err = m.factory.GetById(id, value)
+		// 写入缓存
+		cache.Set(key, value)
+
+	}
+	return value, err
 }
 
 func (m *menuService) GetByPath(path string) (*model.SysMenu, error) {

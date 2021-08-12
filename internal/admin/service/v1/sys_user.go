@@ -11,9 +11,11 @@ import (
 )
 
 type SysUserSrv interface {
+	Create(values ...model.SysUser) error
 	Update(user *model.SysUser) error
 	UpdateRoleForUser(cd *model.CreateDelete) error
 	BatchDelete(ids []uint64) error
+	GetById(id uint64) (*model.SysUser, error)
 	GetByUsername(username string) (*model.SysUser, error)
 	GetList(user model.SysUser) ([]model.SysUser, error)
 	GetPage(userPaage model.SysUserPage) (*model.Page, error)
@@ -34,13 +36,17 @@ func newSysUser(srv *service) SysUserSrv {
 
 //实现SysUserSrv接口
 
-func (u *userService) Update(param *model.SysUser) error {
-	err := u.factory.SysUser().Update(param)
+func (u *userService) Create(values ...model.SysUser) error {
+	return u.factory.Create(&values)
+}
+
+func (u *userService) Update(value *model.SysUser) error {
+	err := u.factory.Update(value)
 	if err != nil {
 		return err
 	}
 	// 清空user相关的key
-	keys := cache.Keys(param.TableName() + "*")
+	keys := cache.Keys(value.TableName() + "*")
 	cache.Del(keys...)
 	return nil
 }
@@ -65,7 +71,7 @@ func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
 
 func (u *userService) BatchDelete(ids []uint64) error {
 	user := &model.SysUser{}
-	err := u.factory.SysUser().BatchDelete(ids)
+	err := u.factory.BatchDelete(ids, *user)
 	if err != nil {
 		return err
 	}
@@ -73,6 +79,19 @@ func (u *userService) BatchDelete(ids []uint64) error {
 	keys := cache.Keys(user.TableName() + "*")
 	cache.Del(keys...)
 	return nil
+}
+
+func (u *userService) GetById(id uint64) (*model.SysUser, error) {
+	value := new(model.SysUser)
+	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
+	err := cache.Get(key, value)
+	if err != nil {
+		err = u.factory.GetById(id, value)
+		// 写入缓存
+		cache.Set(key, value)
+
+	}
+	return value, err
 }
 
 func (u *userService) GetByUsername(username string) (*model.SysUser, error) {

@@ -32,8 +32,19 @@ func (ds *datastore) SysApi() store.SysApiStore {
 	return newSysApi(ds)
 }
 
-func (ds *datastore) Create(value interface{}) error {
-	return ds.db.Create(value).Error
+// value必须是指针
+func (ds *datastore) Create(values interface{}) error {
+	return ds.db.Create(values).Error
+}
+
+// value结构体
+func (ds *datastore) BatchDelete(ids []uint64, value interface{}) error {
+	return ds.db.Where("id in ?", ids).Delete(&value).Error
+}
+
+// Updates使用 struct 更新时，默认情况下，GORM 只会更新非零值的字段
+func (ds *datastore) Update(values interface{}) error {
+	return ds.db.Updates(values).Error
 }
 
 // result要用于绑定数据，必须是指针类型
@@ -123,8 +134,4 @@ func queryByCondition(db *gorm.DB, model interface{}, whereOrder []model.WhereOr
 		}
 	}
 	return tx
-}
-
-func batchDelete(db *gorm.DB, model interface{}, ids []uint64) error {
-	return db.Where("id in ?", ids).Delete(model).Error
 }

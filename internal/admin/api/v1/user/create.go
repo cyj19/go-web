@@ -17,7 +17,7 @@ func (u *SysUserHandler) Create(c *gin.Context) {
 		return
 	}
 	param.Password = util.EncryptionPsw(param.Password)
-	err = u.srv.Create(&param)
+	err = u.srv.SysUser().Create(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

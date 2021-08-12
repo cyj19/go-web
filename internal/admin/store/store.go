@@ -8,9 +8,16 @@ type Factory interface {
 	SysRole() SysRoleStore
 	SysMenu() SysMenuStore
 	SysApi() SysApiStore
-	// 以下是公用操作
-	Create(value interface{}) error
+	// values必须是指针
+	Create(values interface{}) error
+	// value应是结构体
+	BatchDelete(ids []uint64, value interface{}) error
+	// values必须是指针
+	Update(values interface{}) error
+	// value必须是指针
 	GetById(id uint64, value interface{}) error
+	// value是结构体，result必须是指针
 	GetList(value interface{}, result interface{}, whereOrders ...model.WhereOrder) error
+	// value是结构体，result必须是指针
 	GetPage(pageIndex int, pageSize int, value interface{}, result interface{}, whereOrder ...model.WhereOrder) (int64, error)
 }

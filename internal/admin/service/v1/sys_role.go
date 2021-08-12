@@ -11,10 +11,12 @@ import (
 )
 
 type SysRoleSrv interface {
-	Update(r *model.SysRole) error
+	Create(values ...model.SysRole) error
+	Update(value *model.SysRole) error
 	UpdateMenuForRole(cd *model.CreateDelete) error
 	UpdateApiForRole(cd *model.CreateDelete) error
 	BatchDelete(ids []uint64) error
+	GetById(id uint64) (*model.SysRole, error)
 	GetByName(name string) (*model.SysRole, error)
 	GetList(role model.SysRole) ([]model.SysRole, error)
 	GetListByWhereOrder(whereOrders ...model.WhereOrder) ([]model.SysRole, error)
@@ -33,8 +35,12 @@ func newSysRole(srv *service) SysRoleSrv {
 	}
 }
 
+func (r *roleService) Create(values ...model.SysRole) error {
+	return r.factory.Create(&values)
+}
+
 func (r *roleService) Update(role *model.SysRole) error {
-	return r.factory.SysRole().Update(role)
+	return r.factory.Update(role)
 }
 
 func (r *roleService) UpdateMenuForRole(cd *model.CreateDelete) error {
@@ -109,7 +115,20 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 }
 
 func (r *roleService) BatchDelete(ids []uint64) error {
-	return r.factory.SysRole().BatchDelete(ids)
+	return r.factory.BatchDelete(ids, &model.SysRole{})
+}
+
+func (r *roleService) GetById(id uint64) (*model.SysRole, error) {
+	value := new(model.SysRole)
+	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
+	err := cache.Get(key, value)
+	if err != nil {
+		err = r.factory.GetById(id, value)
+		// 写入缓存
+		cache.Set(key, value)
+
+	}
+	return value, err
 }
 
 func (r *roleService) GetByName(name string) (*model.SysRole, error) {
