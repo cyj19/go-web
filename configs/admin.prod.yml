@@ -1,0 +1,27 @@
+# 服务配置
+server:
+  # 端口
+  port: 8081
+  #服务名
+  name: auth
+  # url前缀
+  url-prefix: api
+  # api版本
+  api-version: v1
+
+#MySQL 数据库相关配置
+mysql:
+  host: 127.0.0.1:3306
+  username: root
+  password: "123456"
+  database: go-web
+  max-idle-connections: 100  # MySQL 最大空闲连接数
+  max-open-connections: 100  # MySQL 最大打开的连接数
+  max-connection-life-time: 10s # 空闲连接最大存活时间
+  log-level: 4  # GORM log level, 1: silent, 2:error, 3:warn, 4:info
+
+#redis 数据库相关配置
+redis:
+  addr: 127.0.0.1:6379
+  password: "123456"
+  db: 1
