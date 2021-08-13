@@ -79,7 +79,7 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 	if len(cd.Delete) > 0 {
 		// 获取要删除的api
 		whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{cd.Delete}}
-		deleteApis, _ := as.GetList(whereOrder)
+		deleteApis, _ := as.GetListByWhereOrder(whereOrder)
 		// 构建casbin规则
 		deleteCasbins := make([]model.SysRoleCasbin, 0)
 		for _, api := range deleteApis {
@@ -102,7 +102,7 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 	if len(cd.Create) > 0 {
 		// 获取要增加的api
 		whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{cd.Create}}
-		createApis, _ := as.GetList(whereOrder)
+		createApis, _ := as.GetListByWhereOrder(whereOrder)
 		// 构建casbin规则
 		createCasbins := make([]model.SysRoleCasbin, 0)
 		for _, api := range createApis {
@@ -174,7 +174,7 @@ func (r *roleService) GetList(role model.SysRole) ([]model.SysRole, error) {
 
 	list = cache.GetSysRoleList(key)
 	if len(list) < 1 {
-		whereOrders := createSysRoleQueryCondition(role)
+		whereOrders := util.GenWhereOrderByStruct(role)
 		err = r.factory.GetList(model.SysRole{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysRoleList(key, list)
@@ -214,7 +214,7 @@ func (r *roleService) GetPage(rolePage model.SysRolePage) (*model.Page, error) {
 	// 从缓存中查找
 	list = cache.GetSysRoleList(key)
 	if len(list) < 1 {
-		whereOrders := createSysRoleQueryCondition(rolePage.SysRole)
+		whereOrders := util.GenWhereOrderByStruct(rolePage.SysRole)
 		count, err = r.factory.GetPage(pageIndex, pageSize, model.SysRole{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysRoleList(key, list)
@@ -227,26 +227,4 @@ func (r *roleService) GetPage(rolePage model.SysRolePage) (*model.Page, error) {
 	}
 	page.SetPageNum(count)
 	return page, err
-}
-
-func createSysRoleQueryCondition(param model.SysRole) []model.WhereOrder {
-	whereOrders := make([]model.WhereOrder, 0)
-
-	if param.Name != "" {
-		v := "%" + param.Name + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
-	}
-	if param.NameZh != "" {
-		v := "%" + param.NameZh + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "name_zh like ?", Value: []interface{}{v}})
-	}
-	if param.Status != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
-	}
-	if param.Sort != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "sort = ?", Value: []interface{}{*param.Sort}})
-	}
-	whereOrders = append(whereOrders, model.WhereOrder{Order: "sort"})
-
-	return whereOrders
 }

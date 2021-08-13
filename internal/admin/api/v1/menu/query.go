@@ -32,8 +32,7 @@ func (m *SysMenuHandler) GetList(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysMenuQueryCondition(param)
-	menus, err := m.srv.SysMenu().GetList(whereOrders...)
+	menus, err := m.srv.SysMenu().GetList(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -65,29 +64,12 @@ func (m *SysMenuHandler) GetPage(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysMenuQueryCondition(param.SysMenu)
 
-	page, err := m.srv.SysMenu().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+	page, err := m.srv.SysMenu().GetPage(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
 	}
 
 	response.SuccessWithData(page)
-}
-
-func createSysMenuQueryCondition(param model.SysMenu) []model.WhereOrder {
-	whereOrders := make([]model.WhereOrder, 0)
-
-	if param.Name != "" {
-		v := "%" + param.Name + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "name like ?", Value: []interface{}{v}})
-	}
-	if param.Status != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
-	}
-
-	whereOrders = append(whereOrders, model.WhereOrder{Order: "parent_id, sort"})
-
-	return whereOrders
 }

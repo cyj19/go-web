@@ -56,7 +56,7 @@ func (ds *datastore) GetById(id uint64, result interface{}) error {
 	case *model.SysRole:
 		db = db.Preload("Menus").Order("sort")
 	case *model.SysMenu:
-		db = db.Order("sort")
+		db = db.Order("parent_id, sort")
 	}
 	return db.Where("id = ?", id).First(result).Error
 }
@@ -68,7 +68,9 @@ func (ds *datastore) GetList(value interface{}, result interface{}, whereOrders 
 	case model.SysUser:
 		db = queryByCondition(ds.db, &v, whereOrders).Preload("Roles")
 	case model.SysRole:
-		db = queryByCondition(ds.db, &v, whereOrders).Preload("Menus")
+		db = queryByCondition(ds.db, &v, whereOrders).Preload("Menus").Order("sort")
+	case model.SysMenu:
+		db = queryByCondition(ds.db, &v, whereOrders).Order("parent_id, sort")
 	default:
 		db = queryByCondition(ds.db, &v, whereOrders)
 	}

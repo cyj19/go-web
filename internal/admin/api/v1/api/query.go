@@ -14,8 +14,8 @@ func (a *SysApiHandler) GetList(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysApiQueryCondition(param)
-	apis, err := a.srv.SysApi().GetList(whereOrders...)
+
+	apis, err := a.srv.SysApi().GetList(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -31,38 +31,11 @@ func (a *SysApiHandler) GetPage(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	whereOrders := createSysApiQueryCondition(param.SysApi)
-	page, err := a.srv.SysApi().GetPage(param.PageIndex, param.PageSize, whereOrders...)
+	page, err := a.srv.SysApi().GetPage(param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
 	}
 
 	response.SuccessWithData(page)
-}
-
-func createSysApiQueryCondition(param model.SysApi) []model.WhereOrder {
-
-	whereOrders := make([]model.WhereOrder, 0)
-	if param.Id > 0 {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "id = ?", Value: []interface{}{param.Id}})
-	}
-	if param.Method != "" {
-		v := "%" + param.Method + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "method like ?", Value: []interface{}{v}})
-	}
-	if param.Path != "" {
-		v := "%" + param.Path + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "path like ?", Value: []interface{}{v}})
-	}
-	if param.Category != "" {
-		v := "%" + param.Category + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "category like ?", Value: []interface{}{v}})
-	}
-	if param.Creator != "" {
-		v := "%" + param.Creator + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "creator like ?", Value: []interface{}{v}})
-	}
-	return whereOrders
-
 }

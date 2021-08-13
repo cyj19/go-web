@@ -127,7 +127,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	newRoleCasbins := make([]model.SysRoleCasbin, 0)
 	for _, api := range apis {
 		whereOrder := model.WhereOrder{Where: "method = ? and path = ?", Value: []interface{}{api.Method, api.Path}}
-		oldApis, err := service.SysApi().GetList(whereOrder)
+		oldApis, err := service.SysApi().GetListByWhereOrder(whereOrder)
 		if err != nil || len(oldApis) == 0 {
 			newApis = append(newApis, api)
 			p := strings.TrimPrefix(api.Path, "/"+configuration.Server.ApiVersion)

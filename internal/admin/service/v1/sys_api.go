@@ -15,8 +15,9 @@ type SysApiSrv interface {
 	Update(value *model.SysApi) error
 	BatchDelete(ids []uint64) error
 	GetById(id uint64) (*model.SysApi, error)
-	GetList(whereOrders ...model.WhereOrder) ([]model.SysApi, error)
-	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error)
+	GetList(value model.SysApi) ([]model.SysApi, error)
+	GetListByWhereOrder(whereOrders ...model.WhereOrder) ([]model.SysApi, error)
+	GetPage(value model.SysApiPage) (*model.Page, error)
 }
 
 type apiService struct {
@@ -148,21 +149,47 @@ func (a *apiService) GetById(id uint64) (*model.SysApi, error) {
 	return value, err
 }
 
-func (a *apiService) GetList(whereOrders ...model.WhereOrder) ([]model.SysApi, error) {
-	list := make([]model.SysApi, 0)
+func (a *apiService) GetList(value model.SysApi) ([]model.SysApi, error) {
+	var list []model.SysApi
+	var err error
+	key := fmt.Sprintf("%s:id:%d:method:%s:path:%s:category:%s", value.TableName(), value.Id, value.Method, value.Path, value.Category)
+
+	list = cache.GetSysApiList(key)
+	if len(list) < 1 {
+		whereOrders := util.GenWhereOrderByStruct(value)
+		err = a.factory.GetList(value, &list, whereOrders...)
+		// 添加到缓存
+		cache.SetSysApiList(key, list)
+	}
+	return list, err
+}
+
+func (a *apiService) GetListByWhereOrder(whereOrders ...model.WhereOrder) ([]model.SysApi, error) {
+	var list []model.SysApi
 	err := a.factory.GetList(model.SysApi{}, &list, whereOrders...)
 	return list, err
 }
 
-func (a *apiService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
-	list := make([]model.SysApi, 0)
+// 为了判断结果返回指针类型
+func (a *apiService) GetPage(apiPage model.SysApiPage) (*model.Page, error) {
+	var list []model.SysApi
+	var count int64
+	var err error
+	pageIndex := apiPage.PageIndex
+	pageSize := apiPage.PageSize
 	if pageIndex <= 0 {
 		pageIndex = 1
 	}
 	if pageSize <= 0 {
 		pageSize = defaultSize
 	}
-	count, err := a.factory.GetPage(pageIndex, pageSize, model.SysApi{}, &list, whereOrders...)
+	key := fmt.Sprintf("%s:id:%d:method:%s:path:%s:category:%s", apiPage.TableName(), apiPage.Id, apiPage.Method, apiPage.Path, apiPage.Category)
+	list = cache.GetSysApiList(key)
+	if len(list) < 1 {
+		whereOrders := util.GenWhereOrderByStruct(apiPage.SysApi)
+		count, err = a.factory.GetPage(pageIndex, pageSize, model.SysApi{}, &list, whereOrders...)
+	}
+
 	page := &model.Page{
 		Records:  list,
 		Total:    count,

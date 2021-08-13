@@ -15,9 +15,9 @@ type SysMenuSrv interface {
 	GetById(id uint64) (*model.SysMenu, error)
 	GetByPath(path string) (*model.SysMenu, error)
 	GetSome(ids []uint64) ([]model.SysMenu, error)
-	GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error)
+	GetList(value model.SysMenu) ([]model.SysMenu, error)
 	GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error)
-	GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error)
+	GetPage(value model.SysMenuPage) (*model.Page, error)
 }
 
 type menuService struct {
@@ -82,12 +82,35 @@ func (m *menuService) GetByPath(path string) (*model.SysMenu, error) {
 }
 
 func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
-	return m.factory.SysMenu().GetSome(ids)
+	var list []model.SysMenu
+	var menu model.SysMenu
+	var err error
+	key := fmt.Sprintf("%s:ids:%v", menu.TableName(), ids)
+	list = cache.GetSysMenuList(key)
+	if len(list) < 1 {
+		list, err = m.factory.SysMenu().GetSome(ids)
+		// 写入缓存
+		cache.SetSysMenuList(key, list)
+	}
+	return list, err
 }
 
-func (m *menuService) GetList(whereOrders ...model.WhereOrder) ([]model.SysMenu, error) {
-	list := make([]model.SysMenu, 0)
-	err := m.factory.GetList(model.SysMenu{}, &list, whereOrders...)
+func (m *menuService) GetList(value model.SysMenu) ([]model.SysMenu, error) {
+	var list []model.SysMenu
+	var err error
+	var key string
+	key = fmt.Sprintf("%s:id:%d:name:%s:title:%s", value.TableName(), value.Id, value.Name, value.Title)
+	if value.Status != nil {
+		key = fmt.Sprintf("%s:status:%t", key, *value.Status)
+	}
+	list = cache.GetSysMenuList(key)
+	if len(list) < 1 {
+		whereOrders := util.GenWhereOrderByStruct(value)
+		err = m.factory.GetList(model.SysMenu{}, &list, whereOrders...)
+		// 写入缓存
+		cache.SetSysMenuList(key, list)
+	}
+
 	return list, err
 }
 
@@ -120,15 +143,31 @@ func (m *menuService) GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error) {
 	return tree, nil
 }
 
-func (m *menuService) GetPage(pageIndex int, pageSize int, whereOrders ...model.WhereOrder) (*model.Page, error) {
-	list := make([]model.SysMenu, 0)
+func (m *menuService) GetPage(menuPage model.SysMenuPage) (*model.Page, error) {
+	var list []model.SysMenu
+	var err error
+	var count int64
+	var key string
+	pageIndex := menuPage.PageIndex
+	pageSize := menuPage.PageSize
 	if pageIndex <= 0 {
 		pageIndex = 1
 	}
 	if pageSize <= 0 {
 		pageSize = defaultSize
 	}
-	count, err := m.factory.GetPage(pageIndex, pageSize, model.SysMenu{}, &list, whereOrders...)
+	key = fmt.Sprintf("%s:id:%d:name:%s:title:%s", menuPage.TableName(), menuPage.Id, menuPage.Name, menuPage.Title)
+	if menuPage.Status != nil {
+		key = fmt.Sprintf("%s:status:%t", key, *menuPage.Status)
+	}
+	list = cache.GetSysMenuList(key)
+	if len(list) < 1 {
+		whereOrders := util.GenWhereOrderByStruct(menuPage.SysMenu)
+		count, err = m.factory.GetPage(pageIndex, pageSize, model.SysMenu{}, &list, whereOrders...)
+		// 写入缓存
+		cache.SetSysMenuList(key, list)
+	}
+
 	page := &model.Page{
 		Records:  list,
 		Total:    count,
