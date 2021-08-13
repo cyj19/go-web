@@ -106,7 +106,7 @@ func (m *menuService) GetList(value model.SysMenu) ([]model.SysMenu, error) {
 	list = cache.GetSysMenuList(key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(value)
-		err = m.factory.GetList(model.SysMenu{}, &list, whereOrders...)
+		err = m.factory.GetList(&model.SysMenu{}, &list, whereOrders...)
 		// 写入缓存
 		cache.SetSysMenuList(key, list)
 	}
@@ -163,7 +163,7 @@ func (m *menuService) GetPage(menuPage model.SysMenuPage) (*model.Page, error) {
 	list = cache.GetSysMenuList(key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(menuPage.SysMenu)
-		count, err = m.factory.GetPage(pageIndex, pageSize, model.SysMenu{}, &list, whereOrders...)
+		count, err = m.factory.GetPage(pageIndex, pageSize, &model.SysMenu{}, &list, whereOrders...)
 		// 写入缓存
 		cache.SetSysMenuList(key, list)
 	}

@@ -29,6 +29,10 @@ func GetSysApiList(key string) []model.SysApi {
 	return list
 }
 
+/*
+	Redis Lpush 命令将一个或多个值插入到列表头部，导致最后插入的在列表最前面
+	Redis Rpush 命令用于将一个或多个值插入到列表的尾部(最右边)
+*/
 func SetSysApiList(key string, values []model.SysApi) error {
 	redisdb := initialize.GetRedisIns()
 	strs := make([]string, 0)
@@ -37,5 +41,5 @@ func SetSysApiList(key string, values []model.SysApi) error {
 	}
 	// 设置过期时间
 	redisdb.Expire(key, 2*time.Hour)
-	return redisdb.LPush(key, strs).Err()
+	return redisdb.RPush(key, strs).Err()
 }

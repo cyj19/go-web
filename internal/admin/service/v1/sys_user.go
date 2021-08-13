@@ -110,8 +110,8 @@ func (u *userService) GetList(user model.SysUser) ([]model.SysUser, error) {
 
 	list = cache.GetSysUserList(key)
 	if len(list) < 1 {
-		whereOrders := createSysUserQueryCondition(user)
-		err = u.factory.GetList(model.SysUser{}, &list, whereOrders...)
+		whereOrders := util.GenWhereOrderByStruct(user)
+		err = u.factory.GetList(&model.SysUser{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysUserList(key, list)
 	}
@@ -142,8 +142,8 @@ func (u *userService) GetPage(userPage model.SysUserPage) (*model.Page, error) {
 
 	list = cache.GetSysUserList(key)
 	if len(list) < 1 {
-		whereOrders := createSysUserQueryCondition(userPage.SysUser)
-		count, err = u.factory.GetPage(pageIndex, pageSize, model.SysUser{}, &list, whereOrders...)
+		whereOrders := util.GenWhereOrderByStruct(userPage.SysUser)
+		count, err = u.factory.GetPage(pageIndex, pageSize, &model.SysUser{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysUserList(key, list)
 	}
@@ -164,22 +164,4 @@ func (u *userService) Login(username, password string) (*model.SysUser, error) {
 
 	return u.factory.SysUser().Login(username, util.EncryptionPsw(password))
 
-}
-
-func createSysUserQueryCondition(param model.SysUser) []model.WhereOrder {
-	whereOrders := make([]model.WhereOrder, 0)
-
-	if param.Id > 0 {
-		v := param.Id
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "id = ?", Value: []interface{}{v}})
-	}
-	if param.Username != "" {
-		v := "%" + param.Username + "%"
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "username like ?", Value: []interface{}{v}})
-	}
-	if param.Status != nil {
-		whereOrders = append(whereOrders, model.WhereOrder{Where: "status = ?", Value: []interface{}{*param.Status}})
-	}
-
-	return whereOrders
 }

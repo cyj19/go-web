@@ -175,7 +175,7 @@ func (r *roleService) GetList(role model.SysRole) ([]model.SysRole, error) {
 	list = cache.GetSysRoleList(key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(role)
-		err = r.factory.GetList(model.SysRole{}, &list, whereOrders...)
+		err = r.factory.GetList(&model.SysRole{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysRoleList(key, list)
 	}
@@ -185,7 +185,7 @@ func (r *roleService) GetList(role model.SysRole) ([]model.SysRole, error) {
 // 特定条件的查询
 func (r *roleService) GetListByWhereOrder(whereOrders ...model.WhereOrder) ([]model.SysRole, error) {
 	list := make([]model.SysRole, 0)
-	err := r.factory.GetList(model.SysRole{}, &list, whereOrders...)
+	err := r.factory.GetList(&model.SysRole{}, &list, whereOrders...)
 	return list, err
 }
 
@@ -215,7 +215,7 @@ func (r *roleService) GetPage(rolePage model.SysRolePage) (*model.Page, error) {
 	list = cache.GetSysRoleList(key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(rolePage.SysRole)
-		count, err = r.factory.GetPage(pageIndex, pageSize, model.SysRole{}, &list, whereOrders...)
+		count, err = r.factory.GetPage(pageIndex, pageSize, &model.SysRole{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysRoleList(key, list)
 	}

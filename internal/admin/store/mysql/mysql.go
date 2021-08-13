@@ -61,34 +61,36 @@ func (ds *datastore) GetById(id uint64, result interface{}) error {
 	return db.Where("id = ?", id).First(result).Error
 }
 
-// value用于区别模型，struct类型；result用于绑定数据，必须是指针
+// value用于设置db.Model，必须是指针；result用于绑定数据，必须是指针
 func (ds *datastore) GetList(value interface{}, result interface{}, whereOrders ...model.WhereOrder) error {
 	var db *gorm.DB
 	switch v := value.(type) {
-	case model.SysUser:
-		db = queryByCondition(ds.db, &v, whereOrders).Preload("Roles")
-	case model.SysRole:
-		db = queryByCondition(ds.db, &v, whereOrders).Preload("Menus").Order("sort")
-	case model.SysMenu:
-		db = queryByCondition(ds.db, &v, whereOrders).Order("parent_id, sort")
+	case *model.SysUser:
+		db = queryByCondition(ds.db, v, whereOrders).Preload("Roles")
+	case *model.SysRole:
+		db = queryByCondition(ds.db, v, whereOrders).Preload("Menus").Order("sort")
+	case *model.SysMenu:
+		db = queryByCondition(ds.db, v, whereOrders).Order("parent_id, sort")
 	default:
-		db = queryByCondition(ds.db, &v, whereOrders)
+		db = queryByCondition(ds.db, v, whereOrders)
 	}
 
 	return db.Find(result).Error
 
 }
 
-// value用于区别模型，struct类型；result用于绑定数据，必须是指针
+// value用于设置db.Model，必须是指针；result用于绑定数据，必须是指针
 func (ds *datastore) GetPage(pageIndex int, pageSize int, value interface{}, result interface{}, whereOrders ...model.WhereOrder) (int64, error) {
 	var db *gorm.DB
 	switch v := value.(type) {
-	case model.SysUser:
-		db = queryByCondition(ds.db, &v, whereOrders).Preload("Roles")
-	case model.SysRole:
-		db = queryByCondition(ds.db, &v, whereOrders).Preload("Menus")
+	case *model.SysUser:
+		db = queryByCondition(ds.db, v, whereOrders).Preload("Roles")
+	case *model.SysRole:
+		db = queryByCondition(ds.db, v, whereOrders).Preload("Menus").Order("sort")
+	case *model.SysMenu:
+		db = queryByCondition(ds.db, v, whereOrders).Order("parent_id, sort")
 	default:
-		db = queryByCondition(ds.db, &v, whereOrders)
+		db = queryByCondition(ds.db, v, whereOrders)
 	}
 
 	//查询总记录数

@@ -109,7 +109,7 @@ func (a *apiService) BatchDelete(ids []uint64) error {
 	// 查询接口
 	apis := make([]model.SysApi, 0)
 	whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{ids}}
-	err := a.factory.GetList(model.SysApi{}, &apis, whereOrder)
+	err := a.factory.GetList(&model.SysApi{}, &apis, whereOrder)
 	if err != nil {
 		return err
 	}
@@ -157,7 +157,7 @@ func (a *apiService) GetList(value model.SysApi) ([]model.SysApi, error) {
 	list = cache.GetSysApiList(key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(value)
-		err = a.factory.GetList(value, &list, whereOrders...)
+		err = a.factory.GetList(&model.SysApi{}, &list, whereOrders...)
 		// 添加到缓存
 		cache.SetSysApiList(key, list)
 	}
@@ -166,7 +166,7 @@ func (a *apiService) GetList(value model.SysApi) ([]model.SysApi, error) {
 
 func (a *apiService) GetListByWhereOrder(whereOrders ...model.WhereOrder) ([]model.SysApi, error) {
 	var list []model.SysApi
-	err := a.factory.GetList(model.SysApi{}, &list, whereOrders...)
+	err := a.factory.GetList(&model.SysApi{}, &list, whereOrders...)
 	return list, err
 }
 
@@ -187,7 +187,9 @@ func (a *apiService) GetPage(apiPage model.SysApiPage) (*model.Page, error) {
 	list = cache.GetSysApiList(key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(apiPage.SysApi)
-		count, err = a.factory.GetPage(pageIndex, pageSize, model.SysApi{}, &list, whereOrders...)
+		count, err = a.factory.GetPage(pageIndex, pageSize, &model.SysApi{}, &list, whereOrders...)
+		// 写入缓存
+		cache.SetSysApiList(key, list)
 	}
 
 	page := &model.Page{
