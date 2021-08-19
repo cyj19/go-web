@@ -72,7 +72,7 @@ go run main.go
 go run main.go -web_config=xxxx -web_mode=prod
 
 ```
-> 启动成功后，携带参数username:admin password:123456，发送POST请求到 http://127.0.0.1:9999/api/v1/base/login获取token
+> 启动成功后，携带参数username:admin password:123456，发送POST请求到 `http://127.0.0.1:9999/api/v1/base/login`获取token
 
 ## 感想
 花足够多的时间，做足够多的练习才是学习一门技艺的康庄大道。  
