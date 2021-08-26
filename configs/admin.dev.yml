@@ -43,3 +43,18 @@ jwt:
   timeout: 2
   # 刷新token最大过期时间，小时
   max-refresh: 24
+
+# log 配置
+log:
+  # 日志文件路径
+  path: ../../logs
+  # 日志等级 Debug: -1 Info: 0 Warn: 1 Error: 2 Panic: 4 Fatal: 5
+  level: -1
+  # 单个日志文件大小
+  max-size: 10
+  # 旧日志文件保存天数
+  max-age: 30
+  # 保留旧日志文件的最大个数
+  max-backups: 5
+  # 是否压缩旧日志文件
+  compress: false

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"go-web/internal/admin"
 	"go-web/internal/admin/store/mysql"
+	"go-web/internal/pkg/global"
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/model"
 	"log"
@@ -29,7 +30,7 @@ func main() {
 	// 初始化操作工厂
 	factoryIns, err := mysql.GetMySQLFactory()
 	if err != nil {
-		panic(fmt.Sprintf("初始化工厂实例失败：%v", err))
+		global.Log.Panicf("初始化工厂实例失败：%v", err)
 	}
 
 	// 初始化Redis
@@ -44,9 +45,9 @@ func main() {
 
 	// 初始化路由
 	g := admin.Router(factoryIns, enforcer)
-	configuration := initialize.GetConfiguration()
+
 	host := "0.0.0.0"
-	port := configuration.Server.Port
+	port := global.Conf.Server.Port
 	//启动服务
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", host, port),
@@ -70,14 +71,13 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	log.Println("Shutting down server")
+	global.Log.Info("Shutting down server...")
 
 	// 留5秒用于处理未完成的请求
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server forced to shutdown: ", err)
+		global.Log.Fatalf("Server forced to shutdown: %v", err)
 	}
 
-	log.Println("Server exiting")
 }

@@ -1,8 +1,7 @@
 package initialize
 
 import (
-	"fmt"
-	"log"
+	"go-web/internal/pkg/global"
 	"sync"
 
 	"github.com/casbin/casbin/v2"
@@ -19,9 +18,10 @@ var (
 func Casbin() {
 	err := mysqlCasbin()
 	if err != nil {
-		panic(fmt.Sprintf("初始化Casbin失败：%s", err))
+		global.Log.Fatalf("初始化Casbin失败：%s", err)
 	}
-	log.Println("初始化Casbin完成")
+
+	global.Log.Info("初始化Casbin完成...")
 }
 
 func mysqlCasbin() error {
@@ -34,15 +34,17 @@ func mysqlCasbin() error {
 			return
 		}
 		// 读取策略文件
-		modelPath := configuration.Casbin.ModelPath
+		modelPath := global.Conf.Casbin.ModelPath
 		config, err := box.Find(modelPath)
 		if err != nil {
+			global.Log.Errorf("读取策略文件失败：%v", err)
 			return
 		}
 		// 创建模型
 		casbinModel := model.NewModel()
 		err = casbinModel.LoadModelFromText(string(config))
 		if err != nil {
+			global.Log.Errorf("加载casbin模型失败：%v", err)
 			return
 		}
 		enforcer, err = casbin.NewEnforcer(casbinModel, a)
@@ -53,6 +55,7 @@ func mysqlCasbin() error {
 		// 加载策略
 		err = enforcer.LoadPolicy()
 		if err != nil {
+			global.Log.Errorf("加载策略失败：%v", err)
 			return
 		}
 

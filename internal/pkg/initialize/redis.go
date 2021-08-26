@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"fmt"
+	"go-web/internal/pkg/global"
 	"sync"
 
 	"github.com/go-redis/redis"
@@ -18,9 +19,9 @@ func Redis() {
 	// 单例模式，保证生命周期只初始化一次
 	onceRedis.Do(func() {
 		redisIns = redis.NewClient(&redis.Options{
-			Addr:     configuration.Redis.Addr,
-			Password: configuration.Redis.Password,
-			DB:       configuration.Redis.Db,
+			Addr:     global.Conf.Redis.Addr,
+			Password: global.Conf.Redis.Password,
+			DB:       global.Conf.Redis.Db,
 		})
 	})
 	err := redisIns.Ping().Err()
@@ -28,7 +29,7 @@ func Redis() {
 		panic(fmt.Sprintf("初始化Redis异常：%v", err))
 	}
 
-	fmt.Println("初始化Redis完成...")
+	global.Log.Info("初始化redis完成...")
 }
 
 // 暴露给其他包

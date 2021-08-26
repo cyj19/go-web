@@ -18,7 +18,7 @@ func MySQL(models ...interface{}) {
 	var err error
 	// 单例模式，保证整个生命周期只初始化一次
 	once.Do(func() {
-		dbIns, err = global.NewMySQL(configuration.Mysql)
+		dbIns, err = global.NewMySQL(global.Conf.Mysql)
 	})
 
 	if err != nil {
@@ -26,6 +26,8 @@ func MySQL(models ...interface{}) {
 	}
 
 	autoMigrateTables(models...)
+
+	global.Log.Info("初始化MySQL完成...")
 
 }
 

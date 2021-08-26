@@ -14,12 +14,12 @@ func Exception(c *gin.Context) {
 			switch v := err.(type) {
 			case response.Result:
 				// 写入日志文件
-				global.LoggerIns.Println("正常响应：", err)
+				global.Log.Infof("response success, data: %v", v)
 				response.JSON(c, v.Code, v)
 				return
 			default:
 				// 写入日志文件
-				global.LoggerIns.Println("未知异常：", err)
+				global.Log.Errorf("unknown exception: %v", err)
 				result := response.Result{
 					Code: response.InternalServerError,
 					Msg:  response.CustomError[response.InternalServerError],

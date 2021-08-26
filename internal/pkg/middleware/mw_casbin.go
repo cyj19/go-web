@@ -5,7 +5,7 @@ import (
 
 	"go-web/internal/admin/api/v1/user"
 	"go-web/internal/admin/store"
-	"go-web/internal/pkg/initialize"
+	"go-web/internal/pkg/global"
 	"go-web/internal/pkg/model"
 
 	"github.com/casbin/casbin/v2"
@@ -15,10 +15,10 @@ import (
 // 基于rbac
 func CasbinMiddleware(factory store.Factory, enforcer *casbin.Enforcer) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		configuration := initialize.GetConfiguration()
+
 		obj := c.Request.URL.Path
 		// 清除路径前缀
-		obj = strings.Replace(obj, "/"+configuration.Server.UrlPrefix, "", 1)
+		obj = strings.Replace(obj, "/"+global.Conf.Server.UrlPrefix, "", 1)
 		act := c.Request.Method
 		// 获取当前用户
 		userHandler := user.NewSysUserHandler(factory, enforcer)

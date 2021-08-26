@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"go.uber.org/zap/zapcore"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -11,11 +12,12 @@ import (
 
 // viper内置了mapstructure, yml文件用"-"区分单词, 转为驼峰方便
 type Configuration struct {
-	Server *ServerConfiguration
-	Mysql  *MysqlConfiguration
-	Redis  *RedisConfiguration
-	Casbin *CasbinConfiguration
-	Jwt    *JWTConfiguration
+	Server *ServerConfiguration `mapstructure:"server" json:"server"`
+	Mysql  *MysqlConfiguration  `mapstructure:"mysql" json:"mysql"`
+	Redis  *RedisConfiguration  `mapstructure:"redis" json:"redis"`
+	Casbin *CasbinConfiguration `mapstructure:"casbin" json:"casbin"`
+	Jwt    *JWTConfiguration    `mapstructure:"jwt" json:"jwt"`
+	Log    *LogConfiguration    `mapstructure:"log" json:"log"`
 }
 
 type ServerConfiguration struct {
@@ -79,4 +81,13 @@ type JWTConfiguration struct {
 	Key        string `mapstructure:"key" json:"key"`
 	Timeout    int    `mapstructure:"timeout" json:"timeout"`
 	MaxRefresh int    `mapstructure:"max-refresh" json:"maxRefresh"`
+}
+
+type LogConfiguration struct {
+	Path       string        `mapstructure:"path" json:"path"`
+	Level      zapcore.Level `mapstructure:"level" json:"level"`
+	MaxSize    int           `mapstructure:"max-size" json:"maxSize"`
+	MaxAge     int           `mapstructure:"max-age" json:"maxAge"`
+	MaxBackups int           `mapstructure:"max-backups" json:"maxBackups"`
+	Compress   bool          `mapstructure:"compress" json:"compress"`
 }

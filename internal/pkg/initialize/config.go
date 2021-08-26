@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"go-web/internal/pkg/global"
+	"log"
 	"strings"
 
 	"github.com/spf13/viper"
@@ -16,7 +17,6 @@ const (
 )
 
 var box = new(global.CustomConfBox)
-var configuration = new(global.Configuration)
 
 /*
 	初始化配置文件
@@ -58,11 +58,11 @@ func Config(developmentConfig, productionConfig string) {
 	}
 
 	// 配置转为结构体
-	if err := box.ViperIns.Unmarshal(configuration); err != nil {
+	if err := box.ViperIns.Unmarshal(&global.Conf); err != nil {
 		panic(fmt.Sprintf("配置转结构体失败：%v , 配置文件所在目录为：%s", err, box.ConfEnv))
 	}
 
-	fmt.Println("server: ", configuration.Server)
+	log.Println("初始化配置文件完成...")
 
 }
 
@@ -77,8 +77,4 @@ func readConfig(filename string) {
 	if err != nil {
 		panic(fmt.Sprintf("初始化配置失败：%v , 配置文件所在目录为：%s", err, box.ConfEnv))
 	}
-}
-
-func GetConfiguration() *global.Configuration {
-	return configuration
 }

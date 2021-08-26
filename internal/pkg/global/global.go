@@ -2,12 +2,19 @@ package global
 
 import (
 	"io/ioutil"
-	"log"
 
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 )
 
-var LoggerIns *log.Logger
+const (
+	MsecLocalTimeFormat = "2006-01-02 15:04:05.000"
+)
+
+var (
+	Conf Configuration
+	Log  *zap.SugaredLogger
+)
 
 //自定义配置盒子，存放环境配置和对应的viper
 type CustomConfBox struct {
