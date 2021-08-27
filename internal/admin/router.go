@@ -1,6 +1,9 @@
 package admin
 
 import (
+	"context"
+	"fmt"
+
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 
@@ -12,7 +15,7 @@ import (
 )
 
 // 初始化路由
-func Router(factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
+func Router(c context.Context, factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	// 创建一个没有中间件的路由
 	g := gin.New()
 	// 添加访问日志
@@ -26,7 +29,7 @@ func Router(factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	// 初始化go-jwt中间件
 	authMiddleware, err := middleware.InitGinJWTMiddleware(userHandler.Login)
 	if err != nil {
-		global.Log.Fatalf("初始化jwt中间件失败：%v", err)
+		panic(fmt.Sprintf("初始化jwt中间件失败：%v", err))
 	}
 
 	apiRouter := g.Group(global.Conf.Server.UrlPrefix)
@@ -38,6 +41,6 @@ func Router(factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	router.InitRoleRouter(v1, factoryIns, enforcer, authMiddleware) // 注册角色路由
 	router.InitMenuRouter(v1, factoryIns, enforcer, authMiddleware) // 注册菜单路由
 	router.InitApiRouter(v1, factoryIns, enforcer, authMiddleware)  // 注册接口路由
-	global.Log.Info("初始化路由完成...")
+	global.Log.Info(c, "初始化路由完成...")
 	return g
 }

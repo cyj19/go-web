@@ -9,6 +9,7 @@ import (
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gorm.io/gorm/logger"
 )
 
 // 初始化日志，使用zap+lumberjack代替标准库的log
@@ -18,8 +19,8 @@ func InitLogger() {
 	encoderConfig := zap.NewProductionEncoderConfig()
 	// 自定义时间格式
 	encoderConfig.EncodeTime = ZapLogLocalTimeEncoder
-	// 使用大写字母记录日志级别
-	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
+	// 使用大写字母+颜色记录日志级别
+	encoderConfig.EncodeLevel = zapcore.CapitalColorLevelEncoder
 	encoder := zapcore.NewConsoleEncoder(encoderConfig)
 	// 日志文件名
 	now := time.Now()
@@ -36,8 +37,13 @@ func InitLogger() {
 	writerSyncer := zapcore.NewMultiWriteSyncer(zapcore.AddSync(lumberjackLog), zapcore.AddSync(os.Stdout))
 	core := zapcore.NewCore(encoder, writerSyncer, global.Conf.Log.Level)
 	// 创建日志对象
-	logger := zap.New(core, zap.AddCaller())
-	global.Log = logger.Sugar()
+	log := zap.New(core, zap.AddCaller())
+	global.Log = global.NewGormZapLogger(log, logger.Config{
+		Colorful: true,
+	})
+
+	global.Log.Info(ctx, "初始化日志完成...")
+
 }
 
 // zap日志自定义时间格式

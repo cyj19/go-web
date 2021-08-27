@@ -27,7 +27,7 @@ func MySQL(models ...interface{}) {
 
 	autoMigrateTables(models...)
 
-	global.Log.Info("初始化MySQL完成...")
+	global.Log.Info(ctx, "初始化MySQL完成...")
 
 }
 

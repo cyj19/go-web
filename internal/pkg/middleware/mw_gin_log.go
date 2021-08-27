@@ -30,6 +30,6 @@ func GinLog(c *gin.Context) {
 	// 执行时间
 	execTime := endTime.Sub(startTime)
 
-	global.Log.Info(fmt.Sprintf("%d %s %s %s %s %s", statusCode, method, path, query, clientIP, execTime))
+	global.Log.Info(c, fmt.Sprintf("%d %s %s %s %s %s", statusCode, method, path, query, clientIP, execTime))
 
 }

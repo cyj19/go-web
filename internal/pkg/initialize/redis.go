@@ -29,7 +29,7 @@ func Redis() {
 		panic(fmt.Sprintf("初始化Redis异常：%v", err))
 	}
 
-	global.Log.Info("初始化redis完成...")
+	global.Log.Info(ctx, "初始化redis完成...")
 }
 
 // 暴露给其他包

@@ -17,9 +17,9 @@ import (
 )
 
 func main() {
-
+	ctx := context.Background()
 	// 初始化配置文件
-	initialize.Config("admin.dev.yml", "admin.prod.yml")
+	initialize.Config(ctx, "admin.dev.yml", "admin.prod.yml")
 
 	// 初始化日志
 	initialize.InitLogger()
@@ -30,7 +30,7 @@ func main() {
 	// 初始化操作工厂
 	factoryIns, err := mysql.GetMySQLFactory()
 	if err != nil {
-		global.Log.Panicf("初始化工厂实例失败：%v", err)
+		panic(fmt.Sprintf("初始化工厂实例失败：%v", err))
 	}
 
 	// 初始化Redis
@@ -44,7 +44,7 @@ func main() {
 	admin.InitData(factoryIns, enforcer)
 
 	// 初始化路由
-	g := admin.Router(factoryIns, enforcer)
+	g := admin.Router(ctx, factoryIns, enforcer)
 
 	host := "0.0.0.0"
 	port := global.Conf.Server.Port
@@ -71,13 +71,13 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	global.Log.Info("Shutting down server...")
+	global.Log.Info(ctx, "Shutting down server...")
 
 	// 留5秒用于处理未完成的请求
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		global.Log.Fatalf("Server forced to shutdown: %v", err)
+		global.Log.Error(ctx, "Server forced to shutdown: %v", err)
 	}
 
 }

@@ -4,7 +4,6 @@ import (
 	"io/ioutil"
 
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 const (
@@ -13,7 +12,7 @@ const (
 
 var (
 	Conf Configuration
-	Log  *zap.SugaredLogger
+	Log  *GormZapLogger
 )
 
 //自定义配置盒子，存放环境配置和对应的viper

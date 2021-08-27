@@ -2,7 +2,6 @@ package cache
 
 import (
 	"encoding/json"
-	"go-web/internal/pkg/global"
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/util"
 	"time"
@@ -19,7 +18,6 @@ func Get(key string, model interface{}) error {
 	redisdb := initialize.GetRedisIns()
 	value, err := redisdb.Get(key).Result()
 	if err == redis.Nil || err != nil {
-		global.Log.Errorf("redis missing key err:%v", err)
 		return err
 	}
 
@@ -32,7 +30,6 @@ func Set(key string, value interface{}) error {
 	redisdb := initialize.GetRedisIns()
 	valueData, err := json.Marshal(value)
 	if err != nil {
-		global.Log.Errorf("json marshal err:%v", err)
 		return err
 	}
 

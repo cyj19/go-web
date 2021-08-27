@@ -7,7 +7,6 @@ import (
 	"go.uber.org/zap/zapcore"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 // viper内置了mapstructure, yml文件用"-"区分单词, 转为驼峰方便
@@ -50,7 +49,7 @@ func NewMySQL(opt *MysqlConfiguration) (*gorm.DB, error) {
 		"Local")
 
 	// gorm 默认会在事务里执行写入操作（创建、更新、删除）
-	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{Logger: logger.Default.LogMode(logger.LogLevel(opt.LogLevel))})
+	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{Logger: Log})
 	if err != nil {
 		return nil, err
 	}

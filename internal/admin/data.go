@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"fmt"
 	srvv1 "go-web/internal/admin/service/v1"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/global"
@@ -171,13 +172,14 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	if len(newApis) > 0 {
 		err := service.SysApi().Create(newApis...)
 		if err != nil {
-			global.Log.Fatalf("初始化接口失败：%v", err)
+			panic(fmt.Sprintf("初始化接口失败：%v", err))
 		}
 	}
 	if len(newRoleCasbins) > 0 {
 		_, err := service.SysCasbin().BatchCreateRoleCasbins(newRoleCasbins)
 		if err != nil {
-			global.Log.Fatalf("初始化接口权限失败：%v", err)
+			//global.LogIns.Log.Fatalf("初始化接口权限失败：%v", err)
+			panic(fmt.Sprintf("初始化接口权限失败：%v", err))
 		}
 	}
 
@@ -232,7 +234,8 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 		if len(newMenus) > 0 {
 			err := srv.SysMenu().Create(newMenus...)
 			if err != nil {
-				global.Log.Fatalf("初始化菜单失败：%v", err)
+				//global.Log.Fatalf("初始化菜单失败：%v", err)
+				panic(fmt.Sprintf("初始化菜单失败：%v", err))
 			}
 
 			// 创建子菜单
@@ -256,7 +259,8 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 				}
 				err := srv.SysMenu().Create(value.Children...)
 				if err != nil {
-					global.Log.Fatalf("初始化子菜单失败：%v", err)
+					//global.Log.Fatalf("初始化子菜单失败：%v", err)
+					panic(fmt.Sprintf("初始化子菜单失败：%v", err))
 				}
 
 			}

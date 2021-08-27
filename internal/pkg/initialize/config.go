@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"bytes"
+	"context"
 	"flag"
 	"fmt"
 	"go-web/internal/pkg/global"
@@ -16,14 +17,18 @@ const (
 	configPath  = "../../configs"
 )
 
-var box = new(global.CustomConfBox)
+var (
+	box = new(global.CustomConfBox)
+	ctx context.Context
+)
 
 /*
 	初始化配置文件
 	参数developmentConfig: 默认开发配置文件
 	参数productionConfig: 默认生产配置文件
 */
-func Config(developmentConfig, productionConfig string) {
+func Config(c context.Context, developmentConfig string, productionConfig string) {
+	ctx = c
 	// 声明命令行标志
 	confFlag := flag.String("web_conf", "", "config path")
 	modeFlag := flag.String("web_mode", "", "run mode")

@@ -18,10 +18,10 @@ var (
 func Casbin() {
 	err := mysqlCasbin()
 	if err != nil {
-		global.Log.Fatalf("初始化Casbin失败：%s", err)
+		global.Log.Error(ctx, "初始化Casbin失败：%s", err)
 	}
 
-	global.Log.Info("初始化Casbin完成...")
+	global.Log.Info(ctx, "初始化Casbin完成...")
 }
 
 func mysqlCasbin() error {
@@ -37,14 +37,14 @@ func mysqlCasbin() error {
 		modelPath := global.Conf.Casbin.ModelPath
 		config, err := box.Find(modelPath)
 		if err != nil {
-			global.Log.Errorf("读取策略文件失败：%v", err)
+			global.Log.Error(ctx, "读取策略文件失败：%v", err)
 			return
 		}
 		// 创建模型
 		casbinModel := model.NewModel()
 		err = casbinModel.LoadModelFromText(string(config))
 		if err != nil {
-			global.Log.Errorf("加载casbin模型失败：%v", err)
+			global.Log.Error(ctx, "加载casbin模型失败：%v", err)
 			return
 		}
 		enforcer, err = casbin.NewEnforcer(casbinModel, a)
@@ -55,7 +55,7 @@ func mysqlCasbin() error {
 		// 加载策略
 		err = enforcer.LoadPolicy()
 		if err != nil {
-			global.Log.Errorf("加载策略失败：%v", err)
+			global.Log.Error(ctx, "加载策略失败：%v", err)
 			return
 		}
 
