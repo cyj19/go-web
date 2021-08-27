@@ -17,7 +17,7 @@ func (u *SysUserHandler) BatchDelete(c *gin.Context) {
 	}
 
 	ids := util.Str2Uint64Array(param.Ids)
-	err = u.srv.SysUser().BatchDelete(ids)
+	err = u.srv.SysUser().BatchDelete(c, ids)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

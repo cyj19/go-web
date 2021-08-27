@@ -14,8 +14,13 @@ import (
 	"go-web/internal/pkg/middleware"
 )
 
-// 初始化路由
-func Router(c context.Context, factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
+/*
+	初始化路由
+	参数1：上下文
+	参数2：工厂实例
+	参数3：casbin执行指针
+*/
+func Router(ctx context.Context, factoryIns store.Factory, enforcer *casbin.Enforcer) *gin.Engine {
 	// 创建一个没有中间件的路由
 	g := gin.New()
 	// 添加访问日志
@@ -41,6 +46,6 @@ func Router(c context.Context, factoryIns store.Factory, enforcer *casbin.Enforc
 	router.InitRoleRouter(v1, factoryIns, enforcer, authMiddleware) // 注册角色路由
 	router.InitMenuRouter(v1, factoryIns, enforcer, authMiddleware) // 注册菜单路由
 	router.InitApiRouter(v1, factoryIns, enforcer, authMiddleware)  // 注册接口路由
-	global.Log.Info(c, "初始化路由完成...")
+	global.Log.Info(ctx, "初始化路由完成...")
 	return g
 }

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"fmt"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
@@ -9,15 +10,15 @@ import (
 )
 
 type SysMenuSrv interface {
-	Create(values ...model.SysMenu) error
-	Update(value *model.SysMenu) error
-	BatchDelete(ids []uint64) error
-	GetById(id uint64) (*model.SysMenu, error)
-	GetByPath(path string) (*model.SysMenu, error)
-	GetSome(ids []uint64) ([]model.SysMenu, error)
-	GetList(value model.SysMenu) ([]model.SysMenu, error)
-	GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error)
-	GetPage(value model.SysMenuPage) (*model.Page, error)
+	Create(ctx context.Context, values ...model.SysMenu) error
+	Update(ctx context.Context, value *model.SysMenu) error
+	BatchDelete(ctx context.Context, ids []uint64) error
+	GetById(ctx context.Context, id uint64) (*model.SysMenu, error)
+	GetByPath(ctx context.Context, path string) (*model.SysMenu, error)
+	GetSome(ctx context.Context, ids []uint64) ([]model.SysMenu, error)
+	GetList(ctx context.Context, value model.SysMenu) ([]model.SysMenu, error)
+	GetMenusByRoleId(ctx context.Context, ids []uint64) ([]model.SysMenu, error)
+	GetPage(ctx context.Context, value model.SysMenuPage) (*model.Page, error)
 }
 
 type menuService struct {
@@ -28,7 +29,7 @@ func newSysMenu(srv *service) SysMenuSrv {
 	return &menuService{factory: srv.factory}
 }
 
-func (m *menuService) Create(values ...model.SysMenu) error {
+func (m *menuService) Create(ctx context.Context, values ...model.SysMenu) error {
 	err := m.factory.Create(&values)
 	if err != nil {
 		return err
@@ -37,7 +38,7 @@ func (m *menuService) Create(values ...model.SysMenu) error {
 	return nil
 }
 
-func (m *menuService) Update(value *model.SysMenu) error {
+func (m *menuService) Update(ctx context.Context, value *model.SysMenu) error {
 	err := m.factory.Update(value)
 	if err != nil {
 		return err
@@ -46,7 +47,7 @@ func (m *menuService) Update(value *model.SysMenu) error {
 	return nil
 }
 
-func (m *menuService) BatchDelete(ids []uint64) error {
+func (m *menuService) BatchDelete(ctx context.Context, ids []uint64) error {
 	value := new(model.SysMenu)
 	err := m.factory.BatchDelete(ids, value)
 	if err != nil {
@@ -56,7 +57,7 @@ func (m *menuService) BatchDelete(ids []uint64) error {
 	return nil
 }
 
-func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
+func (m *menuService) GetById(ctx context.Context, id uint64) (*model.SysMenu, error) {
 	value := new(model.SysMenu)
 	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
 	err := cache.Get(key, value)
@@ -69,7 +70,7 @@ func (m *menuService) GetById(id uint64) (*model.SysMenu, error) {
 	return value, err
 }
 
-func (m *menuService) GetByPath(path string) (*model.SysMenu, error) {
+func (m *menuService) GetByPath(ctx context.Context, path string) (*model.SysMenu, error) {
 	value := new(model.SysMenu)
 	key := fmt.Sprintf("%s:path:%s", value.TableName(), path)
 	err := cache.Get(key, value)
@@ -81,7 +82,7 @@ func (m *menuService) GetByPath(path string) (*model.SysMenu, error) {
 	return value, err
 }
 
-func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
+func (m *menuService) GetSome(ctx context.Context, ids []uint64) ([]model.SysMenu, error) {
 	var list []model.SysMenu
 	var menu model.SysMenu
 	var err error
@@ -95,7 +96,7 @@ func (m *menuService) GetSome(ids []uint64) ([]model.SysMenu, error) {
 	return list, err
 }
 
-func (m *menuService) GetList(value model.SysMenu) ([]model.SysMenu, error) {
+func (m *menuService) GetList(ctx context.Context, value model.SysMenu) ([]model.SysMenu, error) {
 	var list []model.SysMenu
 	var err error
 	var key string
@@ -114,11 +115,11 @@ func (m *menuService) GetList(value model.SysMenu) ([]model.SysMenu, error) {
 	return list, err
 }
 
-func (m *menuService) GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error) {
+func (m *menuService) GetMenusByRoleId(ctx context.Context, ids []uint64) ([]model.SysMenu, error) {
 	// 创建role服务
 	rs := &roleService{factory: m.factory}
 	whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{ids}}
-	roles, err := rs.GetListByWhereOrder(whereOrder)
+	roles, err := rs.GetListByWhereOrder(ctx, whereOrder)
 	if err != nil {
 		return nil, err
 	}
@@ -143,7 +144,7 @@ func (m *menuService) GetMenusByRoleId(ids []uint64) ([]model.SysMenu, error) {
 	return tree, nil
 }
 
-func (m *menuService) GetPage(menuPage model.SysMenuPage) (*model.Page, error) {
+func (m *menuService) GetPage(ctx context.Context, menuPage model.SysMenuPage) (*model.Page, error) {
 	var list []model.SysMenu
 	var err error
 	var count int64

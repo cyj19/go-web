@@ -14,7 +14,7 @@ func (r *SysRoleHandler) Create(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	err = r.srv.SysRole().Create(role)
+	err = r.srv.SysRole().Create(c, role)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

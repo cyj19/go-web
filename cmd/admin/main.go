@@ -18,6 +18,14 @@ import (
 
 func main() {
 	ctx := context.Background()
+	// 处理初始化阶段可能抛出的panic
+	defer func() {
+		if err := recover(); err != nil {
+			// 写入日志文件
+			global.Log.Fatal(ctx, "未知异常，退出程序", err)
+		}
+	}()
+
 	// 初始化配置文件
 	initialize.Config(ctx, "admin.dev.yml", "admin.prod.yml")
 
@@ -41,7 +49,7 @@ func main() {
 	enforcer := initialize.GetEnforcerIns()
 
 	// 初始化数据
-	admin.InitData(factoryIns, enforcer)
+	admin.InitData(ctx, factoryIns, enforcer)
 
 	// 初始化路由
 	g := admin.Router(ctx, factoryIns, enforcer)

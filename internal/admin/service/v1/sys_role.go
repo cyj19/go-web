@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"fmt"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
@@ -11,16 +12,16 @@ import (
 )
 
 type SysRoleSrv interface {
-	Create(values ...model.SysRole) error
-	Update(value *model.SysRole) error
-	UpdateMenuForRole(cd *model.CreateDelete) error
-	UpdateApiForRole(cd *model.CreateDelete) error
-	BatchDelete(ids []uint64) error
-	GetById(id uint64) (*model.SysRole, error)
-	GetByName(name string) (*model.SysRole, error)
-	GetList(role model.SysRole) ([]model.SysRole, error)
-	GetListByWhereOrder(whereOrders ...model.WhereOrder) ([]model.SysRole, error)
-	GetPage(rolePage model.SysRolePage) (*model.Page, error)
+	Create(ctx context.Context, values ...model.SysRole) error
+	Update(ctx context.Context, value *model.SysRole) error
+	UpdateMenuForRole(ctx context.Context, cd *model.CreateDelete) error
+	UpdateApiForRole(ctx context.Context, cd *model.CreateDelete) error
+	BatchDelete(ctx context.Context, ids []uint64) error
+	GetById(ctx context.Context, id uint64) (*model.SysRole, error)
+	GetByName(ctx context.Context, name string) (*model.SysRole, error)
+	GetList(ctx context.Context, role model.SysRole) ([]model.SysRole, error)
+	GetListByWhereOrder(ctx context.Context, whereOrders ...model.WhereOrder) ([]model.SysRole, error)
+	GetPage(ctx context.Context, rolePage model.SysRolePage) (*model.Page, error)
 }
 
 type roleService struct {
@@ -35,7 +36,7 @@ func newSysRole(srv *service) SysRoleSrv {
 	}
 }
 
-func (r *roleService) Create(values ...model.SysRole) error {
+func (r *roleService) Create(ctx context.Context, values ...model.SysRole) error {
 	err := r.factory.Create(&values)
 	if err != nil {
 		return err
@@ -45,7 +46,7 @@ func (r *roleService) Create(values ...model.SysRole) error {
 	return nil
 }
 
-func (r *roleService) Update(role *model.SysRole) error {
+func (r *roleService) Update(ctx context.Context, role *model.SysRole) error {
 	err := r.factory.Update(role)
 	if err != nil {
 		return err
@@ -55,9 +56,9 @@ func (r *roleService) Update(role *model.SysRole) error {
 	return nil
 }
 
-func (r *roleService) UpdateMenuForRole(cd *model.CreateDelete) error {
+func (r *roleService) UpdateMenuForRole(ctx context.Context, cd *model.CreateDelete) error {
 	// 查询记录是否存在
-	_, err := r.GetById(cd.Id)
+	_, err := r.GetById(ctx, cd.Id)
 	if err != nil {
 		return fmt.Errorf("记录不存在：%v ", err)
 	}
@@ -65,9 +66,9 @@ func (r *roleService) UpdateMenuForRole(cd *model.CreateDelete) error {
 }
 
 // 更新角色的接口权限，维护casbin规则
-func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
+func (r *roleService) UpdateApiForRole(ctx context.Context, cd *model.CreateDelete) error {
 	// 查询记录是否存在
-	_, err := r.GetById(cd.Id)
+	_, err := r.GetById(ctx, cd.Id)
 	if err != nil {
 		return fmt.Errorf("记录不存在：%v ", err)
 	}
@@ -79,7 +80,7 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 	if len(cd.Delete) > 0 {
 		// 获取要删除的api
 		whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{cd.Delete}}
-		deleteApis, _ := as.GetListByWhereOrder(whereOrder)
+		deleteApis, _ := as.GetListByWhereOrder(ctx, whereOrder)
 		// 构建casbin规则
 		deleteCasbins := make([]model.SysRoleCasbin, 0)
 		for _, api := range deleteApis {
@@ -91,7 +92,7 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 		}
 		if len(deleteCasbins) > 0 {
 			// 删除casbin规则
-			_, err = cs.BatchDeleteRoleCasbins(deleteCasbins)
+			_, err = cs.BatchDeleteRoleCasbins(ctx, deleteCasbins)
 			if err != nil {
 				return err
 			}
@@ -102,7 +103,7 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 	if len(cd.Create) > 0 {
 		// 获取要增加的api
 		whereOrder := model.WhereOrder{Where: "id in ?", Value: []interface{}{cd.Create}}
-		createApis, _ := as.GetListByWhereOrder(whereOrder)
+		createApis, _ := as.GetListByWhereOrder(ctx, whereOrder)
 		// 构建casbin规则
 		createCasbins := make([]model.SysRoleCasbin, 0)
 		for _, api := range createApis {
@@ -114,7 +115,7 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 		}
 		if len(createCasbins) > 0 {
 			// 增加casbin规则
-			_, err = cs.BatchCreateRoleCasbins(createCasbins)
+			_, err = cs.BatchCreateRoleCasbins(ctx, createCasbins)
 			if err != nil {
 				return err
 			}
@@ -124,7 +125,7 @@ func (r *roleService) UpdateApiForRole(cd *model.CreateDelete) error {
 	return nil
 }
 
-func (r *roleService) BatchDelete(ids []uint64) error {
+func (r *roleService) BatchDelete(ctx context.Context, ids []uint64) error {
 	value := new(model.SysRole)
 	err := r.factory.BatchDelete(ids, value)
 	if err != nil {
@@ -135,7 +136,7 @@ func (r *roleService) BatchDelete(ids []uint64) error {
 	return nil
 }
 
-func (r *roleService) GetById(id uint64) (*model.SysRole, error) {
+func (r *roleService) GetById(ctx context.Context, id uint64) (*model.SysRole, error) {
 	value := new(model.SysRole)
 	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
 	err := cache.Get(key, value)
@@ -148,7 +149,7 @@ func (r *roleService) GetById(id uint64) (*model.SysRole, error) {
 	return value, err
 }
 
-func (r *roleService) GetByName(name string) (*model.SysRole, error) {
+func (r *roleService) GetByName(ctx context.Context, name string) (*model.SysRole, error) {
 	value := new(model.SysRole)
 	key := fmt.Sprintf("%s:name:%s", value.TableName(), name)
 	err := cache.Get(key, value)
@@ -160,7 +161,7 @@ func (r *roleService) GetByName(name string) (*model.SysRole, error) {
 	return value, err
 }
 
-func (r *roleService) GetList(role model.SysRole) ([]model.SysRole, error) {
+func (r *roleService) GetList(ctx context.Context, role model.SysRole) ([]model.SysRole, error) {
 	var list []model.SysRole
 	var err error
 	var key string
@@ -183,13 +184,13 @@ func (r *roleService) GetList(role model.SysRole) ([]model.SysRole, error) {
 }
 
 // 特定条件的查询
-func (r *roleService) GetListByWhereOrder(whereOrders ...model.WhereOrder) ([]model.SysRole, error) {
+func (r *roleService) GetListByWhereOrder(ctx context.Context, whereOrders ...model.WhereOrder) ([]model.SysRole, error) {
 	list := make([]model.SysRole, 0)
 	err := r.factory.GetList(&model.SysRole{}, &list, whereOrders...)
 	return list, err
 }
 
-func (r *roleService) GetPage(rolePage model.SysRolePage) (*model.Page, error) {
+func (r *roleService) GetPage(ctx context.Context, rolePage model.SysRolePage) (*model.Page, error) {
 	var list []model.SysRole
 	var err error
 	var key string

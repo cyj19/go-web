@@ -16,7 +16,7 @@ func (a *SysApiHandler) BatchDelete(c *gin.Context) {
 		return
 	}
 	ids := util.Str2Uint64Array(param.Ids)
-	err = a.srv.SysApi().BatchDelete(ids)
+	err = a.srv.SysApi().BatchDelete(c, ids)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"fmt"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
@@ -11,15 +12,15 @@ import (
 )
 
 type SysUserSrv interface {
-	Create(values ...model.SysUser) error
-	Update(user *model.SysUser) error
-	UpdateRoleForUser(cd *model.CreateDelete) error
-	BatchDelete(ids []uint64) error
-	GetById(id uint64) (*model.SysUser, error)
-	GetByUsername(username string) (*model.SysUser, error)
-	GetList(user model.SysUser) ([]model.SysUser, error)
-	GetPage(userPaage model.SysUserPage) (*model.Page, error)
-	Login(username, password string) (*model.SysUser, error)
+	Create(ctx context.Context, values ...model.SysUser) error
+	Update(ctx context.Context, user *model.SysUser) error
+	UpdateRoleForUser(ctx context.Context, cd *model.CreateDelete) error
+	BatchDelete(ctx context.Context, ids []uint64) error
+	GetById(ctx context.Context, id uint64) (*model.SysUser, error)
+	GetByUsername(ctx context.Context, username string) (*model.SysUser, error)
+	GetList(ctx context.Context, user model.SysUser) ([]model.SysUser, error)
+	GetPage(ctx context.Context, userPaage model.SysUserPage) (*model.Page, error)
+	Login(ctx context.Context, username, password string) (*model.SysUser, error)
 }
 
 type userService struct {
@@ -36,7 +37,7 @@ func newSysUser(srv *service) SysUserSrv {
 
 //实现SysUserSrv接口
 
-func (u *userService) Create(values ...model.SysUser) error {
+func (u *userService) Create(ctx context.Context, values ...model.SysUser) error {
 	err := u.factory.Create(&values)
 	if err != nil {
 		return err
@@ -46,7 +47,7 @@ func (u *userService) Create(values ...model.SysUser) error {
 	return nil
 }
 
-func (u *userService) Update(value *model.SysUser) error {
+func (u *userService) Update(ctx context.Context, value *model.SysUser) error {
 	err := u.factory.Update(value)
 	if err != nil {
 		return err
@@ -56,9 +57,9 @@ func (u *userService) Update(value *model.SysUser) error {
 	return nil
 }
 
-func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
+func (u *userService) UpdateRoleForUser(ctx context.Context, cd *model.CreateDelete) error {
 	// 查询记录是否存在
-	user, err := u.GetById(cd.Id)
+	user, err := u.GetById(ctx, cd.Id)
 	if err != nil {
 		return fmt.Errorf("记录找不到：%v ", err)
 	}
@@ -71,7 +72,7 @@ func (u *userService) UpdateRoleForUser(cd *model.CreateDelete) error {
 	return nil
 }
 
-func (u *userService) BatchDelete(ids []uint64) error {
+func (u *userService) BatchDelete(ctx context.Context, ids []uint64) error {
 	user := new(model.SysUser)
 	err := u.factory.BatchDelete(ids, user)
 	if err != nil {
@@ -82,7 +83,7 @@ func (u *userService) BatchDelete(ids []uint64) error {
 	return nil
 }
 
-func (u *userService) GetById(id uint64) (*model.SysUser, error) {
+func (u *userService) GetById(ctx context.Context, id uint64) (*model.SysUser, error) {
 	value := new(model.SysUser)
 	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
 	err := cache.Get(key, value)
@@ -95,11 +96,11 @@ func (u *userService) GetById(id uint64) (*model.SysUser, error) {
 	return value, err
 }
 
-func (u *userService) GetByUsername(username string) (*model.SysUser, error) {
+func (u *userService) GetByUsername(ctx context.Context, username string) (*model.SysUser, error) {
 	return u.factory.SysUser().GetByUsername(username)
 }
 
-func (u *userService) GetList(user model.SysUser) ([]model.SysUser, error) {
+func (u *userService) GetList(ctx context.Context, user model.SysUser) ([]model.SysUser, error) {
 	var list []model.SysUser
 	var err error
 	var key string
@@ -119,7 +120,7 @@ func (u *userService) GetList(user model.SysUser) ([]model.SysUser, error) {
 
 }
 
-func (u *userService) GetPage(userPage model.SysUserPage) (*model.Page, error) {
+func (u *userService) GetPage(ctx context.Context, userPage model.SysUserPage) (*model.Page, error) {
 	var list []model.SysUser
 	var count int64
 	var err error
@@ -160,7 +161,7 @@ func (u *userService) GetPage(userPage model.SysUserPage) (*model.Page, error) {
 
 }
 
-func (u *userService) Login(username, password string) (*model.SysUser, error) {
+func (u *userService) Login(ctx context.Context, username, password string) (*model.SysUser, error) {
 
 	return u.factory.SysUser().Login(username, util.EncryptionPsw(password))
 

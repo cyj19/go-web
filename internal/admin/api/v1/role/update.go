@@ -13,7 +13,7 @@ func (r *SysRoleHandler) Update(c *gin.Context) {
 	if err != nil {
 		response.FailWithCode(response.ParameterBindingError)
 	}
-	err = r.srv.SysRole().Update(&role)
+	err = r.srv.SysRole().Update(c, &role)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -30,7 +30,7 @@ func (r *SysRoleHandler) UpdateMenuForRole(c *gin.Context) {
 		return
 	}
 
-	err = r.srv.SysRole().UpdateMenuForRole(&param)
+	err = r.srv.SysRole().UpdateMenuForRole(c, &param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -46,7 +46,7 @@ func (r *SysRoleHandler) UpdateApiForRole(c *gin.Context) {
 		return
 	}
 
-	err = r.srv.SysRole().UpdateApiForRole(&param)
+	err = r.srv.SysRole().UpdateApiForRole(c, &param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

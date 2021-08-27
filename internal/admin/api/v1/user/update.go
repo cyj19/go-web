@@ -14,7 +14,7 @@ func (u *SysUserHandler) Update(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	err = u.srv.SysUser().Update(&param)
+	err = u.srv.SysUser().Update(c, &param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -31,7 +31,7 @@ func (u *SysUserHandler) UpdateRoleForUser(c *gin.Context) {
 		return
 	}
 
-	err = u.srv.SysUser().UpdateRoleForUser(&param)
+	err = u.srv.SysUser().UpdateRoleForUser(c, &param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

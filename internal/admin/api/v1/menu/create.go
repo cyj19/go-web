@@ -15,7 +15,7 @@ func (m *SysMenuHandler) Create(c *gin.Context) {
 		return
 	}
 
-	err = m.srv.SysMenu().Create(menu)
+	err = m.srv.SysMenu().Create(c, menu)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

@@ -1,6 +1,7 @@
 package admin
 
 import (
+	"context"
 	"fmt"
 	srvv1 "go-web/internal/admin/service/v1"
 	"go-web/internal/admin/store"
@@ -12,8 +13,13 @@ import (
 	"github.com/casbin/casbin/v2"
 )
 
-// 初始化数据
-func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
+/*
+	初始化数据
+	参数1：上下文
+	参数2：工厂实例
+	参数3：casbin的执行指针
+*/
+func InitData(ctx context.Context, factoryIns store.Factory, enforcer *casbin.Enforcer) {
 
 	if !global.Conf.Server.InitData {
 		return
@@ -36,7 +42,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	}
 
 	for i, value := range roles {
-		oldRole, err := service.SysRole().GetByName(value.Name)
+		oldRole, err := service.SysRole().GetByName(ctx, value.Name)
 		if err != nil || oldRole == nil {
 			sort := uint(i)
 			value.Sort = &sort
@@ -47,7 +53,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	}
 
 	if len(newRoles) > 0 {
-		service.SysRole().Create(newRoles...)
+		service.SysRole().Create(ctx, newRoles...)
 		// 如果admin 和 guest都插入
 		if len(newRoles) == len(roles) {
 			roles = newRoles
@@ -119,7 +125,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 		},
 	}
 	// 生成菜单，先创建父菜单，再创建子菜单
-	generateMenu(0, menus, roles[0], service)
+	generateMenu(ctx, 0, menus, roles[0], service)
 
 	// 初始化接口
 	apis := mockSysApi(global.Conf.Server.ApiVersion)
@@ -127,7 +133,7 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	newRoleCasbins := make([]model.SysRoleCasbin, 0)
 	for _, api := range apis {
 		whereOrder := model.WhereOrder{Where: "method = ? and path = ?", Value: []interface{}{api.Method, api.Path}}
-		oldApis, err := service.SysApi().GetListByWhereOrder(whereOrder)
+		oldApis, err := service.SysApi().GetListByWhereOrder(ctx, whereOrder)
 		if err != nil || len(oldApis) == 0 {
 			newApis = append(newApis, api)
 			p := strings.TrimPrefix(api.Path, "/"+global.Conf.Server.ApiVersion)
@@ -170,15 +176,15 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 		}
 	}
 	if len(newApis) > 0 {
-		err := service.SysApi().Create(newApis...)
+		err := service.SysApi().Create(ctx, newApis...)
 		if err != nil {
 			panic(fmt.Sprintf("初始化接口失败：%v", err))
 		}
 	}
 	if len(newRoleCasbins) > 0 {
-		_, err := service.SysCasbin().BatchCreateRoleCasbins(newRoleCasbins)
+		_, err := service.SysCasbin().BatchCreateRoleCasbins(ctx, newRoleCasbins)
 		if err != nil {
-			//global.LogIns.Log.Fatalf("初始化接口权限失败：%v", err)
+			//global.Log.Error(ctx, "初始化接口权限失败：%v", err)
 			panic(fmt.Sprintf("初始化接口权限失败：%v", err))
 		}
 	}
@@ -200,19 +206,19 @@ func InitData(factoryIns store.Factory, enforcer *casbin.Enforcer) {
 	}
 
 	for _, value := range users {
-		oldUser, err := service.SysUser().GetByUsername(value.Username)
+		oldUser, err := service.SysUser().GetByUsername(ctx, value.Username)
 		if err != nil || oldUser == nil {
 			newUsers = append(newUsers, value)
 		}
 	}
 
 	if len(newUsers) > 0 {
-		service.SysUser().Create(newUsers...)
+		service.SysUser().Create(ctx, newUsers...)
 	}
 
 }
 
-func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRole, srv srvv1.Service) {
+func generateMenu(ctx context.Context, parentId uint64, menus []model.SysMenu, adminRole model.SysRole, srv srvv1.Service) {
 
 	if len(menus) > 0 {
 		newMenus := make([]model.SysMenu, 0)
@@ -220,7 +226,7 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 		// 创建父菜单
 		for i, value := range menus {
 			value.ParentId = parentId
-			oldMenu, err := srv.SysMenu().GetByPath(value.Path)
+			oldMenu, err := srv.SysMenu().GetByPath(ctx, value.Path)
 			if err != nil || oldMenu == nil {
 				sort := uint(i)
 				value.Sort = &sort
@@ -232,9 +238,9 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 
 		}
 		if len(newMenus) > 0 {
-			err := srv.SysMenu().Create(newMenus...)
+			err := srv.SysMenu().Create(ctx, newMenus...)
 			if err != nil {
-				//global.Log.Fatalf("初始化菜单失败：%v", err)
+				//global.Log.Error(ctx, "初始化菜单失败：%v", err)
 				panic(fmt.Sprintf("初始化菜单失败：%v", err))
 			}
 
@@ -257,9 +263,9 @@ func generateMenu(parentId uint64, menus []model.SysMenu, adminRole model.SysRol
 				if len(value.Roles) == 0 {
 					value.Roles = []model.SysRole{adminRole}
 				}
-				err := srv.SysMenu().Create(value.Children...)
+				err := srv.SysMenu().Create(ctx, value.Children...)
 				if err != nil {
-					//global.Log.Fatalf("初始化子菜单失败：%v", err)
+					// global.Log.Error(ctx, "初始化子菜单失败：%v", err)
 					panic(fmt.Sprintf("初始化子菜单失败：%v", err))
 				}
 

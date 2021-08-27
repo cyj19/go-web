@@ -14,7 +14,7 @@ func (m *SysMenuHandler) Update(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	err = m.srv.SysMenu().Update(&menu)
+	err = m.srv.SysMenu().Update(c, &menu)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

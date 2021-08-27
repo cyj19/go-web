@@ -15,7 +15,7 @@ func (a *SysApiHandler) GetList(c *gin.Context) {
 		return
 	}
 
-	apis, err := a.srv.SysApi().GetList(param)
+	apis, err := a.srv.SysApi().GetList(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -31,7 +31,7 @@ func (a *SysApiHandler) GetPage(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	page, err := a.srv.SysApi().GetPage(param)
+	page, err := a.srv.SysApi().GetPage(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

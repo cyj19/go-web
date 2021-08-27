@@ -15,7 +15,7 @@ func (a *SysApiHandler) Create(c *gin.Context) {
 		return
 	}
 
-	err = a.srv.SysApi().Create(api)
+	err = a.srv.SysApi().Create(c, api)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

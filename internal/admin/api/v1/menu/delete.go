@@ -20,7 +20,7 @@ func (m *SysMenuHandler) BatchDelete(c *gin.Context) {
 		return
 	}
 	ids := util.Str2Uint64Array(param.Ids)
-	err = m.srv.SysMenu().BatchDelete(ids)
+	err = m.srv.SysMenu().BatchDelete(c, ids)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

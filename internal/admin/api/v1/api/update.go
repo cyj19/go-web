@@ -14,7 +14,7 @@ func (a *SysApiHandler) Update(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	err = a.srv.SysApi().Update(&param)
+	err = a.srv.SysApi().Update(c, &param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

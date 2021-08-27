@@ -16,7 +16,7 @@ func (r *SysRoleHandler) BatchDelete(c *gin.Context) {
 		return
 	}
 	ids := util.Str2Uint64Array(param.Ids)
-	err = r.srv.SysRole().BatchDelete(ids)
+	err = r.srv.SysRole().BatchDelete(c, ids)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

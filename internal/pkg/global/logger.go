@@ -21,16 +21,17 @@ import (
 type GormZapLogger struct {
 	log *zap.Logger
 	logger.Config
-	debugStr, infoStr, warnStr, errStr  string
-	traceStr, traceErrStr, traceWarnStr string
+	debugStr, infoStr, warnStr, errStr, fatalStr string
+	traceStr, traceErrStr, traceWarnStr          string
 }
 
 func NewGormZapLogger(log *zap.Logger, config logger.Config) *GormZapLogger {
 	var (
 		debugStr     = "%s\n[debug]"
-		infoStr      = "%s\n[info] "
+		infoStr      = "%s[info] "
 		warnStr      = "%s\n[warn] "
 		errStr       = "%s\n[error] "
+		fatalStr     = "%s[fatal]"
 		traceStr     = "%s\n[%.3fms] [rows:%v] %s"
 		traceWarnStr = "%s %s\n[%.3fms] [rows:%v] %s"
 		traceErrStr  = "%s %s\n[%.3fms] [rows:%v] %s"
@@ -52,6 +53,7 @@ func NewGormZapLogger(log *zap.Logger, config logger.Config) *GormZapLogger {
 		infoStr:      infoStr,
 		warnStr:      warnStr,
 		errStr:       errStr,
+		fatalStr:     fatalStr,
 		traceStr:     traceStr,
 		traceWarnStr: traceWarnStr,
 		traceErrStr:  traceErrStr,
@@ -66,9 +68,9 @@ func (l *GormZapLogger) LogMode(level logger.LogLevel) logger.Interface {
 	return &newlogger
 }
 
+// 增加Debug打印
 func (l GormZapLogger) Debug(ctx context.Context, msg string, data ...interface{}) {
 	if l.log.Core().Enabled(zapcore.DebugLevel) {
-		fmt.Println("执行debug")
 		l.log.Sugar().Debugf(l.debugStr+msg, append([]interface{}{utils.FileWithLineNum()}, data...)...)
 	}
 }
@@ -92,8 +94,15 @@ func (l GormZapLogger) Error(ctx context.Context, msg string, data ...interface{
 	}
 }
 
+// 增加Fatal打印
+func (l GormZapLogger) Fatal(ctx context.Context, msg string, data ...interface{}) {
+	if l.log.Core().Enabled(zapcore.FatalLevel) {
+		l.log.Sugar().Fatalf(l.fatalStr+msg, append([]interface{}{utils.FileWithLineNum()}, data...))
+	}
+}
+
 func (l GormZapLogger) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) {
-	// 打印panic
+	// 只打印panic级别的sql日志
 	if !l.log.Core().Enabled(zapcore.DPanicLevel) || l.LogLevel <= logger.Silent {
 		return
 	}
