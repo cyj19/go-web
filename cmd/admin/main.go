@@ -12,17 +12,24 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 	"time"
 )
 
 func main() {
 	ctx := context.Background()
-	// 处理初始化阶段可能抛出的panic
+	// 处理初始化阶段可能抛出的panic，目的并非要恢复程序，而是在程序退出前记录错误信息和堆栈信息
 	defer func() {
 		if err := recover(); err != nil {
-			// 写入日志文件
-			global.Log.Fatal(ctx, "未知异常，退出程序", err)
+			// 如果初始化日志完成，则写入日志文件
+			if global.Log != nil {
+				// 把错误信息和堆栈信息写入日志文件
+				global.Log.Fatal(ctx, "未知异常，退出程序", err, string(debug.Stack()))
+			} else {
+				log.Fatalf("未知异常，退出程序: %v   %s", err, string(debug.Stack()))
+			}
+
 		}
 	}()
 
@@ -64,7 +71,7 @@ func main() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Could not listen on %s:%d: %v\n", host, port, err)
+			global.Log.Fatal(ctx, "Could not listen on %s:%d: %v\n", host, port, err)
 		}
 	}()
 
