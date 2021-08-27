@@ -15,13 +15,15 @@
 
 ## 特性
 - `RESTful API` 设计风格
-- `Gin` golang web 的微框架
-- `Gorm` 数据库的ORM管理框架
 - `MySQL` 数据库存储
-- `Gin-JWT` gin封装的jwt中间件，用户认证
-- `Casbin` 轻量级开源访问控制框架，RBAC
-- `Go-redis` redis客户端开发工具
-- `Viper` 轻便的golang配置管理工具
+- `gin` golang web 的微框架
+- `gorm` 数据库的ORM管理框架
+- `gin-jwt` gin封装的jwt中间件，用户认证
+- `casbin` 轻量级开源访问控制框架，RBAC
+- `go-redis` redis客户端开发工具
+- `viper` 轻便的golang配置管理工具
+- `zap` 高性能日志库，提供多种级别的日志打印
+- `lumberjack` 日志文件切割归档工具
 
 ## 项目结构
 ```
