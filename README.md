@@ -34,6 +34,7 @@
 │    ├── admin # admin项目目录
 │    │     ├── api # api目录
 │    │     │    └── v1 # v1版本接口目录(类似于Java中的controller), 如果有新版本可以继续添加v2/v3
+│    │     ├── global # 全局公用模型目录
 │    │     ├── router # 路由目录
 │    │     ├── service # 业务逻辑目录
 │    │     │    └── v1 # v1版本业务目录, 如果有新版本可以继续添加v2/v3
@@ -42,12 +43,15 @@
 │    │     └── router.go # 定义路由规则
 │    ├── pkg # 内部公共模块目录
 │    │     ├── cache # redis操作目录
-│    │     ├── global # 全局公用模型目录
+│    │     ├── cofnig # 配置实体目录
+│    │     ├── db # 数据库目录
 │    │     ├── initialize # 工具初始化目录
+│    │     ├── logger # 日志目录
 │    │     ├── middleware # 中间件目录
 │    │     ├── model # 传输模型目录
 │    │     ├── response # 响应模型目录
 │    │     └── util # 工具包目录
+├── logs # 日志文件目录
 ├── pkg # 外部公共模块目录
 │   └── model # 存储层模型定义目录
 ├── .gitignore # git忽略
