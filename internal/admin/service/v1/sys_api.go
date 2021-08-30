@@ -3,12 +3,11 @@ package v1
 import (
 	"context"
 	"fmt"
+	"go-web/internal/admin/global"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
-
-	"github.com/casbin/casbin/v2"
 )
 
 type SysApiSrv interface {
@@ -22,14 +21,12 @@ type SysApiSrv interface {
 }
 
 type apiService struct {
-	factory  store.Factory
-	enforcer *casbin.Enforcer
+	factory store.Factory
 }
 
 func newSysApi(srv *service) SysApiSrv {
 	return &apiService{
-		factory:  srv.factory,
-		enforcer: srv.enforcer,
+		factory: srv.factory,
 	}
 }
 
@@ -46,7 +43,7 @@ func (a *apiService) Create(ctx context.Context, values ...model.SysApi) error {
 	for _, api := range values {
 		if len(api.Roles) > 0 {
 			// 创建casbin规则
-			cs := &casbinService{enforcer: a.enforcer}
+			cs := &casbinService{factory: a.factory}
 			roleCasbins := make([]model.SysRoleCasbin, 0)
 			for _, role := range api.Roles {
 				roleCasbins = append(roleCasbins, model.SysRoleCasbin{
@@ -82,7 +79,7 @@ func (a *apiService) Update(ctx context.Context, value *model.SysApi) error {
 	// 对比新旧接口的Method , Path
 	if oldApi.Method != value.Method || oldApi.Path != value.Path {
 		// 有修改，更新casbin规则
-		cs := &casbinService{enforcer: a.enforcer}
+		cs := &casbinService{factory: a.factory}
 		// 获取和旧接口相关的规则
 		oldRules := cs.GetRoleCasbins(ctx, model.SysRoleCasbin{Path: oldApi.Path, Method: oldApi.Method})
 		if len(oldRules) > 0 {
@@ -125,7 +122,7 @@ func (a *apiService) BatchDelete(ctx context.Context, ids []uint64) error {
 	cleanCache(temp.TableName() + "*")
 
 	// 删除casbin规则
-	cs := &casbinService{enforcer: a.enforcer}
+	cs := &casbinService{factory: a.factory}
 	roleCasbins := make([]model.SysRoleCasbin, 0)
 	for _, api := range apis {
 		roleCasbins = append(roleCasbins, model.SysRoleCasbin{
@@ -140,11 +137,11 @@ func (a *apiService) BatchDelete(ctx context.Context, ids []uint64) error {
 func (a *apiService) GetById(ctx context.Context, id uint64) (*model.SysApi, error) {
 	value := new(model.SysApi)
 	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
-	err := cache.Get(key, value)
+	err := cache.Get(global.RedisIns, key, value)
 	if err != nil {
 		err = a.factory.GetById(id, value)
 		// 写入缓存
-		cache.Set(key, value)
+		cache.Set(global.RedisIns, key, value)
 
 	}
 	return value, err
@@ -155,12 +152,12 @@ func (a *apiService) GetList(ctx context.Context, value model.SysApi) ([]model.S
 	var err error
 	key := fmt.Sprintf("%s:id:%d:method:%s:path:%s:category:%s", value.TableName(), value.Id, value.Method, value.Path, value.Category)
 
-	list = cache.GetSysApiList(key)
+	list = cache.GetSysApiList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(value)
 		err = a.factory.GetList(&model.SysApi{}, &list, whereOrders...)
 		// 添加到缓存
-		cache.SetSysApiList(key, list)
+		cache.SetSysApiList(global.RedisIns, key, list)
 	}
 	return list, err
 }
@@ -185,12 +182,12 @@ func (a *apiService) GetPage(ctx context.Context, apiPage model.SysApiPage) (*mo
 		pageSize = defaultSize
 	}
 	key := fmt.Sprintf("%s:id:%d:method:%s:path:%s:category:%s", apiPage.TableName(), apiPage.Id, apiPage.Method, apiPage.Path, apiPage.Category)
-	list = cache.GetSysApiList(key)
+	list = cache.GetSysApiList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(apiPage.SysApi)
 		count, err = a.factory.GetPage(pageIndex, pageSize, &model.SysApi{}, &list, whereOrders...)
 		// 写入缓存
-		cache.SetSysApiList(key, list)
+		cache.SetSysApiList(global.RedisIns, key, list)
 	}
 
 	page := &model.Page{

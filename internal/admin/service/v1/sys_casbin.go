@@ -2,9 +2,9 @@ package v1
 
 import (
 	"context"
+	"go-web/internal/admin/global"
+	"go-web/internal/admin/store"
 	"go-web/internal/pkg/model"
-
-	"github.com/casbin/casbin/v2"
 )
 
 type SysCasbinSrv interface {
@@ -15,16 +15,16 @@ type SysCasbinSrv interface {
 }
 
 type casbinService struct {
-	enforcer *casbin.Enforcer
+	factory store.Factory
 }
 
 func newCasbinService(s *service) SysCasbinSrv {
-	return &casbinService{enforcer: s.enforcer}
+	return &casbinService{factory: s.factory}
 }
 
 // 按角色即默认p_type=p，获取符合条件的casbin规则
 func (c *casbinService) GetRoleCasbins(ctx context.Context, roleCasbin model.SysRoleCasbin) []model.SysRoleCasbin {
-	rules := c.enforcer.GetFilteredGroupingPolicy(0, roleCasbin.Kyeword, roleCasbin.Path, roleCasbin.Method)
+	rules := global.Enforcer.GetFilteredGroupingPolicy(0, roleCasbin.Kyeword, roleCasbin.Path, roleCasbin.Method)
 	cs := make([]model.SysRoleCasbin, 0)
 	for _, rule := range rules {
 		cs = append(cs, model.SysRoleCasbin{
@@ -44,11 +44,11 @@ func (c *casbinService) BatchDeleteRoleCasbins(ctx context.Context, roleCasbins 
 		rule := []string{v.Kyeword, v.Path, v.Method}
 		rules = append(rules, rule)
 	}
-	return c.enforcer.RemovePolicies(rules)
+	return global.Enforcer.RemovePolicies(rules)
 }
 
 func (c *casbinService) CreateRoleCasbin(ctx context.Context, roleCasbin model.SysRoleCasbin) (bool, error) {
-	return c.enforcer.AddPolicy(roleCasbin.Kyeword, roleCasbin.Path, roleCasbin.Method)
+	return global.Enforcer.AddPolicy(roleCasbin.Kyeword, roleCasbin.Path, roleCasbin.Method)
 }
 
 // 按角色, 批量创建casbin规则
@@ -58,5 +58,5 @@ func (c *casbinService) BatchCreateRoleCasbins(ctx context.Context, roleCasbins 
 		rule := []string{v.Kyeword, v.Path, v.Method}
 		rules = append(rules, rule)
 	}
-	return c.enforcer.AddPolicies(rules)
+	return global.Enforcer.AddPolicies(rules)
 }

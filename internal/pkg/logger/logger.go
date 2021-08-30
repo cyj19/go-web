@@ -1,4 +1,4 @@
-package global
+package logger
 
 import (
 	"context"

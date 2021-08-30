@@ -3,8 +3,6 @@ package menu
 import (
 	srvv1 "go-web/internal/admin/service/v1"
 	"go-web/internal/admin/store"
-
-	"github.com/casbin/casbin/v2"
 )
 
 type SysMenuHandler struct {
@@ -12,9 +10,9 @@ type SysMenuHandler struct {
 	factory store.Factory
 }
 
-func NewSysMenuHandler(factory store.Factory, enforcer *casbin.Enforcer) *SysMenuHandler {
+func NewSysMenuHandler(factory store.Factory) *SysMenuHandler {
 	return &SysMenuHandler{
-		srv:     srvv1.NewService(factory, enforcer),
+		srv:     srvv1.NewService(factory),
 		factory: factory,
 	}
 }

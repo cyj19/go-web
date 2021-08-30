@@ -3,12 +3,11 @@ package v1
 import (
 	"context"
 	"fmt"
+	"go-web/internal/admin/global"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
-
-	"github.com/casbin/casbin/v2"
 )
 
 type SysRoleSrv interface {
@@ -25,14 +24,12 @@ type SysRoleSrv interface {
 }
 
 type roleService struct {
-	factory  store.Factory
-	enforcer *casbin.Enforcer
+	factory store.Factory
 }
 
 func newSysRole(srv *service) SysRoleSrv {
 	return &roleService{
-		factory:  srv.factory,
-		enforcer: srv.enforcer,
+		factory: srv.factory,
 	}
 }
 
@@ -73,9 +70,9 @@ func (r *roleService) UpdateApiForRole(ctx context.Context, cd *model.CreateDele
 		return fmt.Errorf("记录不存在：%v ", err)
 	}
 	// 创建api服务
-	as := &apiService{factory: r.factory, enforcer: r.enforcer}
+	as := &apiService{factory: r.factory}
 	// 创建casbin服务
-	cs := &casbinService{enforcer: r.enforcer}
+	cs := &casbinService{factory: r.factory}
 	// 删除接口权限
 	if len(cd.Delete) > 0 {
 		// 获取要删除的api
@@ -139,11 +136,11 @@ func (r *roleService) BatchDelete(ctx context.Context, ids []uint64) error {
 func (r *roleService) GetById(ctx context.Context, id uint64) (*model.SysRole, error) {
 	value := new(model.SysRole)
 	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
-	err := cache.Get(key, value)
+	err := cache.Get(global.RedisIns, key, value)
 	if err != nil {
 		err = r.factory.GetById(id, value)
 		// 写入缓存
-		cache.Set(key, value)
+		cache.Set(global.RedisIns, key, value)
 
 	}
 	return value, err
@@ -152,11 +149,11 @@ func (r *roleService) GetById(ctx context.Context, id uint64) (*model.SysRole, e
 func (r *roleService) GetByName(ctx context.Context, name string) (*model.SysRole, error) {
 	value := new(model.SysRole)
 	key := fmt.Sprintf("%s:name:%s", value.TableName(), name)
-	err := cache.Get(key, value)
+	err := cache.Get(global.RedisIns, key, value)
 	if err != nil {
 		value, err = r.factory.SysRole().GetByName(name)
 		// 写入缓存
-		cache.Set(key, value)
+		cache.Set(global.RedisIns, key, value)
 	}
 	return value, err
 }
@@ -173,12 +170,12 @@ func (r *roleService) GetList(ctx context.Context, role model.SysRole) ([]model.
 		key = fmt.Sprintf("%s:sort:%d", key, *role.Sort)
 	}
 
-	list = cache.GetSysRoleList(key)
+	list = cache.GetSysRoleList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(role)
 		err = r.factory.GetList(&model.SysRole{}, &list, whereOrders...)
 		// 添加到缓存
-		cache.SetSysRoleList(key, list)
+		cache.SetSysRoleList(global.RedisIns, key, list)
 	}
 	return list, err
 }
@@ -213,12 +210,12 @@ func (r *roleService) GetPage(ctx context.Context, rolePage model.SysRolePage) (
 	key = fmt.Sprintf("%s:pageIndex:%d:pageSize:%d", key, pageIndex, pageSize)
 
 	// 从缓存中查找
-	list = cache.GetSysRoleList(key)
+	list = cache.GetSysRoleList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(rolePage.SysRole)
 		count, err = r.factory.GetPage(pageIndex, pageSize, &model.SysRole{}, &list, whereOrders...)
 		// 添加到缓存
-		cache.SetSysRoleList(key, list)
+		cache.SetSysRoleList(global.RedisIns, key, list)
 	}
 
 	page := &model.Page{

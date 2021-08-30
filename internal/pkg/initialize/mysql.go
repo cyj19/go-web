@@ -2,41 +2,30 @@ package initialize
 
 import (
 	"fmt"
-	"go-web/internal/pkg/global"
-	"sync"
+	"go-web/internal/pkg/config"
+	"go-web/internal/pkg/db"
 
 	"gorm.io/gorm"
-)
-
-var (
-	dbIns *gorm.DB
-	once  sync.Once
+	gormlogger "gorm.io/gorm/logger"
 )
 
 // model为表结构
-func MySQL(models ...interface{}) {
-	var err error
-	// 单例模式，保证整个生命周期只初始化一次
-	once.Do(func() {
-		dbIns, err = global.NewMySQL(global.Conf.Mysql)
-	})
+func MySQL(opt *config.MysqlConfiguration, log gormlogger.Interface, models ...interface{}) *gorm.DB {
+	dbIns, err := db.NewMySQL(opt, log)
 
 	if err != nil {
 		panic(fmt.Sprintf("初始化MySQL异常：%v", err))
 	}
 
-	autoMigrateTables(models...)
+	err = autoMigrateTables(dbIns, models...)
+	if err != nil {
+		panic(fmt.Sprintf("初始化MySQL异常：%v", err))
+	}
 
-	global.Log.Info(ctx, "初始化MySQL完成...")
-
+	return dbIns
 }
 
 //自动迁移表结构
-func autoMigrateTables(models ...interface{}) {
-	dbIns.AutoMigrate(models...)
-}
-
-// 暴露给其他包
-func GetMySQLIns() *gorm.DB {
-	return dbIns
+func autoMigrateTables(dbIns *gorm.DB, models ...interface{}) error {
+	return dbIns.AutoMigrate(models...)
 }

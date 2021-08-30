@@ -2,18 +2,19 @@ package initialize
 
 import (
 	"fmt"
-	"go-web/internal/pkg/global"
+	"go-web/internal/pkg/config"
+	"go-web/internal/pkg/logger"
 	"os"
 	"time"
 
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
-	"gorm.io/gorm/logger"
+	gormlogger "gorm.io/gorm/logger"
 )
 
 // 初始化日志，使用zap+lumberjack代替标准库的log
-func InitLogger() {
+func InitLogger(conf *config.Configuration) *logger.GormZapLogger {
 
 	// 自定义编码器
 	encoderConfig := zap.NewProductionEncoderConfig()
@@ -24,29 +25,27 @@ func InitLogger() {
 	encoder := zapcore.NewConsoleEncoder(encoderConfig)
 	// 日志文件名
 	now := time.Now()
-	fileName := fmt.Sprintf("%s/%04d-%02d-%02d", global.Conf.Log.Path, now.Year(), now.Month(), now.Day())
+	fileName := fmt.Sprintf("%s/%04d-%02d-%02d", conf.Log.Path, now.Year(), now.Month(), now.Day())
 	// 使用lumberjack进行日志配置
 	lumberjackLog := &lumberjack.Logger{
 		Filename:   fileName,
-		MaxSize:    global.Conf.Log.MaxSize,
-		MaxAge:     global.Conf.Log.MaxAge,
-		MaxBackups: global.Conf.Log.MaxBackups,
-		Compress:   global.Conf.Log.Compress,
+		MaxSize:    conf.Log.MaxSize,
+		MaxAge:     conf.Log.MaxAge,
+		MaxBackups: conf.Log.MaxBackups,
+		Compress:   conf.Log.Compress,
 	}
 	// 打印到控制台和日志文件
 	writerSyncer := zapcore.NewMultiWriteSyncer(zapcore.AddSync(lumberjackLog), zapcore.AddSync(os.Stdout))
-	core := zapcore.NewCore(encoder, writerSyncer, global.Conf.Log.Level)
+	core := zapcore.NewCore(encoder, writerSyncer, conf.Log.Level)
 	// 创建日志对象
 	log := zap.New(core, zap.AddCaller())
-	global.Log = global.NewGormZapLogger(log, logger.Config{
+	glog := logger.NewGormZapLogger(log, gormlogger.Config{
 		Colorful: true,
 	})
-
-	global.Log.Info(ctx, "初始化日志完成...")
-
+	return glog
 }
 
 // zap日志自定义时间格式
 func ZapLogLocalTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format(global.MsecLocalTimeFormat))
+	enc.AppendString(t.Format(config.MsecLocalTimeFormat))
 }

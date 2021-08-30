@@ -3,6 +3,7 @@ package v1
 import (
 	"context"
 	"fmt"
+	"go-web/internal/admin/global"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
 	"go-web/internal/pkg/model"
@@ -60,11 +61,11 @@ func (m *menuService) BatchDelete(ctx context.Context, ids []uint64) error {
 func (m *menuService) GetById(ctx context.Context, id uint64) (*model.SysMenu, error) {
 	value := new(model.SysMenu)
 	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
-	err := cache.Get(key, value)
+	err := cache.Get(global.RedisIns, key, value)
 	if err != nil {
 		err = m.factory.GetById(id, value)
 		// 写入缓存
-		cache.Set(key, value)
+		cache.Set(global.RedisIns, key, value)
 
 	}
 	return value, err
@@ -73,11 +74,11 @@ func (m *menuService) GetById(ctx context.Context, id uint64) (*model.SysMenu, e
 func (m *menuService) GetByPath(ctx context.Context, path string) (*model.SysMenu, error) {
 	value := new(model.SysMenu)
 	key := fmt.Sprintf("%s:path:%s", value.TableName(), path)
-	err := cache.Get(key, value)
+	err := cache.Get(global.RedisIns, key, value)
 	if err != nil {
 		value, err = m.factory.SysMenu().GetByPath(path)
 		// 写入缓存
-		cache.Set(key, value)
+		cache.Set(global.RedisIns, key, value)
 	}
 	return value, err
 }
@@ -87,11 +88,11 @@ func (m *menuService) GetSome(ctx context.Context, ids []uint64) ([]model.SysMen
 	var menu model.SysMenu
 	var err error
 	key := fmt.Sprintf("%s:ids:%v", menu.TableName(), ids)
-	list = cache.GetSysMenuList(key)
+	list = cache.GetSysMenuList(global.RedisIns, key)
 	if len(list) < 1 {
 		list, err = m.factory.SysMenu().GetSome(ids)
 		// 写入缓存
-		cache.SetSysMenuList(key, list)
+		cache.SetSysMenuList(global.RedisIns, key, list)
 	}
 	return list, err
 }
@@ -104,12 +105,12 @@ func (m *menuService) GetList(ctx context.Context, value model.SysMenu) ([]model
 	if value.Status != nil {
 		key = fmt.Sprintf("%s:status:%t", key, *value.Status)
 	}
-	list = cache.GetSysMenuList(key)
+	list = cache.GetSysMenuList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(value)
 		err = m.factory.GetList(&model.SysMenu{}, &list, whereOrders...)
 		// 写入缓存
-		cache.SetSysMenuList(key, list)
+		cache.SetSysMenuList(global.RedisIns, key, list)
 	}
 
 	return list, err
@@ -161,12 +162,12 @@ func (m *menuService) GetPage(ctx context.Context, menuPage model.SysMenuPage) (
 	if menuPage.Status != nil {
 		key = fmt.Sprintf("%s:status:%t", key, *menuPage.Status)
 	}
-	list = cache.GetSysMenuList(key)
+	list = cache.GetSysMenuList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(menuPage.SysMenu)
 		count, err = m.factory.GetPage(pageIndex, pageSize, &model.SysMenu{}, &list, whereOrders...)
 		// 写入缓存
-		cache.SetSysMenuList(key, list)
+		cache.SetSysMenuList(global.RedisIns, key, list)
 	}
 
 	page := &model.Page{

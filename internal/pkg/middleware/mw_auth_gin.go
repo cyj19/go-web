@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"go-web/internal/pkg/global"
+	"go-web/internal/pkg/config"
 	"go-web/internal/pkg/response"
 	"go-web/internal/pkg/util"
 	"go-web/pkg/model"
@@ -17,22 +17,22 @@ import (
 */
 
 // login为登录处理函数，因为gin-jwt是授权认证一体的，不需要授权功能传入nil即可
-func InitGinJWTMiddleware(login func(c *gin.Context) (interface{}, error)) (*jwt.GinJWTMiddleware, error) {
+func InitGinJWTMiddleware(login func(c *gin.Context) (interface{}, error), jwtConf *config.JWTConfiguration) (*jwt.GinJWTMiddleware, error) {
 
 	return jwt.New(&jwt.GinJWTMiddleware{
-		Realm:           global.Conf.Jwt.Realm,                                 // jwt标识
-		Key:             []byte(global.Conf.Jwt.Key),                           // 服务端密钥
-		Timeout:         time.Hour * time.Duration(global.Conf.Jwt.Timeout),    // token过期时间
-		MaxRefresh:      time.Hour * time.Duration(global.Conf.Jwt.MaxRefresh), // token最大刷新时间(RefreshToken过期时间=Timeout+MaxRefresh)
-		PayloadFunc:     payloadFunc,                                           // 有效荷载处理
-		IdentityHandler: identityHandler,                                       // 解析Claims
-		Authenticator:   login,                                                 // 登录处理
-		Authorizator:    authorizator,                                          // token校验成功处理
-		Unauthorized:    unauthorized,                                          // token校验失败处理
-		LoginResponse:   loginResponse,                                         // 登录成功后的响应
-		LogoutResponse:  logoutResponse,                                        // 登出后的响应
-		RefreshResponse: refreshResponse,                                       // 刷新token后的响应
-		TokenLookup:     "header: Authorization, query: token, cookie: jwt",    // 依次在这几个地方寻找请求中的token
+		Realm:           jwtConf.Realm,                                      // jwt标识
+		Key:             []byte(jwtConf.Key),                                // 服务端密钥
+		Timeout:         time.Hour * time.Duration(jwtConf.Timeout),         // token过期时间
+		MaxRefresh:      time.Hour * time.Duration(jwtConf.MaxRefresh),      // token最大刷新时间(RefreshToken过期时间=Timeout+MaxRefresh)
+		PayloadFunc:     payloadFunc,                                        // 有效荷载处理
+		IdentityHandler: identityHandler,                                    // 解析Claims
+		Authenticator:   login,                                              // 登录处理
+		Authorizator:    authorizator,                                       // token校验成功处理
+		Unauthorized:    unauthorized,                                       // token校验失败处理
+		LoginResponse:   loginResponse,                                      // 登录成功后的响应
+		LogoutResponse:  logoutResponse,                                     // 登出后的响应
+		RefreshResponse: refreshResponse,                                    // 刷新token后的响应
+		TokenLookup:     "header: Authorization, query: token, cookie: jwt", // 依次在这几个地方寻找请求中的token
 		TokenHeadName:   "Bearer",
 		TimeFunc:        time.Now,
 	})
@@ -72,12 +72,10 @@ func authorizator(data interface{}, c *gin.Context) bool {
 
 // 认证失败处理
 func unauthorized(c *gin.Context, code int, message string) {
-	global.Log.Debug(c, "authorized fail...")
 	response.FailWithCode(code)
 }
 
 func loginResponse(c *gin.Context, code int, token string, expires time.Time) {
-	global.Log.Info(c, "login success...")
 	response.SuccessWithData(map[string]interface{}{
 		"token": token,
 		"expires": model.LocalTime{
@@ -87,12 +85,10 @@ func loginResponse(c *gin.Context, code int, token string, expires time.Time) {
 }
 
 func logoutResponse(c *gin.Context, code int) {
-	global.Log.Info(c, "logout success...")
 	response.Success()
 }
 
 func refreshResponse(c *gin.Context, code int, token string, expires time.Time) {
-	global.Log.Info(c, "refresh token success...")
 	response.SuccessWithData(map[string]interface{}{
 		"token": token,
 		"expires": model.LocalTime{

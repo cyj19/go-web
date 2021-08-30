@@ -3,12 +3,11 @@ package v1
 import (
 	"context"
 	"fmt"
+	"go-web/internal/admin/global"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
-
-	"github.com/casbin/casbin/v2"
 )
 
 type SysUserSrv interface {
@@ -24,14 +23,12 @@ type SysUserSrv interface {
 }
 
 type userService struct {
-	factory  store.Factory
-	enforcer *casbin.Enforcer
+	factory store.Factory
 }
 
 func newSysUser(srv *service) SysUserSrv {
 	return &userService{
-		factory:  srv.factory,
-		enforcer: srv.enforcer,
+		factory: srv.factory,
 	}
 }
 
@@ -86,11 +83,11 @@ func (u *userService) BatchDelete(ctx context.Context, ids []uint64) error {
 func (u *userService) GetById(ctx context.Context, id uint64) (*model.SysUser, error) {
 	value := new(model.SysUser)
 	key := fmt.Sprintf("%s:id:%d", value.TableName(), id)
-	err := cache.Get(key, value)
+	err := cache.Get(global.RedisIns, key, value)
 	if err != nil {
 		err = u.factory.GetById(id, value)
 		// 写入缓存
-		cache.Set(key, value)
+		cache.Set(global.RedisIns, key, value)
 
 	}
 	return value, err
@@ -109,12 +106,12 @@ func (u *userService) GetList(ctx context.Context, user model.SysUser) ([]model.
 		key = fmt.Sprintf("%s:status:%t", key, *user.Status)
 	}
 
-	list = cache.GetSysUserList(key)
+	list = cache.GetSysUserList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(user)
 		err = u.factory.GetList(&model.SysUser{}, &list, whereOrders...)
 		// 添加到缓存
-		cache.SetSysUserList(key, list)
+		cache.SetSysUserList(global.RedisIns, key, list)
 	}
 	return list, err
 
@@ -141,12 +138,12 @@ func (u *userService) GetPage(ctx context.Context, userPage model.SysUserPage) (
 	}
 	key = fmt.Sprintf("%s:pageIndex:%d:pageSize:%d", key, pageIndex, pageSize)
 
-	list = cache.GetSysUserList(key)
+	list = cache.GetSysUserList(global.RedisIns, key)
 	if len(list) < 1 {
 		whereOrders := util.GenWhereOrderByStruct(userPage.SysUser)
 		count, err = u.factory.GetPage(pageIndex, pageSize, &model.SysUser{}, &list, whereOrders...)
 		// 添加到缓存
-		cache.SetSysUserList(key, list)
+		cache.SetSysUserList(global.RedisIns, key, list)
 	}
 
 	var userRespList []model.SysUserResponse

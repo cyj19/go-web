@@ -3,14 +3,12 @@ package admin
 import (
 	"context"
 	"fmt"
+	"go-web/internal/admin/global"
 	srvv1 "go-web/internal/admin/service/v1"
 	"go-web/internal/admin/store"
-	"go-web/internal/pkg/global"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
 	"strings"
-
-	"github.com/casbin/casbin/v2"
 )
 
 /*
@@ -19,13 +17,13 @@ import (
 	参数2：工厂实例
 	参数3：casbin的执行指针
 */
-func InitData(ctx context.Context, factoryIns store.Factory, enforcer *casbin.Enforcer) {
+func InitData(ctx context.Context, factoryIns store.Factory) {
 
 	if !global.Conf.Server.InitData {
 		return
 	}
 
-	service := srvv1.NewService(factoryIns, enforcer)
+	service := srvv1.NewService(factoryIns)
 
 	// 初始化角色
 	newRoles := make([]model.SysRole, 0)

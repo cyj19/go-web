@@ -1,13 +1,31 @@
-package global
+package config
 
 import (
-	"fmt"
+	"io/ioutil"
 	"time"
 
+	"github.com/spf13/viper"
 	"go.uber.org/zap/zapcore"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
 )
+
+const (
+	MsecLocalTimeFormat = "2006-01-02 15:04:05.000"
+)
+
+//自定义配置盒子，存放环境配置和对应的viper
+type CustomConfBox struct {
+	// 配置文件所在文件目录
+	ConfEnv string
+	// 配置实例
+	ViperIns *viper.Viper
+}
+
+//查找配置文件
+func (c *CustomConfBox) Find(filename string) ([]byte, error) {
+
+	return ioutil.ReadFile(c.ConfEnv + "/" + filename)
+
+}
 
 // viper内置了mapstructure, yml文件用"-"区分单词, 转为驼峰方便
 type Configuration struct {
@@ -36,33 +54,6 @@ type MysqlConfiguration struct {
 	MaxOpenConnections    int           `mapstructure:"max-open-connections" json:"maxOpenConnections"`
 	MaxConnectionLifeTime time.Duration `mapstructure:"max-connection-life-time" json:"maxConnectionLifeTime"`
 	LogLevel              int           `mapstructure:"log-level" json:"logLevel"`
-}
-
-// 根据MysqlConfiguration打开一个数据库连接
-func NewMySQL(opt *MysqlConfiguration) (*gorm.DB, error) {
-	dns := fmt.Sprintf(`%s:%s@tcp(%s)/%s?charset=utf8&parseTime=%t&loc=%s`,
-		opt.Username,
-		opt.Password,
-		opt.Host,
-		opt.Database,
-		true,
-		"Local")
-
-	// gorm 默认会在事务里执行写入操作（创建、更新、删除）
-	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{Logger: Log})
-	if err != nil {
-		return nil, err
-	}
-
-	sqlDB, err := db.DB()
-	if err != nil {
-		return nil, err
-	}
-
-	sqlDB.SetMaxIdleConns(opt.MaxIdleConnections)
-	sqlDB.SetMaxOpenConns(opt.MaxOpenConnections)
-	sqlDB.SetConnMaxLifetime(opt.MaxConnectionLifeTime)
-	return db, nil
 }
 
 type RedisConfiguration struct {

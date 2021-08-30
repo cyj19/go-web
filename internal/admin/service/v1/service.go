@@ -1,10 +1,9 @@
 package v1
 
 import (
+	"go-web/internal/admin/global"
 	"go-web/internal/admin/store"
 	"go-web/internal/pkg/cache"
-
-	"github.com/casbin/casbin/v2"
 )
 
 type Service interface {
@@ -16,17 +15,15 @@ type Service interface {
 }
 
 type service struct {
-	factory  store.Factory
-	enforcer *casbin.Enforcer
+	factory store.Factory
 }
 
 const defaultSize = 10
 
 //工厂模式，创建service
-func NewService(factory store.Factory, enforcer *casbin.Enforcer) Service {
+func NewService(factory store.Factory) Service {
 	return &service{
-		factory:  factory,
-		enforcer: enforcer,
+		factory: factory,
 	}
 }
 
@@ -56,6 +53,6 @@ func (s *service) Create(value interface{}) error {
 }
 
 func cleanCache(pattern string) error {
-	keys := cache.Keys(pattern)
-	return cache.Del(keys...)
+	keys := cache.Keys(global.RedisIns, pattern)
+	return cache.Del(global.RedisIns, keys...)
 }

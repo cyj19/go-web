@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"go-web/internal/admin"
-	"go-web/internal/admin/store/mysql"
-	"go-web/internal/pkg/global"
+	"go-web/internal/admin/global"
+	"go-web/internal/admin/store"
 	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/model"
 	"log"
@@ -34,32 +34,36 @@ func main() {
 	}()
 
 	// 初始化配置文件
-	initialize.Config(ctx, "admin.dev.yml", "admin.prod.yml")
+	global.Box, global.Conf = initialize.Config("admin.dev.yml", "admin.prod.yml")
 
 	// 初始化日志
-	initialize.InitLogger()
+	global.Log = initialize.InitLogger(global.Conf)
+	global.Log.Info(ctx, "初始化日志完成...")
 
 	// 初始化MySQL
-	initialize.MySQL(new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin), new(model.SysApi))
+	global.DB = initialize.MySQL(global.Conf.Mysql, global.Log, new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin), new(model.SysApi))
+	global.Log.Info(ctx, "初始化mysql完成...")
+
+	// 初始化Redis
+	global.RedisIns = initialize.Redis(global.Conf.Redis)
+	global.Log.Info(ctx, "初始化redis完成...")
+
+	// 初始化Casbin
+	global.Enforcer = initialize.Casbin(global.DB, global.Box, global.Conf)
+	global.Log.Info(ctx, "初始化casbin完成...")
 
 	// 初始化操作工厂
-	factoryIns, err := mysql.GetMySQLFactory()
+	factoryIns, err := store.NewSqlFactory(global.DB)
 	if err != nil {
 		panic(fmt.Sprintf("初始化工厂实例失败：%v", err))
 	}
 
-	// 初始化Redis
-	initialize.Redis()
-
-	// 初始化Casbin
-	initialize.Casbin()
-	enforcer := initialize.GetEnforcerIns()
-
 	// 初始化数据
-	admin.InitData(ctx, factoryIns, enforcer)
+	admin.InitData(ctx, factoryIns)
+	global.Log.Info(ctx, "初始化数据完成...")
 
 	// 初始化路由
-	g := admin.Router(ctx, factoryIns, enforcer)
+	g := admin.Router(ctx, factoryIns)
 
 	host := "0.0.0.0"
 	port := global.Conf.Server.Port

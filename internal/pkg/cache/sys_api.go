@@ -1,15 +1,15 @@
 package cache
 
 import (
-	"go-web/internal/pkg/initialize"
 	"go-web/internal/pkg/model"
 	"go-web/internal/pkg/util"
 	"time"
+
+	"github.com/go-redis/redis"
 )
 
-func GetSysApiList(key string) []model.SysApi {
+func GetSysApiList(redisdb *redis.Client, key string) []model.SysApi {
 
-	redisdb := initialize.GetRedisIns()
 	list := make([]model.SysApi, 0)
 	rLen, err := redisdb.LLen(key).Result()
 	if err != nil {
@@ -33,8 +33,7 @@ func GetSysApiList(key string) []model.SysApi {
 	Redis Lpush 命令将一个或多个值插入到列表头部，导致最后插入的在列表最前面
 	Redis Rpush 命令用于将一个或多个值插入到列表的尾部(最右边)
 */
-func SetSysApiList(key string, values []model.SysApi) error {
-	redisdb := initialize.GetRedisIns()
+func SetSysApiList(redisdb *redis.Client, key string, values []model.SysApi) error {
 	strs := make([]string, 0)
 	for _, value := range values {
 		strs = append(strs, util.Struct2Json(value))
