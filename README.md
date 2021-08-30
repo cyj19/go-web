@@ -53,7 +53,6 @@
 │    │     └── util # 工具包目录
 ├── logs # 日志文件目录
 ├── pkg # 外部公共模块目录
-│   └── model # 存储层模型定义目录
 ├── .gitignore # git忽略
 ├── go.mod # go依赖列表
 ├── go.sum # go依赖下载历史
