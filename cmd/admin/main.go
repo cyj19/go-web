@@ -3,11 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"go-web/internal/admin"
-	"go-web/internal/admin/global"
-	"go-web/internal/admin/store"
-	"go-web/internal/pkg/initialize"
-	"go-web/internal/pkg/model"
 	"log"
 	"net/http"
 	"os"
@@ -15,6 +10,12 @@ import (
 	"runtime/debug"
 	"syscall"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/admin"
+	"github.com/vagaryer/go-web/internal/admin/global"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/initialize"
+	"github.com/vagaryer/go-web/internal/pkg/model"
 )
 
 func main() {

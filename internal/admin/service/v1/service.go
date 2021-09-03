@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"go-web/internal/admin/global"
-	"go-web/internal/admin/store"
-	"go-web/internal/pkg/cache"
+	"github.com/vagaryer/go-web/internal/admin/global"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/cache"
 )
 
 type Service interface {

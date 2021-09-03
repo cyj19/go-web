@@ -1,8 +1,8 @@
 package middleware
 
 import (
-	"go-web/internal/pkg/logger"
-	"go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/logger"
+	"github.com/vagaryer/go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,7 +2,8 @@ package db
 
 import (
 	"fmt"
-	"go-web/internal/pkg/config"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

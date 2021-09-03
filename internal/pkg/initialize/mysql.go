@@ -2,8 +2,9 @@ package initialize
 
 import (
 	"fmt"
-	"go-web/internal/pkg/config"
-	"go-web/internal/pkg/db"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/vagaryer/go-web/internal/pkg/db"
 
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"

@@ -1,9 +1,10 @@
 package cache
 
 import (
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/go-redis/redis"
 )

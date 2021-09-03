@@ -1,8 +1,8 @@
 package global
 
 import (
-	"go-web/internal/pkg/config"
-	"go-web/internal/pkg/logger"
+	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/vagaryer/go-web/internal/pkg/logger"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/go-redis/redis"

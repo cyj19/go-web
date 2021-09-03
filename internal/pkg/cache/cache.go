@@ -2,8 +2,9 @@ package cache
 
 import (
 	"encoding/json"
-	"go-web/internal/pkg/util"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/go-redis/redis"
 )

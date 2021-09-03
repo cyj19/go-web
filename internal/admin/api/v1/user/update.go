@@ -1,8 +1,8 @@
 package user
 
 import (
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )

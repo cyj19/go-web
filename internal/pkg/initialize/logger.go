@@ -2,10 +2,11 @@ package initialize
 
 import (
 	"fmt"
-	"go-web/internal/pkg/config"
-	"go-web/internal/pkg/logger"
 	"os"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/vagaryer/go-web/internal/pkg/logger"
 
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"

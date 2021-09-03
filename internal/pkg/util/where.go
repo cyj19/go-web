@@ -1,6 +1,6 @@
 package util
 
-import "go-web/internal/pkg/model"
+import "github.com/vagaryer/go-web/internal/pkg/model"
 
 // 根据结构体生成sql条件
 func GenWhereOrderByStruct(value interface{}) []model.WhereOrder {

@@ -4,9 +4,10 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"go-web/internal/pkg/config"
 	"log"
 	"strings"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
 
 	"github.com/spf13/viper"
 )

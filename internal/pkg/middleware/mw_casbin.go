@@ -3,11 +3,11 @@ package middleware
 import (
 	"strings"
 
-	"go-web/internal/admin/api/v1/user"
-	"go-web/internal/admin/store"
-	"go-web/internal/pkg/config"
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/admin/api/v1/user"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"

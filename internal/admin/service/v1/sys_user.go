@@ -3,11 +3,12 @@ package v1
 import (
 	"context"
 	"fmt"
-	"go-web/internal/admin/global"
-	"go-web/internal/admin/store"
-	"go-web/internal/pkg/cache"
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
+
+	"github.com/vagaryer/go-web/internal/admin/global"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/cache"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 )
 
 type SysUserSrv interface {

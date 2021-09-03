@@ -2,7 +2,8 @@ package initialize
 
 import (
 	"fmt"
-	"go-web/internal/pkg/config"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
 
 	"github.com/go-redis/redis"
 )

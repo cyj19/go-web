@@ -3,12 +3,13 @@ package admin
 import (
 	"context"
 	"fmt"
-	"go-web/internal/admin/global"
-	srvv1 "go-web/internal/admin/service/v1"
-	"go-web/internal/admin/store"
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
 	"strings"
+
+	"github.com/vagaryer/go-web/internal/admin/global"
+	srvv1 "github.com/vagaryer/go-web/internal/admin/service/v1"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 )
 
 /*

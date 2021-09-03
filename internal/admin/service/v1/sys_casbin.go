@@ -2,9 +2,10 @@ package v1
 
 import (
 	"context"
-	"go-web/internal/admin/global"
-	"go-web/internal/admin/store"
-	"go-web/internal/pkg/model"
+
+	"github.com/vagaryer/go-web/internal/admin/global"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/model"
 )
 
 type SysCasbinSrv interface {

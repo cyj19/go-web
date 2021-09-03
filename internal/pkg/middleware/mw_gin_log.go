@@ -2,8 +2,9 @@ package middleware
 
 import (
 	"fmt"
-	"go-web/internal/pkg/logger"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )

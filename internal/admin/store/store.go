@@ -2,8 +2,9 @@ package store
 
 import (
 	"fmt"
-	"go-web/internal/pkg/model"
 	"sync"
+
+	"github.com/vagaryer/go-web/internal/pkg/model"
 
 	"gorm.io/gorm"
 )

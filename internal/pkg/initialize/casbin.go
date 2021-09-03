@@ -2,7 +2,8 @@ package initialize
 
 import (
 	"fmt"
-	"go-web/internal/pkg/config"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"

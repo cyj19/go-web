@@ -1,11 +1,12 @@
 package middleware
 
 import (
-	"go-web/internal/pkg/config"
-	"go-web/internal/pkg/response"
-	"go-web/internal/pkg/util"
-	"go-web/pkg/model"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
