@@ -1,9 +1,9 @@
 package menu
 
 import (
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
-	"go-web/internal/pkg/util"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +20,7 @@ func (m *SysMenuHandler) BatchDelete(c *gin.Context) {
 		return
 	}
 	ids := util.Str2Uint64Array(param.Ids)
-	err = m.srv.SysMenu().BatchDelete(ids)
+	err = m.srv.SysMenu().BatchDelete(c, ids)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

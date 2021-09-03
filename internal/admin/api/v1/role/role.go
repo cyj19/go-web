@@ -1,10 +1,8 @@
 package role
 
 import (
-	srvv1 "go-web/internal/admin/service/v1"
-	"go-web/internal/admin/store"
-
-	"github.com/casbin/casbin/v2"
+	srvv1 "github.com/vagaryer/go-web/internal/admin/service/v1"
+	"github.com/vagaryer/go-web/internal/admin/store"
 )
 
 type SysRoleHandler struct {
@@ -12,9 +10,9 @@ type SysRoleHandler struct {
 	factory store.Factory
 }
 
-func NewSysRoleHandler(factory store.Factory, enforcer *casbin.Enforcer) *SysRoleHandler {
+func NewSysRoleHandler(factory store.Factory) *SysRoleHandler {
 	return &SysRoleHandler{
-		srv:     srvv1.NewService(factory, enforcer),
+		srv:     srvv1.NewService(factory),
 		factory: factory,
 	}
 }

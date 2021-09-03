@@ -1,22 +1,22 @@
 package router
 
 import (
-	"go-web/internal/admin/api/v1/role"
-	"go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/admin/api/v1/role"
+	"github.com/vagaryer/go-web/internal/admin/global"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/middleware"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
-	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 )
 
 // 注册角色路由
-func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory, enforcer *casbin.Enforcer, authMiddleware *jwt.GinJWTMiddleware) {
+func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 
 	rolev1 := r.Group("/role")
-	rolev1.Use(authMiddleware.MiddlewareFunc())
-	// rolev1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(initialize.GetEnforcerIns()))
+	rolev1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(factoryIns, global.Conf, global.Enforcer))
 	{
-		roleHandler := role.NewSysRoleHandler(factoryIns, enforcer)
+		roleHandler := role.NewSysRoleHandler(factoryIns)
 
 		rolev1.POST("/add", roleHandler.Create)
 		rolev1.DELETE("/delete", roleHandler.BatchDelete)

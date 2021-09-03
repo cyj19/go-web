@@ -2,11 +2,9 @@ package cache
 
 import (
 	"encoding/json"
-	"fmt"
-	"go-web/internal/pkg/global"
-	"go-web/internal/pkg/initialize"
-	"go-web/internal/pkg/util"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/go-redis/redis"
 )
@@ -16,25 +14,20 @@ import (
 	例如：user:id:1:username:vagaryer
 */
 // model必须是指针类型
-func Get(key string, model interface{}) error {
-	redisdb := initialize.GetRedisIns()
+func Get(redisdb *redis.Client, key string, model interface{}) error {
 	value, err := redisdb.Get(key).Result()
 	if err == redis.Nil || err != nil {
-		global.LoggerIns.Println("redis missing key err:", err)
 		return err
 	}
-	// 缓存中查询
-	fmt.Println("缓存中查询")
+
 	// json 转 model
 	return util.Json2Struct(value, model)
 
 }
 
-func Set(key string, value interface{}) error {
-	redisdb := initialize.GetRedisIns()
+func Set(redisdb *redis.Client, key string, value interface{}) error {
 	valueData, err := json.Marshal(value)
 	if err != nil {
-		global.LoggerIns.Println("json marshal err:", err)
 		return err
 	}
 
@@ -42,8 +35,7 @@ func Set(key string, value interface{}) error {
 
 }
 
-func Exist(key string) bool {
-	redisdb := initialize.GetRedisIns()
+func Exist(redisdb *redis.Client, key string) bool {
 	num, err := redisdb.Exists(key).Result()
 	if err != nil || num < 1 {
 		return false
@@ -52,13 +44,11 @@ func Exist(key string) bool {
 }
 
 // 删除key
-func Del(key ...string) error {
-	redisdb := initialize.GetRedisIns()
+func Del(redisdb *redis.Client, key ...string) error {
 	return redisdb.Del(key...).Err()
 }
 
 // 返回与pattern匹配的key
-func Keys(pattern string) []string {
-	redisdb := initialize.GetRedisIns()
+func Keys(redisdb *redis.Client, pattern string) []string {
 	return redisdb.Keys(pattern).Val()
 }

@@ -1,8 +1,8 @@
 package menu
 
 import (
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +15,7 @@ func (m *SysMenuHandler) Create(c *gin.Context) {
 		return
 	}
 
-	err = m.srv.SysMenu().Create(menu)
+	err = m.srv.SysMenu().Create(c, menu)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

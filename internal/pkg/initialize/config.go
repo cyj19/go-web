@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"go-web/internal/pkg/global"
+	"log"
 	"strings"
+
+	"github.com/vagaryer/go-web/internal/pkg/config"
 
 	"github.com/spf13/viper"
 )
@@ -15,15 +17,14 @@ const (
 	configPath  = "../../configs"
 )
 
-var box = new(global.CustomConfBox)
-var configuration = new(global.Configuration)
-
 /*
 	初始化配置文件
-	参数developmentConfig: 默认开发配置文件
-	参数productionConfig: 默认生产配置文件
+	参数1: 默认开发配置文件
+	参数2: 默认生产配置文件
 */
-func Config(developmentConfig, productionConfig string) {
+func Config(developmentConfig string, productionConfig string) (*config.CustomConfBox, *config.Configuration) {
+	var box config.CustomConfBox
+	var conf config.Configuration
 	// 声明命令行标志
 	confFlag := flag.String("web_conf", "", "config path")
 	modeFlag := flag.String("web_mode", "", "run mode")
@@ -38,7 +39,7 @@ func Config(developmentConfig, productionConfig string) {
 
 	box.ViperIns = viper.New()
 	// 读取默认配置文件
-	readConfig(developmentConfig)
+	readConfig(&box, developmentConfig)
 	// 把开发配置作为默认配置
 	settings := box.ViperIns.AllSettings()
 	for key, value := range settings {
@@ -54,19 +55,21 @@ func Config(developmentConfig, productionConfig string) {
 
 	if configName != "" {
 		// 重新读取配置文件，修改和默认配置不同的部分
-		readConfig(configName)
+		readConfig(&box, configName)
 	}
 
 	// 配置转为结构体
-	if err := box.ViperIns.Unmarshal(configuration); err != nil {
+	if err := box.ViperIns.Unmarshal(&conf); err != nil {
 		panic(fmt.Sprintf("配置转结构体失败：%v , 配置文件所在目录为：%s", err, box.ConfEnv))
 	}
 
-	fmt.Println("server: ", configuration.Server)
+	log.Println("初始化配置文件完成...")
+
+	return &box, &conf
 
 }
 
-func readConfig(filename string) {
+func readConfig(box *config.CustomConfBox, filename string) {
 	box.ViperIns.SetConfigType(confileType)
 	config, err := box.Find(filename)
 	if err != nil {
@@ -77,8 +80,4 @@ func readConfig(filename string) {
 	if err != nil {
 		panic(fmt.Sprintf("初始化配置失败：%v , 配置文件所在目录为：%s", err, box.ConfEnv))
 	}
-}
-
-func GetConfiguration() *global.Configuration {
-	return configuration
 }

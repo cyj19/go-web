@@ -1,21 +1,40 @@
-package global
+package config
 
 import (
-	"fmt"
+	"io/ioutil"
 	"time"
 
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	"github.com/spf13/viper"
+	"go.uber.org/zap/zapcore"
 )
+
+const (
+	MsecLocalTimeFormat = "2006-01-02 15:04:05.000"
+)
+
+//自定义配置盒子，存放环境配置和对应的viper
+type CustomConfBox struct {
+	// 配置文件所在文件目录
+	ConfEnv string
+	// 配置实例
+	ViperIns *viper.Viper
+}
+
+//查找配置文件
+func (c *CustomConfBox) Find(filename string) ([]byte, error) {
+
+	return ioutil.ReadFile(c.ConfEnv + "/" + filename)
+
+}
 
 // viper内置了mapstructure, yml文件用"-"区分单词, 转为驼峰方便
 type Configuration struct {
-	Server *ServerConfiguration
-	Mysql  *MysqlConfiguration
-	Redis  *RedisConfiguration
-	Casbin *CasbinConfiguration
-	Jwt    *JWTConfiguration
+	Server *ServerConfiguration `mapstructure:"server" json:"server"`
+	Mysql  *MysqlConfiguration  `mapstructure:"mysql" json:"mysql"`
+	Redis  *RedisConfiguration  `mapstructure:"redis" json:"redis"`
+	Casbin *CasbinConfiguration `mapstructure:"casbin" json:"casbin"`
+	Jwt    *JWTConfiguration    `mapstructure:"jwt" json:"jwt"`
+	Log    *LogConfiguration    `mapstructure:"log" json:"log"`
 }
 
 type ServerConfiguration struct {
@@ -37,33 +56,6 @@ type MysqlConfiguration struct {
 	LogLevel              int           `mapstructure:"log-level" json:"logLevel"`
 }
 
-// 根据MysqlConfiguration打开一个数据库连接
-func NewMySQL(opt *MysqlConfiguration) (*gorm.DB, error) {
-	dns := fmt.Sprintf(`%s:%s@tcp(%s)/%s?charset=utf8&parseTime=%t&loc=%s`,
-		opt.Username,
-		opt.Password,
-		opt.Host,
-		opt.Database,
-		true,
-		"Local")
-
-	// gorm 默认会在事务里执行写入操作（创建、更新、删除）
-	db, err := gorm.Open(mysql.Open(dns), &gorm.Config{Logger: logger.Default.LogMode(logger.LogLevel(opt.LogLevel))})
-	if err != nil {
-		return nil, err
-	}
-
-	sqlDB, err := db.DB()
-	if err != nil {
-		return nil, err
-	}
-
-	sqlDB.SetMaxIdleConns(opt.MaxIdleConnections)
-	sqlDB.SetMaxOpenConns(opt.MaxOpenConnections)
-	sqlDB.SetConnMaxLifetime(opt.MaxConnectionLifeTime)
-	return db, nil
-}
-
 type RedisConfiguration struct {
 	Addr     string `mapstructure:"addr" json:"addr"`
 	Password string `mapstructure:"password" json:"password"`
@@ -79,4 +71,13 @@ type JWTConfiguration struct {
 	Key        string `mapstructure:"key" json:"key"`
 	Timeout    int    `mapstructure:"timeout" json:"timeout"`
 	MaxRefresh int    `mapstructure:"max-refresh" json:"maxRefresh"`
+}
+
+type LogConfiguration struct {
+	Path       string        `mapstructure:"path" json:"path"`
+	Level      zapcore.Level `mapstructure:"level" json:"level"`
+	MaxSize    int           `mapstructure:"max-size" json:"maxSize"`
+	MaxAge     int           `mapstructure:"max-age" json:"maxAge"`
+	MaxBackups int           `mapstructure:"max-backups" json:"maxBackups"`
+	Compress   bool          `mapstructure:"compress" json:"compress"`
 }

@@ -1,8 +1,8 @@
 package api
 
 import (
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,7 +15,7 @@ func (a *SysApiHandler) Create(c *gin.Context) {
 		return
 	}
 
-	err = a.srv.SysApi().Create(api)
+	err = a.srv.SysApi().Create(c, api)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

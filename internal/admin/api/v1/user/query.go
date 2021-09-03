@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
-	"go-web/internal/pkg/util"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 )
 
 func (u *SysUserHandler) GetUserInfo(c *gin.Context) {
@@ -24,14 +24,14 @@ func (u *SysUserHandler) GetCurrentUser(c *gin.Context) model.SysUser {
 		return *currentUser
 	}
 	// 查询用户
-	currentUser, _ = u.srv.SysUser().GetById(userId.(uint64))
+	currentUser, _ = u.srv.SysUser().GetById(c, userId.(uint64))
 	return *currentUser
 }
 
 //查询
 func (u *SysUserHandler) GetByUsername(c *gin.Context) {
 
-	user, err := u.srv.SysUser().GetByUsername(c.Param("name"))
+	user, err := u.srv.SysUser().GetByUsername(c, c.Param("name"))
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -52,7 +52,7 @@ func (u *SysUserHandler) GetList(c *gin.Context) {
 		return
 	}
 
-	list, err := u.srv.SysUser().GetList(param)
+	list, err := u.srv.SysUser().GetList(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -70,7 +70,7 @@ func (u *SysUserHandler) GetPage(c *gin.Context) {
 		return
 	}
 	fmt.Printf("userPage: %+v \n", param)
-	page, err := u.srv.SysUser().GetPage(param)
+	page, err := u.srv.SysUser().GetPage(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -87,7 +87,7 @@ func (u *SysUserHandler) Login(c *gin.Context) (interface{}, error) {
 		return nil, err
 	}
 
-	user, err := u.srv.SysUser().Login(param.Username, param.Password)
+	user, err := u.srv.SysUser().Login(c, param.Username, param.Password)
 
 	if err != nil || user == nil {
 		return nil, err

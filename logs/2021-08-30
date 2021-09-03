@@ -1,0 +1,72 @@
+2021-08-30 15:52:07.814	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/admin/router.go:48
+[0m[32m[info] [0m初始化路由完成...
+2021-08-30 15:52:50.246	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 map[expires:2021-08-30 17:52:50.2451484 +0800 CST m=+7242.970457701 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzAzMTcxNzAsImlkZW50aXR5IjoiMSIsIm9yaWdfaWF0IjoxNjMwMzA5OTcwLCJ1c2VyIjoiMSJ9.TOuoqhB2m9UqodPjUPbClRGYmVRjRMr4iBsFWgaODwM]}
+2021-08-30 15:52:50.246	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/base/login  ::1 8.0005ms
+2021-08-30 15:53:21.012	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboardRoot 首页父菜单 dashboard /dashboard   0xc0000388c0 0xc0000388c8 0 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} systemRoot 系统设置 component /system   0xc0000388c0 0xc0000388c8 0 [] []} {{3 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboard 首页 dashboard index  /dashboard/index 0xc0000388c0 0xc0000388c8 1 [] []} {{4 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} menu 菜单管理 tree-table menu  /system/menu 0xc0000388c0 0xc0000388c8 2 [] []} {{5 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} role 角色管理 peoples role  /system/role 0xc0000388c0 0xc0000388c8 2 [] []} {{6 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} user 用户管理 user user  /system/user 0xc0000388c0 0xc0000388c8 2 [] []} {{7 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} api 接口管理 tree api  /system/api 0xc0000388c0 0xc0000388c8 2 [] []}]}
+2021-08-30 15:53:21.014	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/menu/list  ::1 45.0026ms
+2021-08-30 15:53:42.430	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {401 认证失败，请重新登录 <nil>}
+2021-08-30 15:53:42.431	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m401 POST /api/v1/base/login  ::1 9.0005ms
+2021-08-30 15:57:53.593	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 map[expires:2021-08-30 17:57:53.5931484 +0800 CST m=+7546.335809201 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzAzMTc0NzMsImlkZW50aXR5IjoiMiIsIm9yaWdfaWF0IjoxNjMwMzEwMjczLCJ1c2VyIjoiMiJ9.v45z5z8sbv-Mxj1fAxHcyvjs_ty8tKKDJNcTIIqWRGg]}
+2021-08-30 15:57:53.594	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/base/login  ::1 11.0006ms
+2021-08-30 15:58:05.334	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboardRoot 首页父菜单 dashboard /dashboard   0xc00048e560 0xc00048e568 0 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} systemRoot 系统设置 component /system   0xc00048e560 0xc00048e568 0 [] []} {{3 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboard 首页 dashboard index  /dashboard/index 0xc00048e560 0xc00048e568 1 [] []} {{4 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} menu 菜单管理 tree-table menu  /system/menu 0xc00048e560 0xc00048e568 2 [] []} {{5 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} role 角色管理 peoples role  /system/role 0xc00048e560 0xc00048e568 2 [] []} {{6 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} user 用户管理 user user  /system/user 0xc00048e560 0xc00048e568 2 [] []} {{7 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} api 接口管理 tree api  /system/api 0xc00048e560 0xc00048e568 2 [] []}]}
+2021-08-30 15:58:05.335	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/menu/list  ::1 24.0014ms
+2021-08-30 16:06:46.711	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 map[expires:2021-08-30 18:06:46.7112182 +0800 CST m=+8079.478303201 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzAzMTgwMDYsImlkZW50aXR5IjoiMSIsIm9yaWdfaWF0IjoxNjMwMzEwODA2LCJ1c2VyIjoiMSJ9.McQlxYql-lHlGheTDFX7lbRD3ArB1X3Pl9PecnsV2xU]}
+2021-08-30 16:06:46.712	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/base/login  ::1 14.0008ms
+2021-08-30 16:07:23.827	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m404 PATCH /role/api/update  ::1 0s
+2021-08-30 16:07:51.767	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {406 记录不存在：record not found  <nil>}
+2021-08-30 16:07:51.767	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m406 PATCH /api/v1/role/api/update  ::1 11.0006ms
+2021-08-30 16:09:29.607	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 <nil>}
+2021-08-30 16:09:29.608	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 PATCH /api/v1/role/api/update  ::1 130.0074ms
+2021-08-30 16:10:38.791	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 map[expires:2021-08-30 18:10:38.791625 +0800 CST m=+8311.525575601 token:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MzAzMTgyMzgsImlkZW50aXR5IjoiMiIsIm9yaWdfaWF0IjoxNjMwMzExMDM4LCJ1c2VyIjoiMiJ9.fbu0q9CzCWhxJXTz6snG101HKoE5I9o6X3m0LDsO5QI]}
+2021-08-30 16:10:38.792	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/base/login  ::1 13.0007ms
+2021-08-30 16:10:51.858	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboardRoot 首页父菜单 dashboard /dashboard   0xc0000384e0 0xc0000384e8 0 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} systemRoot 系统设置 component /system   0xc0000384e0 0xc0000384e8 0 [] []} {{3 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboard 首页 dashboard index  /dashboard/index 0xc0000384e0 0xc0000384e8 1 [] []} {{4 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} menu 菜单管理 tree-table menu  /system/menu 0xc0000384e0 0xc0000384e8 2 [] []} {{5 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} role 角色管理 peoples role  /system/role 0xc0000384e0 0xc0000384e8 2 [] []} {{6 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} user 用户管理 user user  /system/user 0xc0000384e0 0xc0000384e8 2 [] []} {{7 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} api 接口管理 tree api  /system/api 0xc0000384e0 0xc0000384e8 2 [] []}]}
+2021-08-30 16:10:51.858	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/menu/list  ::1 1.0001ms
+2021-08-30 16:11:51.600	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboardRoot 首页父菜单 dashboard /dashboard   0xc00048e5c0 0xc00048e5c8 0 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} systemRoot 系统设置 component /system   0xc00048e5c0 0xc00048e5c8 0 [] []} {{3 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboard 首页 dashboard index  /dashboard/index 0xc00048e5c0 0xc00048e5c8 1 [] []} {{4 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} menu 菜单管理 tree-table menu  /system/menu 0xc00048e5c0 0xc00048e5c8 2 [] []} {{5 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} role 角色管理 peoples role  /system/role 0xc00048e5c0 0xc00048e5c8 2 [] []} {{6 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} user 用户管理 user user  /system/user 0xc00048e5c0 0xc00048e5c8 2 [] []} {{7 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} api 接口管理 tree api  /system/api 0xc00048e5c0 0xc00048e5c8 2 [] []}]}
+2021-08-30 16:11:51.601	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/menu/list  ::1 2.0001ms
+2021-08-30 16:16:39.369	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/cmd/admin/main.go:88
+[0m[32m[info] [0mShutting down server...
+2021-08-30 16:20:29.111	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/admin/router.go:48
+[0m[32m[info] [0m初始化路由完成...
+2021-08-30 16:20:39.047	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {200 操作成功 [{{1 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboardRoot 首页父菜单 dashboard /dashboard   0xc000097828 0xc000097870 0 [] []} {{2 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} systemRoot 系统设置 component /system   0xc000097828 0xc000097870 0 [] []} {{3 2021-08-07 15:05:52 +0800 CST 2021-08-07 15:05:52 +0800 CST <nil>} dashboard 首页 dashboard index  /dashboard/index 0xc000097828 0xc000097870 1 [] []} {{4 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} menu 菜单管理 tree-table menu  /system/menu 0xc000097828 0xc000097870 2 [] []} {{5 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} role 角色管理 peoples role  /system/role 0xc000097828 0xc000097870 2 [] []} {{6 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} user 用户管理 user user  /system/user 0xc000097828 0xc000097870 2 [] []} {{7 2021-08-07 15:05:53 +0800 CST 2021-08-07 15:05:53 +0800 CST <nil>} api 接口管理 tree api  /system/api 0xc000097828 0xc000097870 2 [] []}]}
+2021-08-30 16:20:39.048	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/menu/list  ::1 2.0001ms
+2021-08-30 16:21:20.514	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/cmd/admin/main.go:88
+[0m[32m[info] [0mShutting down server...
+2021-08-30 16:21:48.848	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/admin/router.go:48
+[0m[32m[info] [0m初始化路由完成...
+2021-08-30 16:21:58.402	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m200 POST /api/v1/menu/list  ::1 3.0001ms
+2021-08-30 16:24:54.842	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/cmd/admin/main.go:88
+[0m[32m[info] [0mShutting down server...
+2021-08-30 16:25:09.225	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/admin/router.go:48
+[0m[32m[info] [0m初始化路由完成...
+2021-08-30 16:25:35.354	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_exception.go:18
+[0m[32m[info] [0mresponse success, data: {403 无权限访问资源 <nil>}
+2021-08-30 16:25:35.355	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/internal/pkg/middleware/mw_gin_log.go:34
+[0m[32m[info] [0m403 POST /api/v1/menu/list  ::1 2.0002ms
+2021-08-30 16:25:47.967	[34mINFO[0m	logger/logger.go:81	[32mE:/goproject2/go-web/cmd/admin/main.go:88
+[0m[32m[info] [0mShutting down server...

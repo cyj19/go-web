@@ -1,9 +1,9 @@
 package user
 
 import (
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
-	"go-web/internal/pkg/util"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +17,7 @@ func (u *SysUserHandler) BatchDelete(c *gin.Context) {
 	}
 
 	ids := util.Str2Uint64Array(param.Ids)
-	err = u.srv.SysUser().BatchDelete(ids)
+	err = u.srv.SysUser().BatchDelete(c, ids)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

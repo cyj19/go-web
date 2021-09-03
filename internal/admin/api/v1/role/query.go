@@ -3,8 +3,8 @@ package role
 import (
 	"strconv"
 
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +12,7 @@ import (
 func (r *SysRoleHandler) GetById(c *gin.Context) {
 
 	id, _ := strconv.Atoi(c.Param("id"))
-	role, err := r.srv.SysRole().GetById(uint64(id))
+	role, err := r.srv.SysRole().GetById(c, uint64(id))
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -28,7 +28,7 @@ func (r *SysRoleHandler) GetList(c *gin.Context) {
 		return
 	}
 
-	roles, err := r.srv.SysRole().GetList(param)
+	roles, err := r.srv.SysRole().GetList(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -45,7 +45,7 @@ func (r *SysRoleHandler) GetPage(c *gin.Context) {
 		return
 	}
 
-	page, err := r.srv.SysRole().GetPage(param)
+	page, err := r.srv.SysRole().GetPage(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

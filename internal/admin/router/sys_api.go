@@ -1,20 +1,21 @@
 package router
 
 import (
-	"go-web/internal/admin/api/v1/api"
-	"go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/admin/api/v1/api"
+	"github.com/vagaryer/go-web/internal/admin/global"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/middleware"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
-	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 )
 
 // 注册接口路由
-func InitApiRouter(r *gin.RouterGroup, factoryIns store.Factory, enforcer *casbin.Enforcer, authMiddleware *jwt.GinJWTMiddleware) {
+func InitApiRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 	apiv1 := r.Group("/api")
-	apiv1.Use(authMiddleware.MiddlewareFunc())
+	apiv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(factoryIns, global.Conf, global.Enforcer))
 	{
-		apiHandler := api.NewSysApiHandler(factoryIns, enforcer)
+		apiHandler := api.NewSysApiHandler(factoryIns)
 
 		apiv1.POST("/add", apiHandler.Create)
 		apiv1.DELETE("/delete", apiHandler.BatchDelete)

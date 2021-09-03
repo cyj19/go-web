@@ -3,50 +3,71 @@ package main
 import (
 	"context"
 	"fmt"
-	"go-web/internal/admin"
-	"go-web/internal/admin/store/mysql"
-	"go-web/internal/pkg/initialize"
-	"go-web/internal/pkg/model"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"syscall"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/admin"
+	"github.com/vagaryer/go-web/internal/admin/global"
+	"github.com/vagaryer/go-web/internal/admin/store"
+	"github.com/vagaryer/go-web/internal/pkg/initialize"
+	"github.com/vagaryer/go-web/internal/pkg/model"
 )
 
 func main() {
+	ctx := context.Background()
+	// 处理初始化阶段可能抛出的panic，目的并非要恢复程序，而是在程序退出前记录错误信息和堆栈信息
+	defer func() {
+		if err := recover(); err != nil {
+			// 如果初始化日志完成，则写入日志文件
+			if global.Log != nil {
+				// 把错误信息和堆栈信息写入日志文件
+				global.Log.Fatal(ctx, "未知异常，退出程序", err, string(debug.Stack()))
+			} else {
+				log.Fatalf("未知异常，退出程序: %v   %s", err, string(debug.Stack()))
+			}
+
+		}
+	}()
 
 	// 初始化配置文件
-	initialize.Config("admin.dev.yml", "admin.prod.yml")
+	global.Box, global.Conf = initialize.Config("admin.dev.yml", "admin.prod.yml")
 
 	// 初始化日志
-	initialize.InitLogger()
+	global.Log = initialize.InitLogger(global.Conf)
+	global.Log.Info(ctx, "初始化日志完成...")
 
 	// 初始化MySQL
-	initialize.MySQL(new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin), new(model.SysApi))
+	global.DB = initialize.MySQL(global.Conf.Mysql, global.Log, new(model.SysUser), new(model.SysRole), new(model.SysMenu), new(model.SysCasbin), new(model.SysApi))
+	global.Log.Info(ctx, "初始化mysql完成...")
+
+	// 初始化Redis
+	global.RedisIns = initialize.Redis(global.Conf.Redis)
+	global.Log.Info(ctx, "初始化redis完成...")
+
+	// 初始化Casbin
+	global.Enforcer = initialize.Casbin(global.DB, global.Box, global.Conf)
+	global.Log.Info(ctx, "初始化casbin完成...")
 
 	// 初始化操作工厂
-	factoryIns, err := mysql.GetMySQLFactory()
+	factoryIns, err := store.NewSqlFactory(global.DB)
 	if err != nil {
 		panic(fmt.Sprintf("初始化工厂实例失败：%v", err))
 	}
 
-	// 初始化Redis
-	initialize.Redis()
-
-	// 初始化Casbin
-	initialize.Casbin()
-	enforcer := initialize.GetEnforcerIns()
-
 	// 初始化数据
-	admin.InitData(factoryIns, enforcer)
+	admin.InitData(ctx, factoryIns)
+	global.Log.Info(ctx, "初始化数据完成...")
 
 	// 初始化路由
-	g := admin.Router(factoryIns, enforcer)
-	configuration := initialize.GetConfiguration()
+	g := admin.Router(ctx, factoryIns)
+
 	host := "0.0.0.0"
-	port := configuration.Server.Port
+	port := global.Conf.Server.Port
 	//启动服务
 	srv := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", host, port),
@@ -55,7 +76,7 @@ func main() {
 
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("Could not listen on %s:%d: %v\n", host, port, err)
+			global.Log.Fatal(ctx, "Could not listen on %s:%d: %v\n", host, port, err)
 		}
 	}()
 
@@ -70,14 +91,13 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
-	log.Println("Shutting down server")
+	global.Log.Info(ctx, "Shutting down server...")
 
 	// 留5秒用于处理未完成的请求
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatal("Server forced to shutdown: ", err)
+		global.Log.Error(ctx, "Server forced to shutdown: %v", err)
 	}
 
-	log.Println("Server exiting")
 }

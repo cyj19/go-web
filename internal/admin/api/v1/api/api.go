@@ -1,10 +1,8 @@
 package api
 
 import (
-	srvv1 "go-web/internal/admin/service/v1"
-	"go-web/internal/admin/store"
-
-	"github.com/casbin/casbin/v2"
+	srvv1 "github.com/vagaryer/go-web/internal/admin/service/v1"
+	"github.com/vagaryer/go-web/internal/admin/store"
 )
 
 type SysApiHandler struct {
@@ -12,9 +10,9 @@ type SysApiHandler struct {
 	factory store.Factory
 }
 
-func NewSysApiHandler(factory store.Factory, enforcer *casbin.Enforcer) *SysApiHandler {
+func NewSysApiHandler(factory store.Factory) *SysApiHandler {
 	return &SysApiHandler{
-		srv:     srvv1.NewService(factory, enforcer),
+		srv:     srvv1.NewService(factory),
 		factory: factory,
 	}
 }

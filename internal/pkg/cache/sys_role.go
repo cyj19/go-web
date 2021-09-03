@@ -1,14 +1,15 @@
 package cache
 
 import (
-	"go-web/internal/pkg/initialize"
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/util"
 	"time"
+
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/util"
+
+	"github.com/go-redis/redis"
 )
 
-func GetSysRoleList(key string) []model.SysRole {
-	redisdb := initialize.GetRedisIns()
+func GetSysRoleList(redisdb *redis.Client, key string) []model.SysRole {
 	list := make([]model.SysRole, 0)
 	rLen, err := redisdb.LLen(key).Result()
 	if err != nil {
@@ -32,8 +33,7 @@ func GetSysRoleList(key string) []model.SysRole {
 	Redis Lpush 命令将一个或多个值插入到列表头部，导致最后插入的在列表最前面
 	Redis Rpush 命令用于将一个或多个值插入到列表的尾部(最右边)
 */
-func SetSysRoleList(key string, values []model.SysRole) error {
-	redisdb := initialize.GetRedisIns()
+func SetSysRoleList(redisdb *redis.Client, key string, values []model.SysRole) error {
 	strs := make([]string, 0)
 	for _, value := range values {
 		strs = append(strs, util.Struct2Json(value))

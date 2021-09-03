@@ -3,9 +3,9 @@ package menu
 import (
 	"strconv"
 
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
-	"go-web/internal/pkg/util"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +16,7 @@ func (m *SysMenuHandler) GetById(c *gin.Context) {
 		response.FailWithCode(response.InternalServerError)
 		return
 	}
-	menu, err := m.srv.SysMenu().GetById(uint64(id))
+	menu, err := m.srv.SysMenu().GetById(c, uint64(id))
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -32,7 +32,7 @@ func (m *SysMenuHandler) GetList(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	menus, err := m.srv.SysMenu().GetList(param)
+	menus, err := m.srv.SysMenu().GetList(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -48,7 +48,7 @@ func (m *SysMenuHandler) GetMenusByRoleId(c *gin.Context) {
 		response.FailWithCode(response.ParameterBindingError)
 		return
 	}
-	menus, err := m.srv.SysMenu().GetMenusByRoleId(util.Str2Uint64Array(param.Ids))
+	menus, err := m.srv.SysMenu().GetMenusByRoleId(c, util.Str2Uint64Array(param.Ids))
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return
@@ -65,7 +65,7 @@ func (m *SysMenuHandler) GetPage(c *gin.Context) {
 		return
 	}
 
-	page, err := m.srv.SysMenu().GetPage(param)
+	page, err := m.srv.SysMenu().GetPage(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

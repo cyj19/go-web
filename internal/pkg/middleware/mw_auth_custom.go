@@ -3,7 +3,7 @@ package middleware
 import (
 	"strings"
 
-	"go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/model"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"

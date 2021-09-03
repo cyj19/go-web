@@ -2,8 +2,9 @@ package util
 
 import (
 	"fmt"
-	"go-web/internal/pkg/model"
 	"testing"
+
+	"github.com/vagaryer/go-web/internal/pkg/model"
 )
 
 func TestStruct2Struct2(t *testing.T) {

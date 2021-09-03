@@ -1,9 +1,9 @@
 package user
 
 import (
-	"go-web/internal/pkg/model"
-	"go-web/internal/pkg/response"
-	"go-web/internal/pkg/util"
+	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/vagaryer/go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
 )
@@ -17,7 +17,7 @@ func (u *SysUserHandler) Create(c *gin.Context) {
 		return
 	}
 	param.Password = util.EncryptionPsw(param.Password)
-	err = u.srv.SysUser().Create(param)
+	err = u.srv.SysUser().Create(c, param)
 	if err != nil {
 		response.FailWithMsg(err.Error())
 		return

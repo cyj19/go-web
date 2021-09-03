@@ -1,36 +1,39 @@
 package middleware
 
 import (
-	"go-web/internal/pkg/global"
-	"go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/logger"
+	"github.com/vagaryer/go-web/internal/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
 
-func Exception(c *gin.Context) {
-	defer func() {
-		if err := recover(); err != nil {
+func Exception(glog *logger.GormZapLogger) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		defer func() {
+			if err := recover(); err != nil {
 
-			switch v := err.(type) {
-			case response.Result:
-				// 写入日志文件
-				global.LoggerIns.Println("正常响应：", err)
-				response.JSON(c, v.Code, v)
-				return
-			default:
-				// 写入日志文件
-				global.LoggerIns.Println("未知异常：", err)
-				result := response.Result{
-					Code: response.InternalServerError,
-					Msg:  response.CustomError[response.InternalServerError],
-					Data: nil,
+				switch v := err.(type) {
+				case response.Result:
+					// 写入日志文件
+					glog.Info(c, "response success, data: %v", v)
+					response.JSON(c, v.Code, v)
+					return
+				default:
+					// 写入日志文件
+					glog.Error(c, "unknown exception: %v", err)
+					result := response.Result{
+						Code: response.InternalServerError,
+						Msg:  response.CustomError[response.InternalServerError],
+						Data: nil,
+					}
+					response.JSON(c, result.Code, result)
+					c.Abort()
+					return
 				}
-				response.JSON(c, result.Code, result)
-				c.Abort()
-				return
-			}
 
-		}
-	}()
-	c.Next()
+			}
+		}()
+		c.Next()
+	}
+
 }
