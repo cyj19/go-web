@@ -10,8 +10,6 @@
 <img src="https://img.shields.io/github/license/vagaryer/go-web" alt="License"/>
 </p>
 
-## 初衷
-在学习golang一段时间后，深感迫切需要动手开发一个项目来进一步掌握和巩固知识，由于之前有过开发web后端的经历，所以决定开发go-web
 
 ## 特性
 - `RESTful API` 设计风格
@@ -77,10 +75,10 @@ go run main.go
 go run main.go -web_config=xxxx -web_mode=prod
 
 ```
-> 启动成功后，携带参数username:admin password:123456，发送POST请求到 `http://127.0.0.1:9999/api/v1/base/login`获取token
+> 启动成功后，携带参数username:admin password:123456，发送POST请求到 `http://127.0.0.1:9999/api/v1/base/login` 获取token
 
 ## 感想
-花足够多的时间，做足够多的练习才是学习一门技艺的康庄大道。  
+花足够多的时间，做足够多的练习。  
 学习过程中一直深受[如何快速高效率地学习Go语言](https://www.cnblogs.com/code-craftsman/p/12515802.html)文章影响，在此与大家分享。
 
 ## 特别鸣谢
