@@ -10,6 +10,8 @@ server:
   api-version: v1
   # 初始化数据
   init-data: false
+  # 幂等性token名称
+  idempotence-token-name: idempotence-token
 
 #MySQL 数据库相关配置
 mysql:

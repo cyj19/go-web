@@ -14,10 +14,12 @@ import (
 func InitApiRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 	apiv1 := r.Group("/api")
 	apiv1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(factoryIns, global.Conf, global.Enforcer))
+	router2 := r.Group("/api").Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(factoryIns, global.Conf, global.Enforcer),
+		middleware.Idempotence(global.RedisIns, global.Conf.Server.IdempotenceTokenName))
 	{
 		apiHandler := api.NewSysApiHandler(factoryIns)
-
-		apiv1.POST("/add", apiHandler.Create)
+		// 创建操作要增加幂等性校验
+		router2.POST("/add", apiHandler.Create)
 		apiv1.DELETE("/delete", apiHandler.BatchDelete)
 		apiv1.PATCH("/update", apiHandler.Update)
 		apiv1.POST("/page", apiHandler.GetPage)

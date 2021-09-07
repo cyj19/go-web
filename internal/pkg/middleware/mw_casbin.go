@@ -2,16 +2,20 @@ package middleware
 
 import (
 	"strings"
+	"sync"
 
 	"github.com/vagaryer/go-web/internal/admin/api/v1/user"
 	"github.com/vagaryer/go-web/internal/admin/store"
 	"github.com/vagaryer/go-web/internal/pkg/config"
 	"github.com/vagaryer/go-web/internal/pkg/model"
 	"github.com/vagaryer/go-web/internal/pkg/response"
+	"github.com/vagaryer/go-web/internal/pkg/util"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
 )
+
+var checkLock sync.Mutex
 
 // 基于rbac
 func CasbinMiddleware(factory store.Factory, conf *config.Configuration, enforcer *casbin.Enforcer) gin.HandlerFunc {
@@ -37,13 +41,15 @@ func CasbinMiddleware(factory store.Factory, conf *config.Configuration, enforce
 }
 
 func check(enforcer *casbin.Enforcer, user model.SysUser, obj string, act string) bool {
+	checkLock.Lock()
+	defer checkLock.Unlock()
 	if len(user.Roles) <= 0 {
 		return false
 	}
 	var flag int
 
 	for i, role := range user.Roles {
-		b, _ := enforcer.Enforce(role.Id, obj, act)
+		b, _ := enforcer.Enforce(util.Uint642Str(role.Id), obj, act)
 		if b {
 			return true
 		}

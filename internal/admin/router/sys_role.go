@@ -15,10 +15,12 @@ func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware
 
 	rolev1 := r.Group("/role")
 	rolev1.Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(factoryIns, global.Conf, global.Enforcer))
+	router2 := r.Group("/role").Use(authMiddleware.MiddlewareFunc(), middleware.CasbinMiddleware(factoryIns, global.Conf, global.Enforcer),
+		middleware.Idempotence(global.RedisIns, global.Conf.Server.IdempotenceTokenName))
 	{
 		roleHandler := role.NewSysRoleHandler(factoryIns)
-
-		rolev1.POST("/add", roleHandler.Create)
+		// 创建操作要增加幂等性校验
+		router2.POST("/add", roleHandler.Create)
 		rolev1.DELETE("/delete", roleHandler.BatchDelete)
 		rolev1.PATCH("/update", roleHandler.Update)
 		rolev1.PATCH("/menu/update", roleHandler.UpdateMenuForRole)
