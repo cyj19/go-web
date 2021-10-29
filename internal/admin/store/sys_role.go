@@ -19,7 +19,9 @@ func newSysRole(ds *datastore) SysRoleStore {
 	return &role{db: ds.db}
 }
 
-//实现store.RoleStore接口
+var _ SysRoleStore = (*role)(nil)
+
+//实现SysRoleStore接口
 
 // 更新角色菜单(添加、删除)
 func (r *role) UpdateMenuForRole(cd *model.CreateDelete) error {

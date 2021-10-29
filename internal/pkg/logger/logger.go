@@ -60,6 +60,8 @@ func NewGormZapLogger(log *zap.Logger, config logger.Config) *GormZapLogger {
 	}
 }
 
+var _ logger.Interface = (*GormZapLogger)(nil)
+
 // 实现Interface接口
 
 func (l *GormZapLogger) LogMode(level logger.LogLevel) logger.Interface {

@@ -23,6 +23,8 @@ func newCasbinService(s *service) SysCasbinSrv {
 	return &casbinService{factory: s.factory}
 }
 
+var _ SysCasbinSrv = (*casbinService)(nil)
+
 // 按角色即默认p_type=p，获取符合条件的casbin规则
 func (c *casbinService) GetRoleCasbins(ctx context.Context, roleCasbin model.SysRoleCasbin) []model.SysRoleCasbin {
 	rules := global.Enforcer.GetFilteredGroupingPolicy(0, roleCasbin.Kyeword, roleCasbin.Path, roleCasbin.Method)

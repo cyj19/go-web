@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-//UserStore defines the user storage interface.
+//SysUserStore defines the user storage interface.
 type SysUserStore interface {
 	UpdateRoleForUser(cd *model.CreateDelete) error
 	GetByUsername(username string) (*model.SysUser, error)
@@ -21,7 +21,9 @@ func newSysUser(ds *datastore) SysUserStore {
 	return &user{db: ds.db}
 }
 
-//实现store.UserStore接口
+var _ SysUserStore = (*user)(nil)
+
+//实现SysUserStore接口
 
 // 更新用户角色(添加、删除)
 func (u *user) UpdateRoleForUser(cd *model.CreateDelete) error {

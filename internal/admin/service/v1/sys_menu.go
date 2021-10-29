@@ -31,6 +31,8 @@ func newSysMenu(srv *service) SysMenuSrv {
 	return &menuService{factory: srv.factory}
 }
 
+var _ SysMenuSrv = (*menuService)(nil)
+
 func (m *menuService) Create(ctx context.Context, values ...model.SysMenu) error {
 	err := m.factory.Create(&values)
 	if err != nil {

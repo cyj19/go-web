@@ -34,6 +34,8 @@ func newSysRole(srv *service) SysRoleSrv {
 	}
 }
 
+var _ SysRoleSrv = (*roleService)(nil)
+
 func (r *roleService) Create(ctx context.Context, values ...model.SysRole) error {
 	err := r.factory.Create(&values)
 	if err != nil {

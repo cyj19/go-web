@@ -33,6 +33,8 @@ func newSysUser(srv *service) SysUserSrv {
 	}
 }
 
+var _ SysUserSrv = (*userService)(nil)
+
 //实现SysUserSrv接口
 
 func (u *userService) Create(ctx context.Context, values ...model.SysUser) error {

@@ -33,6 +33,8 @@ type datastore struct {
 	db *gorm.DB
 }
 
+var _ Factory = (*datastore)(nil)
+
 //实现Factory接口
 func (ds *datastore) SysUser() SysUserStore {
 	return newSysUser(ds)

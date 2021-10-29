@@ -27,6 +27,9 @@ func NewService(factory store.Factory) Service {
 	}
 }
 
+// 用于触发编译期的接口的合理性检查机制
+var _ Service = (*service)(nil)
+
 func (s *service) SysUser() SysUserSrv {
 	//创建userService
 	return newSysUser(s)

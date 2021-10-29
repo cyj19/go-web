@@ -19,7 +19,9 @@ func newSysMenu(ds *datastore) SysMenuStore {
 	return &menu{db: ds.db}
 }
 
-//实现MenuStore接口
+var _ SysMenuStore = (*menu)(nil)
+
+//实现SysMenuStore接口
 
 func (m *menu) GetByPath(path string) (*model.SysMenu, error) {
 	var result model.SysMenu

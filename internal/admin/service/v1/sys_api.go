@@ -31,6 +31,8 @@ func newSysApi(srv *service) SysApiSrv {
 	}
 }
 
+var _ SysApiSrv = (*apiService)(nil)
+
 // 自定义接口创建，同步创建casbin规则
 func (a *apiService) Create(ctx context.Context, values ...model.SysApi) error {
 	err := a.factory.Create(&values)
