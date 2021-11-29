@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/model"
 
 	"gorm.io/gorm"
 )

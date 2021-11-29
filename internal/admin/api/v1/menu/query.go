@@ -3,9 +3,9 @@ package menu
 import (
 	"strconv"
 
-	"github.com/vagaryer/go-web/internal/pkg/model"
-	"github.com/vagaryer/go-web/internal/pkg/response"
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/response"
+	"github.com/cyj19/go-web/internal/pkg/util"
 
 	"github.com/gin-gonic/gin"
 )

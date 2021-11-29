@@ -4,12 +4,12 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/vagaryer/go-web/internal/admin/api/v1/user"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/config"
-	"github.com/vagaryer/go-web/internal/pkg/model"
-	"github.com/vagaryer/go-web/internal/pkg/response"
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/admin/api/v1/user"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/response"
+	"github.com/cyj19/go-web/internal/pkg/util"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ import (
 
 var checkLock sync.Mutex
 
-// 基于rbac
+// CasbinMiddleware 基于rbac
 func CasbinMiddleware(factory store.Factory, conf *config.Configuration, enforcer *casbin.Enforcer) gin.HandlerFunc {
 	return func(c *gin.Context) {
 

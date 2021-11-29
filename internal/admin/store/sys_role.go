@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/model"
 
 	"gorm.io/gorm"
 )
@@ -23,7 +23,7 @@ var _ SysRoleStore = (*role)(nil)
 
 //实现SysRoleStore接口
 
-// 更新角色菜单(添加、删除)
+// UpdateMenuForRole 更新角色菜单(添加、删除)
 func (r *role) UpdateMenuForRole(cd *model.CreateDelete) error {
 	role := new(model.SysRole)
 	role.Id = cd.Id

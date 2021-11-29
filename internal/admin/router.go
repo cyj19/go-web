@@ -6,11 +6,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/vagaryer/go-web/internal/admin/api/v1/user"
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/router"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/middleware"
+	"github.com/cyj19/go-web/internal/admin/api/v1/user"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/router"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/middleware"
 )
 
 /*

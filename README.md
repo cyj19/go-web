@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/Go-v1.16-blue" alt="Go version"/>
 <img src="https://img.shields.io/badge/Gin-v1.7.2-brightgreen" alt="Gin version"/>
 <img src="https://img.shields.io/badge/Gorm-v1.21.11-brightgreen" alt="Gorm version"/>
-<img src="https://img.shields.io/github/license/vagaryer/go-web" alt="License"/>
+<img src="https://img.shields.io/github/license/cyj19/go-web" alt="License"/>
 </p>
 
 
@@ -63,7 +63,7 @@
 # 开始前请使用go mod，它可以为你减少很多麻烦
 
 # 下载项目
-git clone https://github.com/vagaryer/go-web.git
+git clone https://github.com/cyj19/go-web.git
 
 # 进入admin主程序入口
 cd cmd/admin
@@ -94,4 +94,4 @@ go run main.go -web_config=xxxx -web_mode=prod
 
 ## MIT License
 
-    Copyright (c) 2021 vagaryer
+    Copyright (c) 2021 cyj19

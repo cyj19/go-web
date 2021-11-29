@@ -1,16 +1,16 @@
 package router
 
 import (
-	"github.com/vagaryer/go-web/internal/admin/api/v1/role"
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/middleware"
+	"github.com/cyj19/go-web/internal/admin/api/v1/role"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/middleware"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
 
-// 注册角色路由
+// InitRoleRouter 注册角色路由
 func InitRoleRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 
 	rolev1 := r.Group("/role")

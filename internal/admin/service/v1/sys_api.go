@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/cache"
-	"github.com/vagaryer/go-web/internal/pkg/model"
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/cache"
+	"github.com/cyj19/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/util"
 )
 
 type SysApiSrv interface {
@@ -33,7 +33,7 @@ func newSysApi(srv *service) SysApiSrv {
 
 var _ SysApiSrv = (*apiService)(nil)
 
-// 自定义接口创建，同步创建casbin规则
+// Create 自定义接口创建，同步创建casbin规则
 func (a *apiService) Create(ctx context.Context, values ...model.SysApi) error {
 	err := a.factory.Create(&values)
 	if err != nil {
@@ -171,7 +171,7 @@ func (a *apiService) GetListByWhereOrder(ctx context.Context, whereOrders ...mod
 	return list, err
 }
 
-// 为了判断结果返回指针类型
+// GetPage 为了判断结果返回指针类型
 func (a *apiService) GetPage(ctx context.Context, apiPage model.SysApiPage) (*model.Page, error) {
 	var list []model.SysApi
 	var count int64

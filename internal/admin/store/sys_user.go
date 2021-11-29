@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/model"
 
 	"gorm.io/gorm"
 )
@@ -25,7 +25,7 @@ var _ SysUserStore = (*user)(nil)
 
 //实现SysUserStore接口
 
-// 更新用户角色(添加、删除)
+// UpdateRoleForUser 更新用户角色(添加、删除)
 func (u *user) UpdateRoleForUser(cd *model.CreateDelete) error {
 	user := model.SysUser{}
 	user.Id = cd.Id

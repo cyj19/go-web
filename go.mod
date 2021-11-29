@@ -1,4 +1,4 @@
-module github.com/vagaryer/go-web
+module github.com/cyj19/go-web
 
 go 1.16
 

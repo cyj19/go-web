@@ -4,10 +4,10 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cyj19/go-web/internal/pkg/response"
 	"github.com/gin-gonic/gin"
 	"github.com/go-redis/redis"
 	uuid "github.com/satori/go.uuid"
-	"github.com/vagaryer/go-web/internal/pkg/response"
 )
 
 /*
@@ -32,7 +32,7 @@ else
 end
 `
 
-// 全局幂等性中间件
+// Idempotence 全局幂等性中间件
 func Idempotence(redisIns *redis.Client, key string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 
@@ -65,7 +65,7 @@ func checkIdempotenceToken(redisIns *redis.Client, token string) bool {
 	return true
 }
 
-// 幂等性token获取接口
+// GetIdempotenceToken 幂等性token获取接口
 func GetIdempotenceToken(redisIns *redis.Client) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		response.SuccessWithData(GenIdempotenceToken(redisIns))

@@ -1,16 +1,16 @@
 package router
 
 import (
-	"github.com/vagaryer/go-web/internal/admin/api/v1/user"
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/middleware"
+	"github.com/cyj19/go-web/internal/admin/api/v1/user"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/middleware"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
 )
 
-// 注册用户路由
+// InitUserRouter 注册用户路由
 func InitUserRouter(r *gin.RouterGroup, factoryIns store.Factory, authMiddleware *jwt.GinJWTMiddleware) {
 
 	userv1 := r.Group("/user")

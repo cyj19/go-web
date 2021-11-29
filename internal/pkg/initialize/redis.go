@@ -3,12 +3,12 @@ package initialize
 import (
 	"fmt"
 
-	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/config"
 
 	"github.com/go-redis/redis"
 )
 
-// 初始化Redis
+// Redis 初始化Redis
 func Redis(redisConf *config.RedisConfiguration) *redis.Client {
 
 	redisIns := redis.NewClient(&redis.Options{

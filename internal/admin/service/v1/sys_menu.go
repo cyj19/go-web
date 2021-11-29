@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/cache"
-	"github.com/vagaryer/go-web/internal/pkg/model"
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/cache"
+	"github.com/cyj19/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/util"
 )
 
 type SysMenuSrv interface {

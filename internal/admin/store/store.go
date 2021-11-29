@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/model"
 
 	"gorm.io/gorm"
 )
@@ -15,17 +15,17 @@ type Factory interface {
 	SysRole() SysRoleStore
 	SysMenu() SysMenuStore
 	SysApi() SysApiStore
-	// values必须是指针
+	// Create values必须是指针
 	Create(values interface{}) error
-	// value必须是指针
+	// BatchDelete value必须是指针
 	BatchDelete(ids []uint64, value interface{}) error
-	// values必须是指针
+	// Update values必须是指针
 	Update(values interface{}) error
-	// value必须是指针
+	// GetById value必须是指针
 	GetById(id uint64, value interface{}) error
-	// value必须是指针，result必须是指针
+	// GetList value必须是指针，result必须是指针
 	GetList(value interface{}, result interface{}, whereOrders ...model.WhereOrder) error
-	// value必须是指针，result必须是指针
+	// GetPage value必须是指针，result必须是指针
 	GetPage(pageIndex int, pageSize int, value interface{}, result interface{}, whereOrder ...model.WhereOrder) (int64, error)
 }
 
@@ -35,7 +35,7 @@ type datastore struct {
 
 var _ Factory = (*datastore)(nil)
 
-//实现Factory接口
+// SysUser 实现Factory接口
 func (ds *datastore) SysUser() SysUserStore {
 	return newSysUser(ds)
 }
@@ -52,22 +52,22 @@ func (ds *datastore) SysApi() SysApiStore {
 	return newSysApi(ds)
 }
 
-// value必须是指针
+// Create value必须是指针
 func (ds *datastore) Create(values interface{}) error {
 	return ds.db.Create(values).Error
 }
 
-// value必须是指针
+// BatchDelete value必须是指针
 func (ds *datastore) BatchDelete(ids []uint64, value interface{}) error {
 	return ds.db.Where("id in ?", ids).Delete(value).Error
 }
 
-// Updates使用 struct 更新时，默认情况下，GORM 只会更新非零值的字段
+// Update Update使用 struct 更新时，默认情况下，GORM 只会更新非零值的字段
 func (ds *datastore) Update(values interface{}) error {
 	return ds.db.Updates(values).Error
 }
 
-// result要用于绑定数据，必须是指针类型
+// GetById result要用于绑定数据，必须是指针类型
 func (ds *datastore) GetById(id uint64, result interface{}) error {
 	db := ds.db
 	switch result.(type) {
@@ -81,7 +81,7 @@ func (ds *datastore) GetById(id uint64, result interface{}) error {
 	return db.Where("id = ?", id).First(result).Error
 }
 
-// value用于设置db.Model，必须是指针；result用于绑定数据，必须是指针
+// GetList value用于设置db.Model，必须是指针；result用于绑定数据，必须是指针
 func (ds *datastore) GetList(value interface{}, result interface{}, whereOrders ...model.WhereOrder) error {
 	var db *gorm.DB
 	switch v := value.(type) {
@@ -99,7 +99,7 @@ func (ds *datastore) GetList(value interface{}, result interface{}, whereOrders 
 
 }
 
-// value用于设置db.Model，必须是指针；result用于绑定数据，必须是指针
+// GetPage value用于设置db.Model，必须是指针；result用于绑定数据，必须是指针
 func (ds *datastore) GetPage(pageIndex int, pageSize int, value interface{}, result interface{}, whereOrders ...model.WhereOrder) (int64, error) {
 	var db *gorm.DB
 	switch v := value.(type) {
@@ -130,7 +130,7 @@ var (
 	onceFactory sync.Once
 )
 
-//单例 获取factory
+// NewSqlFactory 单例 获取factory
 func NewSqlFactory(db *gorm.DB) (Factory, error) {
 	if db == nil {
 		return nil, fmt.Errorf("db is nil")
