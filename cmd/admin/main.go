@@ -11,11 +11,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/vagaryer/go-web/internal/admin"
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/initialize"
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/admin"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/initialize"
+	"github.com/cyj19/go-web/internal/pkg/model"
 )
 
 func main() {

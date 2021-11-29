@@ -7,7 +7,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/config"
 
 	"github.com/spf13/viper"
 )

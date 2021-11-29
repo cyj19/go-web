@@ -4,11 +4,11 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/cache"
-	"github.com/vagaryer/go-web/internal/pkg/model"
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/cache"
+	"github.com/cyj19/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/util"
 )
 
 type SysRoleSrv interface {
@@ -33,6 +33,8 @@ func newSysRole(srv *service) SysRoleSrv {
 		factory: srv.factory,
 	}
 }
+
+var _ SysRoleSrv = (*roleService)(nil)
 
 func (r *roleService) Create(ctx context.Context, values ...model.SysRole) error {
 	err := r.factory.Create(&values)
@@ -63,7 +65,7 @@ func (r *roleService) UpdateMenuForRole(ctx context.Context, cd *model.CreateDel
 	return r.factory.SysRole().UpdateMenuForRole(cd)
 }
 
-// 更新角色的接口权限，维护casbin规则
+// UpdateApiForRole 更新角色的接口权限，维护casbin规则
 func (r *roleService) UpdateApiForRole(ctx context.Context, cd *model.CreateDelete) error {
 	// 查询记录是否存在
 	_, err := r.GetById(ctx, cd.Id)
@@ -181,7 +183,7 @@ func (r *roleService) GetList(ctx context.Context, role model.SysRole) ([]model.
 	return list, err
 }
 
-// 特定条件的查询
+// GetListByWhereOrder 特定条件的查询
 func (r *roleService) GetListByWhereOrder(ctx context.Context, whereOrders ...model.WhereOrder) ([]model.SysRole, error) {
 	list := make([]model.SysRole, 0)
 	err := r.factory.GetList(&model.SysRole{}, &list, whereOrders...)

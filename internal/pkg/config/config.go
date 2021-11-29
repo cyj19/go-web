@@ -38,11 +38,12 @@ type Configuration struct {
 }
 
 type ServerConfiguration struct {
-	Port       int    `mapstructure:"port" json:"port"`
-	Name       string `mapstructure:"name" json:"name"`
-	UrlPrefix  string `mapstructure:"url-prefix" json:"urlPrefix"`
-	ApiVersion string `mapstructure:"api-version" json:"apiVersion"`
-	InitData   bool   `mapstructure:"init-data" json:"initData"`
+	Port                 int    `mapstructure:"port" json:"port"`
+	Name                 string `mapstructure:"name" json:"name"`
+	UrlPrefix            string `mapstructure:"url-prefix" json:"urlPrefix"`
+	ApiVersion           string `mapstructure:"api-version" json:"apiVersion"`
+	InitData             bool   `mapstructure:"init-data" json:"initData"`
+	IdempotenceTokenName string `mapstructure:"idempotence-token-name" json:"idempotenceTokenName"`
 }
 
 type MysqlConfiguration struct {

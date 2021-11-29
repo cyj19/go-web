@@ -3,7 +3,7 @@ package middleware
 import (
 	"strings"
 
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/model"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -16,7 +16,7 @@ import (
 
 var jwtkey = []byte("go-web")
 
-//token授权验证
+// AuthMiddleware token授权验证
 func AuthMiddleware(redisIns *redis.Client, skipper ...SkipperFunc) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if len(skipper) > 0 && skipper[0](c) {

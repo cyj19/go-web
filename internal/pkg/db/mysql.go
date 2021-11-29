@@ -3,14 +3,14 @@ package db
 import (
 	"fmt"
 
-	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-// 根据MysqlConfiguration打开一个数据库连接
+// NewMySQL 根据MysqlConfiguration打开一个数据库连接
 func NewMySQL(opt *config.MysqlConfiguration, log logger.Interface) (*gorm.DB, error) {
 	dns := fmt.Sprintf(`%s:%s@tcp(%s)/%s?charset=utf8&parseTime=%t&loc=%s`,
 		opt.Username,

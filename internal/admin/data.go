@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/vagaryer/go-web/internal/admin/global"
-	srvv1 "github.com/vagaryer/go-web/internal/admin/service/v1"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/model"
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/admin/global"
+	srvv1 "github.com/cyj19/go-web/internal/admin/service/v1"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/util"
 )
 
 /*

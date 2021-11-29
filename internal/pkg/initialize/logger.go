@@ -5,8 +5,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/vagaryer/go-web/internal/pkg/config"
-	"github.com/vagaryer/go-web/internal/pkg/logger"
+	"github.com/cyj19/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/logger"
 
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
@@ -14,7 +14,7 @@ import (
 	gormlogger "gorm.io/gorm/logger"
 )
 
-// 初始化日志，使用zap+lumberjack代替标准库的log
+// InitLogger 初始化日志，使用zap+lumberjack代替标准库的log
 func InitLogger(conf *config.Configuration) *logger.GormZapLogger {
 
 	// 自定义编码器

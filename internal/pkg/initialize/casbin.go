@@ -3,7 +3,7 @@ package initialize
 import (
 	"fmt"
 
-	"github.com/vagaryer/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/config"
 
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/model"
@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 初始化casbin
+// Casbin 初始化casbin
 func Casbin(dbIns *gorm.DB, box *config.CustomConfBox, conf *config.Configuration) *casbin.Enforcer {
 	enforcer, err := newCasbin(dbIns, box, conf)
 	if err != nil {

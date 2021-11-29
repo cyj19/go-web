@@ -3,14 +3,14 @@ package initialize
 import (
 	"fmt"
 
-	"github.com/vagaryer/go-web/internal/pkg/config"
-	"github.com/vagaryer/go-web/internal/pkg/db"
+	"github.com/cyj19/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/db"
 
 	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"
 )
 
-// model为表结构
+// MySQL model为表结构
 func MySQL(opt *config.MysqlConfiguration, log gormlogger.Interface, models ...interface{}) *gorm.DB {
 	dbIns, err := db.NewMySQL(opt, log)
 

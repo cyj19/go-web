@@ -3,10 +3,10 @@ package middleware
 import (
 	"time"
 
-	"github.com/vagaryer/go-web/internal/pkg/config"
-	"github.com/vagaryer/go-web/internal/pkg/model"
-	"github.com/vagaryer/go-web/internal/pkg/response"
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/pkg/config"
+	"github.com/cyj19/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/response"
+	"github.com/cyj19/go-web/internal/pkg/util"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ import (
 	官方参考地址：https://github.com/appleboy/gin-jwt
 */
 
-// login为登录处理函数，因为gin-jwt是授权认证一体的，不需要授权功能传入nil即可
+// InitGinJWTMiddleware login为登录处理函数，因为gin-jwt是授权认证一体的，不需要授权功能传入nil即可
 func InitGinJWTMiddleware(login func(c *gin.Context) (interface{}, error), jwtConf *config.JWTConfiguration) (*jwt.GinJWTMiddleware, error) {
 
 	return jwt.New(&jwt.GinJWTMiddleware{

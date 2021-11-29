@@ -1,9 +1,9 @@
 package v1
 
 import (
-	"github.com/vagaryer/go-web/internal/admin/global"
-	"github.com/vagaryer/go-web/internal/admin/store"
-	"github.com/vagaryer/go-web/internal/pkg/cache"
+	"github.com/cyj19/go-web/internal/admin/global"
+	"github.com/cyj19/go-web/internal/admin/store"
+	"github.com/cyj19/go-web/internal/pkg/cache"
 )
 
 type Service interface {
@@ -20,12 +20,15 @@ type service struct {
 
 const defaultSize = 10
 
-//工厂模式，创建service
+// NewService 创建service
 func NewService(factory store.Factory) Service {
 	return &service{
 		factory: factory,
 	}
 }
+
+// 用于触发编译期的接口的合理性检查机制
+var _ Service = (*service)(nil)
 
 func (s *service) SysUser() SysUserSrv {
 	//创建userService

@@ -1,7 +1,7 @@
 package store
 
 import (
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/model"
 
 	"gorm.io/gorm"
 )
@@ -19,7 +19,9 @@ func newSysMenu(ds *datastore) SysMenuStore {
 	return &menu{db: ds.db}
 }
 
-//实现MenuStore接口
+var _ SysMenuStore = (*menu)(nil)
+
+//实现SysMenuStore接口
 
 func (m *menu) GetByPath(path string) (*model.SysMenu, error) {
 	var result model.SysMenu

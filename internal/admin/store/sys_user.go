@@ -1,12 +1,12 @@
 package store
 
 import (
-	"github.com/vagaryer/go-web/internal/pkg/model"
+	"github.com/cyj19/go-web/internal/pkg/model"
 
 	"gorm.io/gorm"
 )
 
-//UserStore defines the user storage interface.
+//SysUserStore defines the user storage interface.
 type SysUserStore interface {
 	UpdateRoleForUser(cd *model.CreateDelete) error
 	GetByUsername(username string) (*model.SysUser, error)
@@ -21,9 +21,11 @@ func newSysUser(ds *datastore) SysUserStore {
 	return &user{db: ds.db}
 }
 
-//实现store.UserStore接口
+var _ SysUserStore = (*user)(nil)
 
-// 更新用户角色(添加、删除)
+//实现SysUserStore接口
+
+// UpdateRoleForUser 更新用户角色(添加、删除)
 func (u *user) UpdateRoleForUser(cd *model.CreateDelete) error {
 	user := model.SysUser{}
 	user.Id = cd.Id

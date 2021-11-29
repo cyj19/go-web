@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// 参考地址 http://www.topgoer.com  插件库-跨域
+// Cors 参考地址 http://www.topgoer.com  插件库-跨域
 func Cors(c *gin.Context) {
 
 	method := c.Request.Method

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/vagaryer/go-web/internal/pkg/logger"
+	"github.com/cyj19/go-web/internal/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )
 
-// zap替换gin的默认日志
+// GinLog zap替换gin的默认日志
 func GinLog(glog *logger.GormZapLogger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 开始时间

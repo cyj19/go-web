@@ -4,14 +4,14 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/vagaryer/go-web/internal/pkg/util"
+	"github.com/cyj19/go-web/internal/pkg/util"
 
 	"github.com/go-redis/redis"
 )
 
 /*
 	使用Redis做缓存，定义key格式为 表名:字段名:字段值
-	例如：user:id:1:username:vagaryer
+	例如：user:id:1:username:cyj19
 */
 // model必须是指针类型
 func Get(redisdb *redis.Client, key string, model interface{}) error {
@@ -43,12 +43,12 @@ func Exist(redisdb *redis.Client, key string) bool {
 	return true
 }
 
-// 删除key
+// Del 删除key
 func Del(redisdb *redis.Client, key ...string) error {
 	return redisdb.Del(key...).Err()
 }
 
-// 返回与pattern匹配的key
+// Keys 返回与pattern匹配的key
 func Keys(redisdb *redis.Client, pattern string) []string {
 	return redisdb.Keys(pattern).Val()
 }

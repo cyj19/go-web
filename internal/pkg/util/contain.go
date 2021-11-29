@@ -1,6 +1,6 @@
 package util
 
-import "github.com/vagaryer/go-web/internal/pkg/model"
+import "github.com/cyj19/go-web/internal/pkg/model"
 
 func Contains(arr interface{}, item interface{}) bool {
 	// 判断arr类型
